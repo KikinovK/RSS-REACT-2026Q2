@@ -7,7 +7,7 @@ class App extends Component {
     return (
       <div className="min-h-screen flex flex-col bg-deep-space text-stardust font-noigrotesk">
         <SearchSection />
-        <ResultsSection />
+        <ResultsSection results={[]} />
       </div>
     )
   }
