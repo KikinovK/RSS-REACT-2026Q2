@@ -1,6 +1,7 @@
 import { Component } from 'react'
 import SearchSection from './components/SearchSection'
 import ResultsSection from './components/ResultsSection'
+import ProgressBar from './components/ui/ProgressBar'
 import { fetchAllPokemon, fetchPokemonResult } from './services/pokemonService'
 import { getStoredQuery } from './utils/storage'
 import type { PokemonListItem } from './types/pokemon'
@@ -74,6 +75,7 @@ class App extends Component<object, AppState> {
     const { results, isLoading, error } = this.state
     return (
       <div className="min-h-screen flex flex-col bg-deep-space text-stardust font-noigrotesk">
+        <ProgressBar isLoading={isLoading} />
         <SearchSection onSearch={this.handleSearch} />
         <ResultsSection results={results} isLoading={isLoading} error={error} />
       </div>
