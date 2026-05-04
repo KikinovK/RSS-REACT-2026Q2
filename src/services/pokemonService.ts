@@ -5,13 +5,13 @@ import type {
   PokemonSpecies,
 } from '../types/pokemon'
 import type { SearchResult } from '../types/SearchResult'
+import { ApiError } from '../utils/ApiError'
 
 const BASE = 'https://pokeapi.co/api/v2'
 
 export const fetchAllPokemon = async (signal: AbortSignal): Promise<PokemonListItem[]> => {
   const res = await fetch(`${BASE}/pokemon?limit=2000`, { signal })
-  console.log('Fetch all Pokémon response:', res)
-  if (!res.ok) throw new Error(`Failed to fetch pokemon list: ${res.status}`)
+  if (!res.ok) throw new ApiError(res.status, 'Failed to load Pokémon list')
   const data: PokemonListResponse = await res.json()
   return data.results
 }
@@ -22,11 +22,12 @@ export const fetchPokemonResult = async (
 ): Promise<SearchResult> => {
   const [detail, species] = await Promise.all([
     fetch(item.url, { signal }).then((r) => {
-      if (!r.ok) throw new Error(`Failed to fetch ${item.name}: ${r.status}`)
+      console.log('r', r)
+      if (!r.ok) throw new ApiError(r.status, `Failed to load ${item.name}`)
       return r.json() as Promise<PokemonDetail>
     }),
     fetch(`${BASE}/pokemon-species/${item.name}`, { signal }).then((r) => {
-      if (!r.ok) throw new Error(`Failed to fetch species ${item.name}: ${r.status}`)
+      if (!r.ok) throw new ApiError(r.status, `Failed to load species for ${item.name}`)
       return r.json() as Promise<PokemonSpecies>
     }),
   ])

@@ -34,10 +34,21 @@ class App extends Component<object, AppState> {
       : allPokemon.slice(0, 20)
     this.setState({ isLoading: true, error: null, results: [] })
     try {
-      const results = await Promise.all(
+      const settled = await Promise.allSettled(
         filtered.slice(0, 20).map((item) => fetchPokemonResult(item, this.abortController!.signal))
       )
-      this.setState({ results, isLoading: false })
+      const results = settled
+        .filter((r): r is PromiseFulfilledResult<SearchResult> => r.status === 'fulfilled')
+        .map((r) => r.value)
+      const firstError = settled.find((r): r is PromiseRejectedResult => r.status === 'rejected')
+      this.setState({
+        results,
+        isLoading: false,
+        error:
+          firstError && firstError.reason?.name !== 'AbortError'
+            ? firstError.reason?.message
+            : null,
+      })
     } catch (e) {
       if ((e as Error).name !== 'AbortError') {
         this.setState({ error: (e as Error).message, isLoading: false })
