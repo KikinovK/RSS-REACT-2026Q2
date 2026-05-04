@@ -20,7 +20,7 @@ class ResultsSection extends Component<ResultsSectionProps> {
           <p className="text-body text-muted-text">No results found.</p>
         )}
         {!isLoading && !error && results.length > 0 && (
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4">
             {results.map((item) => (
               <ResultCard key={item.id} {...item} />
             ))}
