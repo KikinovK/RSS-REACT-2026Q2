@@ -2,6 +2,8 @@
 
 A React application built with class components that allows users to search and browse Pokémon using the [PokéAPI](https://pokeapi.co/).
 
+🔗 **Demo:** [https://kikinovk.github.io/RSS-REACT-2026Q2/class-components/](https://kikinovk.github.io/RSS-REACT-2026Q2/class-components/)
+
 ## Features
 
 - Search Pokémon by name with local storage persistence
