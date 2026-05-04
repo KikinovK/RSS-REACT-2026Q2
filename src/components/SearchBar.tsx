@@ -19,7 +19,8 @@ class SearchBar extends Component<SearchBarProps, SearchBarState> {
     this.setState({ query: value })
   }
 
-  handleSubmit = () => {
+  handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
     const normalized = this.state.query.trim().replace(/\s+/g, ' ')
     setStoredQuery(normalized)
     this.props.onSearch(normalized)
@@ -27,12 +28,12 @@ class SearchBar extends Component<SearchBarProps, SearchBarState> {
 
   render() {
     return (
-      <div className="flex items-center gap-3 w-full max-w-2xl">
+      <form onSubmit={this.handleSubmit} className="flex items-center gap-3 w-full max-w-2xl">
         <SearchInput value={this.state.query} onChange={this.handleChange} />
-        <Button onClick={this.handleSubmit}>
+        <Button type="submit">
           <SearchIcon className="w-5 h-5 text-deep-space" />
         </Button>
-      </div>
+      </form>
     )
   }
 }
