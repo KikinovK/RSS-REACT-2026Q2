@@ -22,12 +22,14 @@ class App extends Component<object, AppState> {
   }
 
   abortController: AbortController | null = null
+  lastQuery: string | null = null
 
   fetchResults = async (allPokemon: PokemonListItem[], query: string) => {
     this.abortController?.abort()
     this.abortController = new AbortController()
-    const filtered = query
-      ? allPokemon.filter((p) => p.name.includes(query.trim().toLowerCase()))
+    const normalized = query.toLowerCase()
+    const filtered = normalized
+      ? allPokemon.filter((p) => p.name.includes(normalized))
       : allPokemon.slice(0, 20)
     this.setState({ isLoading: true, error: null, results: [] })
     try {
@@ -48,7 +50,9 @@ class App extends Component<object, AppState> {
     try {
       const allPokemon = await fetchAllPokemon(this.abortController.signal)
       this.setState({ allPokemon })
-      await this.fetchResults(allPokemon, getStoredQuery())
+      const initialQuery = getStoredQuery()
+      this.lastQuery = initialQuery.trim()
+      await this.fetchResults(allPokemon, initialQuery)
     } catch (e) {
       if ((e as Error).name !== 'AbortError') {
         this.setState({ error: (e as Error).message, isLoading: false })
@@ -61,6 +65,8 @@ class App extends Component<object, AppState> {
   }
 
   handleSearch = (query: string) => {
+    if (query === this.lastQuery) return
+    this.lastQuery = query
     this.fetchResults(this.state.allPokemon, query)
   }
 

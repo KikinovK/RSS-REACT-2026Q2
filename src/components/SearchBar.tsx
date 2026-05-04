@@ -20,8 +20,9 @@ class SearchBar extends Component<SearchBarProps, SearchBarState> {
   }
 
   handleSubmit = () => {
-    setStoredQuery(this.state.query)
-    this.props.onSearch(this.state.query)
+    const normalized = this.state.query.trim().replace(/\s+/g, ' ')
+    setStoredQuery(normalized)
+    this.props.onSearch(normalized)
   }
 
   render() {
