@@ -4,11 +4,15 @@ import Button from './ui/Button'
 import SearchIcon from '../assets/icons/search.svg?react'
 import { getStoredQuery, setStoredQuery } from '../utils/storage'
 
+interface SearchBarProps {
+  onSearch: (query: string) => void
+}
+
 interface SearchBarState {
   query: string
 }
 
-class SearchBar extends Component<object, SearchBarState> {
+class SearchBar extends Component<SearchBarProps, SearchBarState> {
   state: SearchBarState = { query: getStoredQuery() }
 
   handleChange = (value: string) => {
@@ -17,7 +21,7 @@ class SearchBar extends Component<object, SearchBarState> {
 
   handleSubmit = () => {
     setStoredQuery(this.state.query)
-    console.log('search:', this.state.query)
+    this.props.onSearch(this.state.query)
   }
 
   render() {
