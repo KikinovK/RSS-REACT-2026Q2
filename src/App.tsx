@@ -2,6 +2,7 @@ import { Component } from 'react'
 import SearchSection from './components/SearchSection'
 import ResultsSection from './components/ResultsSection'
 import ProgressBar from './components/ui/ProgressBar'
+import ErrorSimulator from './components/ErrorSimulator'
 import { fetchAllPokemon, fetchPokemonResult } from './services/pokemonService'
 import { getStoredQuery } from './utils/storage'
 import type { PokemonListItem } from './types/pokemon'
@@ -89,6 +90,7 @@ class App extends Component<object, AppState> {
         <ProgressBar isLoading={isLoading} />
         <SearchSection onSearch={this.handleSearch} />
         <ResultsSection results={results} isLoading={isLoading} error={error} />
+        <ErrorSimulator />
       </div>
     )
   }

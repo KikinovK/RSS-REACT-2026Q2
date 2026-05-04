@@ -22,7 +22,6 @@ export const fetchPokemonResult = async (
 ): Promise<SearchResult> => {
   const [detail, species] = await Promise.all([
     fetch(item.url, { signal }).then((r) => {
-      console.log('r', r)
       if (!r.ok) throw new ApiError(r.status, `Failed to load ${item.name}`)
       return r.json() as Promise<PokemonDetail>
     }),
