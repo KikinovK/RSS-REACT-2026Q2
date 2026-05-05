@@ -1,7 +1,7 @@
-import { Component } from 'react'
+import { Component } from 'react';
 
 interface ErrorMessageProps {
-  message: string
+  message: string;
 }
 
 class ErrorMessage extends Component<ErrorMessageProps> {
@@ -11,8 +11,8 @@ class ErrorMessage extends Component<ErrorMessageProps> {
         <span className="mt-0.5">⚠</span>
         <p>{this.props.message}</p>
       </div>
-    )
+    );
   }
 }
 
-export default ErrorMessage
+export default ErrorMessage;

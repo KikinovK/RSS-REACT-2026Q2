@@ -1,8 +1,8 @@
-import { Component } from 'react'
-import SearchBar from './SearchBar'
+import { Component } from 'react';
+import SearchBar from './SearchBar';
 
 interface SearchSectionProps {
-  onSearch: (query: string) => void
+  onSearch: (query: string) => void;
 }
 
 class SearchSection extends Component<SearchSectionProps> {
@@ -14,8 +14,8 @@ class SearchSection extends Component<SearchSectionProps> {
         </h1>
         <SearchBar onSearch={this.props.onSearch} />
       </section>
-    )
+    );
   }
 }
 
-export default SearchSection
+export default SearchSection;

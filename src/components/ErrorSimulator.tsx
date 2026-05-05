@@ -1,19 +1,19 @@
-import { Component } from 'react'
+import { Component } from 'react';
 
 interface ErrorSimulatorState {
-  shouldThrow: boolean
+  shouldThrow: boolean;
 }
 
 class ErrorSimulator extends Component<object, ErrorSimulatorState> {
-  state: ErrorSimulatorState = { shouldThrow: false }
+  state: ErrorSimulatorState = { shouldThrow: false };
 
   handleThrow = () => {
-    this.setState({ shouldThrow: true })
-  }
+    this.setState({ shouldThrow: true });
+  };
 
   render() {
     if (this.state.shouldThrow) {
-      throw new Error('Simulated error triggered by user')
+      throw new Error('Simulated error triggered by user');
     }
     return (
       <button
@@ -22,8 +22,8 @@ class ErrorSimulator extends Component<object, ErrorSimulatorState> {
       >
         Simulate error
       </button>
-    )
+    );
   }
 }
 
-export default ErrorSimulator
+export default ErrorSimulator;

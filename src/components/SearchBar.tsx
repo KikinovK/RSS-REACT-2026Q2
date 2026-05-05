@@ -1,30 +1,30 @@
-import { Component } from 'react'
-import SearchInput from './ui/SearchInput'
-import Button from './ui/Button'
-import SearchIcon from '../assets/icons/search.svg?react'
-import { getStoredQuery, setStoredQuery } from '../utils/storage'
+import { Component } from 'react';
+import SearchInput from './ui/SearchInput';
+import Button from './ui/Button';
+import SearchIcon from '../assets/icons/search.svg?react';
+import { getStoredQuery, setStoredQuery } from '../utils/storage';
 
 interface SearchBarProps {
-  onSearch: (query: string) => void
+  onSearch: (query: string) => void;
 }
 
 interface SearchBarState {
-  query: string
+  query: string;
 }
 
 class SearchBar extends Component<SearchBarProps, SearchBarState> {
-  state: SearchBarState = { query: getStoredQuery() }
+  state: SearchBarState = { query: getStoredQuery() };
 
   handleChange = (value: string) => {
-    this.setState({ query: value })
-  }
+    this.setState({ query: value });
+  };
 
   handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    const normalized = this.state.query.trim().replace(/\s+/g, ' ')
-    setStoredQuery(normalized)
-    this.props.onSearch(normalized)
-  }
+    e.preventDefault();
+    const normalized = this.state.query.trim().replace(/\s+/g, ' ');
+    setStoredQuery(normalized);
+    this.props.onSearch(normalized);
+  };
 
   render() {
     return (
@@ -34,8 +34,8 @@ class SearchBar extends Component<SearchBarProps, SearchBarState> {
           <SearchIcon className="w-5 h-5 text-deep-space" />
         </Button>
       </form>
-    )
+    );
   }
 }
 
-export default SearchBar
+export default SearchBar;

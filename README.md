@@ -83,11 +83,11 @@ npm run preview
 
 ## Scripts
 
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build |
-| `npm run lint` | Run ESLint |
-| `npm run lint:fix` | Run ESLint with auto-fix |
-| `npm run format` | Format code with Prettier |
+| Script             | Description               |
+| ------------------ | ------------------------- |
+| `npm run dev`      | Start development server  |
+| `npm run build`    | Build for production      |
+| `npm run preview`  | Preview production build  |
+| `npm run lint`     | Run ESLint                |
+| `npm run lint:fix` | Run ESLint with auto-fix  |
+| `npm run format`   | Format code with Prettier |

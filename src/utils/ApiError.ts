@@ -7,15 +7,15 @@ const STATUS_MESSAGES: Record<number, string> = {
   500: 'Server error. Please try again later.',
   502: 'Bad gateway. The server is temporarily unavailable.',
   503: 'Service unavailable. Please try again later.',
-}
+};
 
 export class ApiError extends Error {
-  status: number
+  status: number;
 
   constructor(status: number, context?: string) {
-    const base = STATUS_MESSAGES[status] ?? `Unexpected error (${status}).`
-    super(context ? `${context}: ${base}` : base)
-    this.name = 'ApiError'
-    this.status = status
+    const base = STATUS_MESSAGES[status] ?? `Unexpected error (${status}).`;
+    super(context ? `${context}: ${base}` : base);
+    this.name = 'ApiError';
+    this.status = status;
   }
 }

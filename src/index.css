@@ -1,9 +1,15 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @keyframes progress {
-  0% { transform: translateX(-100%); }
-  50% { transform: translateX(0%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 @theme {
@@ -14,8 +20,12 @@
   --color-guidepost-green: #d3fb52;
   --color-muted-text: #666666;
 
-  --font-noigrotesk: 'NoiGrotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-sansplomb: 'SansPlomb', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-noigrotesk:
+    'NoiGrotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
+  --font-sansplomb:
+    'SansPlomb', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
 
   --text-caption: 12px;
   --text-body-sm: 14px;

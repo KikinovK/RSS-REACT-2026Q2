@@ -1,17 +1,17 @@
-import { Component } from 'react'
-import ResultCard from './ui/ResultCard'
-import ErrorMessage from './ui/ErrorMessage'
-import type { SearchResult } from '../types/SearchResult'
+import { Component } from 'react';
+import ResultCard from './ui/ResultCard';
+import ErrorMessage from './ui/ErrorMessage';
+import type { SearchResult } from '../types/SearchResult';
 
 interface ResultsSectionProps {
-  results: SearchResult[]
-  isLoading: boolean
-  error: string | null
+  results: SearchResult[];
+  isLoading: boolean;
+  error: string | null;
 }
 
 class ResultsSection extends Component<ResultsSectionProps> {
   render() {
-    const { results, isLoading, error } = this.props
+    const { results, isLoading, error } = this.props;
     return (
       <section className="w-full flex-1 px-8 py-6 flex flex-col gap-4">
         <h2 className="text-heading font-noigrotesk text-stardust">Results</h2>
@@ -28,8 +28,8 @@ class ResultsSection extends Component<ResultsSectionProps> {
           </ul>
         )}
       </section>
-    )
+    );
   }
 }
 
-export default ResultsSection
+export default ResultsSection;

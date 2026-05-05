@@ -1,15 +1,15 @@
-import { Component } from 'react'
+import { Component } from 'react';
 
 interface ButtonProps {
-  children: React.ReactNode
-  onClick?: () => void
-  disabled?: boolean
-  type?: 'button' | 'submit' | 'reset'
+  children: React.ReactNode;
+  onClick?: () => void;
+  disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset';
 }
 
 class Button extends Component<ButtonProps> {
   render() {
-    const { children, onClick, disabled, type = 'button' } = this.props
+    const { children, onClick, disabled, type = 'button' } = this.props;
     return (
       <button
         type={type}
@@ -19,8 +19,8 @@ class Button extends Component<ButtonProps> {
       >
         {children}
       </button>
-    )
+    );
   }
 }
 
-export default Button
+export default Button;
