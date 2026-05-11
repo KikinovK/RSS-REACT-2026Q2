@@ -29,8 +29,8 @@ class SearchBar extends Component<SearchBarProps, SearchBarState> {
   render() {
     return (
       <form onSubmit={this.handleSubmit} className="flex items-center gap-3 w-full max-w-2xl">
-        <SearchInput value={this.state.query} onChange={this.handleChange} />
-        <Button type="submit">
+        <SearchInput value={this.state.query} onChange={this.handleChange} ariaLabel="Search Pokémon" />
+        <Button type="submit" ariaLabel="Search">
           <SearchIcon className="w-5 h-5 text-deep-space" />
         </Button>
       </form>
