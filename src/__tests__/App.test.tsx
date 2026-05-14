@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from '../App'
+import { SEARCH_KEY } from '../utils/const'
 
 const mockPokemonList = [{ name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1' }]
 const mockPokemonDetail = {
@@ -43,7 +44,7 @@ describe('App Component - Integration Tests', () => {
   })
 
   it('handles search term from localStorage on initial load', async () => {
-    localStorage.setItem('search_query', 'bulb')
+    localStorage.setItem(SEARCH_KEY, 'bulb')
 
     const fetchMock = vi
       .spyOn(global, 'fetch')
@@ -164,7 +165,7 @@ describe('App Component - State Management Tests', () => {
       { name: 'ivysaur', url: 'https://pokeapi.co/api/v2/pokemon/2' }
     ];
 
-    localStorage.setItem('search_query', 'bulb')
+    localStorage.setItem(SEARCH_KEY, 'bulb')
 
     vi.spyOn(global, 'fetch')
       .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockFullList }) } as Response)

@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import SearchBar from '../components/SearchBar'
+import { SEARCH_KEY } from '../utils/const'
 
 vi.mock('../assets/icons/search.svg?react', () => ({
   default: () => <svg data-testid="search-icon" />,
@@ -31,7 +32,7 @@ describe('Search Component - localStorage', () => {
   })
 
   it('displays previously saved search term from localStorage on mount', () => {
-    localStorage.setItem('search_query', 'pikachu')
+    localStorage.setItem(SEARCH_KEY, 'pikachu')
     render(<SearchBar onSearch={vi.fn()} />)
     expect(screen.getByRole('textbox')).toHaveValue('pikachu')
   })
@@ -42,13 +43,13 @@ describe('Search Component - localStorage', () => {
   })
 
   it('overwrites existing localStorage value when new search is performed', async () => {
-    localStorage.setItem('search_query', 'pikachu')
+    localStorage.setItem(SEARCH_KEY, 'pikachu')
     render(<SearchBar onSearch={vi.fn()} />)
     const input = screen.getByRole('textbox')
     await userEvent.clear(input)
     await userEvent.type(input, 'bulbasaur')
     await userEvent.click(screen.getByRole('button'))
-    expect(localStorage.getItem('search_query')).toBe('bulbasaur')
+    expect(localStorage.getItem(SEARCH_KEY)).toBe('bulbasaur')
   })
 })
 
@@ -69,7 +70,7 @@ describe('Search Component - User Interaction', () => {
     const input = screen.getByRole('textbox')
     await userEvent.type(input, 'bulbasaur')
     await userEvent.click(screen.getByRole('button'))
-    expect(localStorage.getItem('search_query')).toBe('bulbasaur')
+    expect(localStorage.getItem(SEARCH_KEY)).toBe('bulbasaur')
   })
 
   it('trims whitespace from search input before saving', async () => {
@@ -77,7 +78,7 @@ describe('Search Component - User Interaction', () => {
     const input = screen.getByRole('textbox')
     await userEvent.type(input, '  pikachu  ')
     await userEvent.click(screen.getByRole('button'))
-    expect(localStorage.getItem('search_query')).toBe('pikachu')
+    expect(localStorage.getItem(SEARCH_KEY)).toBe('pikachu')
   })
 
   it('triggers search callback with correct parameters', async () => {
