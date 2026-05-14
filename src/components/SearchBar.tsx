@@ -1,41 +1,36 @@
-import { Component } from 'react';
+import { useCallback } from 'react';
 import SearchInput from './ui/SearchInput';
 import Button from './ui/Button';
 import SearchIcon from '../assets/icons/search.svg?react';
-import { getStoredQuery, setStoredQuery } from '../utils/storage';
+import { useLocalStorage } from '../utils/useLocalStorage';
+import { SEARCH_KEY } from '../utils/const';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
 }
 
-interface SearchBarState {
-  query: string;
-}
+const SearchBar = ({ onSearch }: SearchBarProps) => {
+  const [query, setQuery] = useLocalStorage(SEARCH_KEY, '');
 
-class SearchBar extends Component<SearchBarProps, SearchBarState> {
-  state: SearchBarState = { query: getStoredQuery() };
+  const handleChange = useCallback((value: string) => {
+    setQuery(value);
+  }, [setQuery]);
 
-  handleChange = (value: string) => {
-    this.setState({ query: value });
-  };
-
-  handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const normalized = this.state.query.trim().replace(/\s+/g, ' ');
-    setStoredQuery(normalized);
-    this.props.onSearch(normalized);
+    const normalized = query.trim().replace(/\s+/g, ' ');
+    setQuery(normalized);
+    onSearch(normalized);
   };
 
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit} className="flex items-center gap-3 w-full max-w-2xl">
-        <SearchInput value={this.state.query} onChange={this.handleChange} ariaLabel="Search Pokémon" />
-        <Button type="submit" ariaLabel="Search">
+  return (
+    <form onSubmit={handleSubmit} className="flex items-center gap-3 w-full max-w-2xl">
+      <SearchInput value={query} onChange={handleChange} ariaLabel="Search Pokémon" />
+        <Button type="submit" ariaLabel="Search" className='bg-guidepost-green'>
           <SearchIcon className="w-5 h-5 text-deep-space" />
         </Button>
-      </form>
-    );
-  }
+    </form>
+  );
 }
 
 export default SearchBar;
