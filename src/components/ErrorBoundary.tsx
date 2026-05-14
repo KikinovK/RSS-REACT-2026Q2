@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import type React from 'react';
+import Button from './ui/Button';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -29,12 +30,13 @@ class ErrorBoundary extends Component<{ children: React.ReactNode }, ErrorBounda
             <span className="text-6xl">⚠️</span>
             <h2 className="text-heading font-noigrotesk text-stardust">Something went wrong</h2>
             <p className="text-body text-muted-text max-w-md">{this.state.error?.message}</p>
-            <button
+            <Button
               onClick={this.handleReset}
-              className="px-6 py-3 bg-guidepost-green text-deep-space font-medium rounded-[var(--radius-buttons)] transition-all hover:brightness-90 active:brightness-75 active:scale-95"
+              ariaLabel="Try again"
+              className="bg-guidepost-green"
             >
               Try again
-            </button>
+            </Button>
           </section>
         </div>
       );
