@@ -31,3 +31,5 @@ coverage/
 .amazonq/
 
 .vite
+
+.tanstack/
