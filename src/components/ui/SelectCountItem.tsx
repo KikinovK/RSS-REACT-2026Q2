@@ -4,12 +4,14 @@ import { OPTIONS_COUNT_ITEMS } from "../../utils/const";
 interface SelectCountItemProps {
   defaultCount?: CountItem;
   onSelect: (count: CountItem) => void;
+  isLoading?: boolean;
 }
 
 const SelectCountItem = (
   {
     defaultCount = OPTIONS_COUNT_ITEMS[0],
-    onSelect
+    onSelect,
+    isLoading = false,
   }: SelectCountItemProps) => {
 
   return (
@@ -18,7 +20,9 @@ const SelectCountItem = (
         defaultValue={defaultCount}
         onChange={(e) =>
         onSelect(Number(e.target.value) as CountItem)}
-        className="border border-stardust/30 text-stardust hover:bg-stardust/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium rounded-(--radius-buttons) text-body px-6 py-3 text-m">
+        className="border border-stardust/30 text-stardust hover:bg-stardust/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium rounded-(--radius-buttons) text-body px-6 py-3 text-m"
+        disabled={isLoading}
+        >
         {OPTIONS_COUNT_ITEMS.map((option) => (
           <option
             key={option}

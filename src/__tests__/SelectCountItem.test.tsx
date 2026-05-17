@@ -26,4 +26,9 @@ describe('SelectCountItem - Rendering', () => {
 
   expect(onSelectMock).toHaveBeenCalledWith(20);
   })
+
+  it('disables the select when isLoading is true', () => {
+    render(<SelectCountItem onSelect={vi.fn()} defaultCount={12} isLoading={true} />)
+    expect(screen.getByRole('combobox')).toBeDisabled()
+  })
 })
