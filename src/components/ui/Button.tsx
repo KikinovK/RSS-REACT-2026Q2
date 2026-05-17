@@ -11,7 +11,7 @@ const Button = ({ children, type = 'button', ariaLabel, className, ...props }: B
       {...props}
       type={type}
       aria-label={ariaLabel}
-      className={`${className} px-6 py-3 text-deep-space font-medium rounded-[var(--radius-buttons)] text-body whitespace-nowrap transition-all hover:cursor-pointer hover:brightness-90 active:brightness-75 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed`}
+      className={`${className} px-6 py-3 text-deep-space font-medium rounded-(--radius-buttons) text-body whitespace-nowrap transition-all hover:cursor-pointer hover:brightness-90 active:brightness-75 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed`}
     >
       {children}
     </button>
