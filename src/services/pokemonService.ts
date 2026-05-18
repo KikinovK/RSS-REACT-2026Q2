@@ -3,6 +3,7 @@ import type {
   PokemonListResponse,
   PokemonDetail,
   PokemonSpecies,
+  PokemonData,
 } from '../types/pokemon';
 import type { SearchResult } from '../types/SearchResult';
 import { ApiError } from '../utils/ApiError';
@@ -43,4 +44,11 @@ export const fetchPokemonResult = async (
     description,
     image: flavor,
   };
+};
+
+export const fetchPokemonData = async (id: string,
+  signal: AbortSignal): Promise<PokemonData> => {
+  const res = await fetch(`${BASE}/pokemon/${id}`, { signal });
+  if (!res.ok) throw new ApiError(res.status, 'Failed to load Pokémon details');
+  return res.json() as Promise<PokemonData>;
 };

@@ -11,7 +11,8 @@ import { Route } from '../routes/pokemons';
 import type { PokemonListItem } from '../types/pokemon';
 import type { SearchResult } from '../types/SearchResult';
 import { CountItem } from '../types/CoutItem';
-import { Outlet } from '@tanstack/react-router';
+import { Outlet, useMatchRoute } from '@tanstack/react-router';
+import Button from '../components/ui/Button';
 
 const HomePage = () => {
   const [allPokemon, setAllPokemon] = useState<PokemonListItem[]>([]);
@@ -24,7 +25,11 @@ const HomePage = () => {
     filter: searchQuery,
     page: currentPage
   } = Route.useSearch();
-  const navigate = Route.useNavigate()
+  const navigate = Route.useNavigate();
+
+  const matchRoute = useMatchRoute();
+  const isDetailsRouteActive = matchRoute({ to: '/pokemons/$detailId' })
+  const detailId = isDetailsRouteActive ? isDetailsRouteActive.detailId : undefined
 
   const [ , setItemsPerPage] = useLocalStorage<CountItem>(LIMIT_KEY, OPTIONS_COUNT_ITEMS[0]);
   const [ , setSearchQuery] = useLocalStorage<string>(SEARCH_KEY, '');
@@ -118,6 +123,17 @@ const HomePage = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleCloseDetails = () => {
+    navigate({
+      to: '/pokemons',
+      search: {
+        filter: searchQuery,
+        page: currentPage,
+        limit: itemsPerPage,
+      },
+    });
+  };
+
   const totalPages = Math.ceil(results.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedResults = results.slice(startIndex, startIndex + itemsPerPage);
@@ -140,7 +156,19 @@ const HomePage = () => {
           />
         </div>
       )}
-      <Outlet />
+      {detailId && (
+        <div className="fixed top-0 right-0 w-full md:w-lg h-full  bg-deep-space  shadow-lg p-10 overflow-auto z-100">
+          <Button
+              onClick={handleCloseDetails}
+              className="absolute top-4 right-4 text-stardust hover:text-guidepost-green text-xl font-bold cursor-pointer transition-colors"
+              ariaLabel="Close details"
+            >
+              ✕
+          </Button>
+          <Outlet />
+        </div>
+      )}
+
     </div>
   );
 };

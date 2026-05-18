@@ -54,6 +54,14 @@ vi.mock('@tanstack/react-router', async (importOriginal) => {
       )
     },
     Outlet: () => <div data-testid="router-outlet" />,
+    useMatchRoute: () => {
+      return (options?: { to?: string }) => {
+        if (options?.to === '/pokemons/$detailId') {
+          return { detailId: '1' };
+        }
+        return null;
+      };
+    },
   };
 });
 
@@ -209,7 +217,7 @@ describe('HomePage Component - API Integration Tests', () => {
 describe('HomePage Component - State Management Tests', () => {
   it('updates component state based on API responses', async () => {
     vi.spyOn(globalThis, 'fetch')
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList }) } as Response)
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList.slice(0, 1) }) } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonDetail } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonSpecies } as Response)
 

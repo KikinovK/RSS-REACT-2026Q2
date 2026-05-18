@@ -19,7 +19,7 @@ vi.mock('../routes/pokemons', () => {
 vi.mock('@tanstack/react-router', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@tanstack/react-router')>()
 
-    interface MockLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
+  interface MockLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
     children?: ReactNode
     to?: string
     params?: Record<string, unknown>
