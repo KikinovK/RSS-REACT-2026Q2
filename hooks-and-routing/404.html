@@ -1,21 +1,29 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Single Page Apps for GitHub Pages</title>
-    <script type="text/javascript">
-      var pathSegmentsToKeep = 2;
+<head>
+  <meta charset="utf-8">
+  <title>GitHub Pages SPA Redirect</title>
+  <script type="text/javascript">
+    var pathSegmentsToKeep = 2;
 
-      var l = window.location;
-      l.replace(
-        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
-        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
-        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-        l.hash
-      );
-    </script>
-  </head>
-  <body>
-  </body>
+    var l = window.location;
+    var pathArray = l.pathname.split('/');
+
+    var basePath = pathArray.slice(0, 1 + pathSegmentsToKeep).join('/');
+
+    var routePath = pathArray.slice(1 + pathSegmentsToKeep).join('/');
+
+    var queryString = l.search ? l.search : '';
+    var hashString = l.hash ? l.hash : '';
+
+    var destination = l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+                      basePath + '/?/' + routePath +
+                      (queryString ? '&' + queryString.slice(1) : '') +
+                      hashString;
+
+    l.replace(destination);
+  </script>
+</head>
+<body>
+</body>
 </html>
