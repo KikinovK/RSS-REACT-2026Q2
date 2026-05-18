@@ -3,6 +3,7 @@ import { createRootRoute, Outlet } from '@tanstack/react-router';
 import ErrorBoundary from '../components/ErrorBoundary';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import NotFoundPage from '../pages/NotFoundPage';
 
 const RootLayout = () => {
   return (
@@ -20,4 +21,5 @@ const RootLayout = () => {
 
 export const Route = createRootRoute({
   component: RootLayout,
+  notFoundComponent: NotFoundPage,
 });

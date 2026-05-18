@@ -7,10 +7,11 @@ import { fetchAllPokemon, fetchPokemonResult } from '../services/pokemonService'
 import { useLocalStorage } from '../utils/useLocalStorage';
 import { LIMIT_KEY, OPTIONS_COUNT_ITEMS, PAGE_KEY, SEARCH_KEY } from '../utils/const';
 import SelectCountItem from '../components/ui/SelectCountItem';
-import { Route } from '../routes';
+import { Route } from '../routes/pokemons';
 import type { PokemonListItem } from '../types/pokemon';
 import type { SearchResult } from '../types/SearchResult';
 import { CountItem } from '../types/CoutItem';
+import { Outlet } from '@tanstack/react-router';
 
 const HomePage = () => {
   const [allPokemon, setAllPokemon] = useState<PokemonListItem[]>([]);
@@ -120,7 +121,6 @@ const HomePage = () => {
   const totalPages = Math.ceil(results.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedResults = results.slice(startIndex, startIndex + itemsPerPage);
-  console.log('Paginated Results:', paginatedResults);
 
   return (
     <div className="space-y-8 pb-2">
@@ -140,6 +140,7 @@ const HomePage = () => {
           />
         </div>
       )}
+      <Outlet />
     </div>
   );
 };

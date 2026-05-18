@@ -1,6 +1,46 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import ResultCard from '../components/ui/ResultCard'
+import { SEARCH_KEY } from '../utils/const';
+import { AnchorHTMLAttributes, ReactNode } from 'react';
+
+vi.mock('../routes/pokemons', () => {
+  return {
+    Route: {
+      useSearch: () => ({
+        limit: 4,
+        filter: localStorage.getItem(SEARCH_KEY) || '',
+        page: 1,
+      }),
+    },
+  };
+});
+
+vi.mock('@tanstack/react-router', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@tanstack/react-router')>()
+
+    interface MockLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
+    children?: ReactNode
+    to?: string
+    params?: Record<string, unknown>
+    search?: Record<string, unknown>
+  }
+
+  return {
+    ...actual,
+    Link: ({ children, to, params, search, ...props }: MockLinkProps) => {
+      const serializedParams = params ? JSON.stringify(params) : ''
+      const serializedSearch = search ? JSON.stringify(search) : ''
+      const fakeHref = to ? `${to}${serializedParams}${serializedSearch}` : '#'
+
+      return (
+        <a href={fakeHref} {...props}>
+          {children}
+        </a>
+      )
+    },
+  }
+})
 
 describe('ResultCard - Rendering', () => {
   it('renders name and description, image correctly', () => {

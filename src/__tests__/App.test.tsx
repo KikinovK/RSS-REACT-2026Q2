@@ -24,25 +24,6 @@ describe('App - Router Integration Tests', () => {
     expect(screen.getByRole('contentinfo')).toBeInTheDocument() // Footer
   })
 
-  it('navigates to home page on root route', async () => {
-    const memoryHistory = createMemoryHistory({
-      initialEntries: ['/'],
-    })
-    const router = createRouter({ routeTree, history: memoryHistory })
-
-    vi.spyOn(global, 'fetch')
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ results: [{ name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1' }] }),
-      } as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ id: 1, name: 'bulbasaur', sprites: { other: { 'official-artwork': { front_default: 'url' } } } }) } as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ flavor_text_entries: [{ language: { name: 'en' }, flavor_text: 'test' }] }) } as Response)
-
-    render(<RouterProvider router={router} />)
-
-    await waitFor(() => expect(screen.getByText('bulbasaur')).toBeInTheDocument())
-  })
-
   it('navigates to about page', async () => {
     const memoryHistory = createMemoryHistory({
       initialEntries: ['/about'],
@@ -62,7 +43,7 @@ describe('App - Router Integration Tests', () => {
     })
     const router = createRouter({ routeTree, history: memoryHistory })
 
-    vi.spyOn(global, 'fetch').mockRejectedValueOnce(new Error('Network error'))
+    vi.spyOn(globalThis, 'fetch').mockRejectedValueOnce(new Error('Network error'))
 
     render(<RouterProvider router={router} />)
 

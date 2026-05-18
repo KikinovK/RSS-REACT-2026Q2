@@ -5,6 +5,7 @@ import HomePage from '../pages/HomePage'
 import { SEARCH_KEY } from '../utils/const'
 import mockPokemonList from '../__mocks__/list'
 import mockPokemonDetails from '../__mocks__/details'
+import { AnchorHTMLAttributes, ReactNode } from 'react'
 
 
 const mockPokemonDetail = mockPokemonDetails[0]
@@ -16,7 +17,7 @@ const mockPokemonSpecies = {
 
 const mockNavigate = vi.fn();
 
-vi.mock('../routes', () => {
+vi.mock('../routes/pokemons', () => {
   return {
     Route: {
       useSearch: () => ({
@@ -26,6 +27,33 @@ vi.mock('../routes', () => {
       }),
       useNavigate: () => mockNavigate,
     },
+  };
+});
+
+vi.mock('@tanstack/react-router', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@tanstack/react-router')>();
+
+  interface MockLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
+    children?: ReactNode
+    to?: string
+    params?: Record<string, unknown>
+    search?: Record<string, unknown>
+  }
+
+  return {
+    ...actual,
+    Link: ({ children, to, params, search, ...props }: MockLinkProps) => {
+      const serializedParams = params ? JSON.stringify(params) : ''
+      const serializedSearch = search ? JSON.stringify(search) : ''
+      const fakeHref = to ? `${to}${serializedParams}${serializedSearch}` : '#'
+
+      return (
+        <a href={fakeHref} {...props}>
+          {children}
+        </a>
+      )
+    },
+    Outlet: () => <div data-testid="router-outlet" />,
   };
 });
 
