@@ -78,6 +78,9 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
+    setItemsPerPage(itemsPerPage);
+    setSearchQuery(searchQuery);
+    setCurrentPage(currentPage);
     const controller = new AbortController();
 
     const init = async () => {
@@ -141,7 +144,7 @@ const HomePage = () => {
   return (
     <div className="space-y-8 pb-2">
       <ProgressBar isLoading={isLoading} />
-      <SearchSection onSearch={handleSearch} />
+      <SearchSection onSearch={handleSearch} query={searchQuery}/>
       <ResultsSection results={paginatedResults} isLoading={isLoading} error={error} />
       {totalPages > 1 && !isLoading && (
         <div className="flex justify-center gap-8 items-center">
