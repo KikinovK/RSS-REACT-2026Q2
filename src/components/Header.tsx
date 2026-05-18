@@ -9,6 +9,7 @@ const Header = () => {
           <div className="mx-auto flex items-center gap-6">
             <Link
               to="/"
+              search={{ page: 1, filter: '', limit: 4 }}
               activeProps={{
                 className: 'text-guidepost-green font-semibold',
               }}
