@@ -1,35 +1,51 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { HomePage } from '../routes'
+import HomePage from '../pages/HomePage'
 import { SEARCH_KEY } from '../utils/const'
+import mockPokemonList from '../__mocks__/list'
+import mockPokemonDetails from '../__mocks__/details'
 
-const mockPokemonList = [{ name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1' }]
-const mockPokemonDetail = {
-  id: 1,
-  name: 'bulbasaur',
-  sprites: { other: { 'official-artwork': { front_default: 'https://example.com/bulbasaur.png' } } },
-}
+
+const mockPokemonDetail = mockPokemonDetails[0]
 const mockPokemonSpecies = {
   flavor_text_entries: [
     { language: { name: 'en' }, flavor_text: 'A strange seed was planted on its back at birth.' },
   ],
 }
 
-describe('HomePage Component - Integration Tests', () => {
-  beforeEach(() => {
-    localStorage.clear()
-    vi.restoreAllMocks()
-  })
+const mockNavigate = vi.fn();
 
-  afterEach(() => {
-    vi.restoreAllMocks()
-  })
+vi.mock('../routes', () => {
+  return {
+    Route: {
+      useSearch: () => ({
+        limit: 4,
+        filter: localStorage.getItem(SEARCH_KEY) || '',
+        page: 1,
+      }),
+      useNavigate: () => mockNavigate,
+    },
+  };
+});
+
+beforeEach(() => {
+  vi.restoreAllMocks()
+  vi.clearAllMocks()
+  localStorage.clear()
+})
+
+beforeAll(() => {
+  window.scrollTo = vi.fn()
+})
+
+
+describe('HomePage Component - Integration Tests', () => {
 
   it('makes initial API call on component mount', async () => {
     const fetchMock = vi
-      .spyOn(global, 'fetch')
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList }) } as Response)
+      .spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList.slice(0, 1) }) } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonDetail } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonSpecies } as Response)
 
@@ -47,21 +63,21 @@ describe('HomePage Component - Integration Tests', () => {
     localStorage.setItem(SEARCH_KEY, 'bulb')
 
     const fetchMock = vi
-      .spyOn(global, 'fetch')
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList }) } as Response)
+      .spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList.slice(0, 1) }) } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonDetail } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonSpecies } as Response)
 
     render(<HomePage />)
-
+    await waitFor(() => {expect(screen.queryByText('Loading...')).not.toBeInTheDocument();});
     await waitFor(() => expect(screen.getByText('bulbasaur')).toBeInTheDocument())
     expect(screen.getByDisplayValue('bulb')).toBeInTheDocument()
     expect(fetchMock).toHaveBeenCalledTimes(3)
   })
 
   it('manages loading states during API calls', async () => {
-    vi.spyOn(global, 'fetch')
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList }) } as Response)
+    vi.spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList.slice(0, 1) }) } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonDetail } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonSpecies } as Response)
 
@@ -76,11 +92,26 @@ describe('HomePage Component - Integration Tests', () => {
 
 describe('HomePage Component - API Integration Tests', () => {
   it('calls API with correct parameters', async () => {
-    const fetchMock = vi
-      .spyOn(global, 'fetch')
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList }) } as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonDetail } as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonSpecies } as Response)
+    const fetchMock = vi.spyOn(globalThis, 'fetch')
+
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        results: mockPokemonList,
+      }),
+    } as Response)
+
+    mockPokemonDetails.forEach((pokemon) => {
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => pokemon,
+      } as Response)
+
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockPokemonSpecies,
+      } as Response)
+    })
 
     render(<HomePage />)
 
@@ -92,7 +123,7 @@ describe('HomePage Component - API Integration Tests', () => {
   })
 
   it('handles successful API responses', async () => {
-    vi.spyOn(global, 'fetch')
+    vi.spyOn(globalThis, 'fetch')
       .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList }) } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonDetail } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonSpecies } as Response)
@@ -104,7 +135,7 @@ describe('HomePage Component - API Integration Tests', () => {
   })
 
   it('handles API error responses', async () => {
-    vi.spyOn(global, 'fetch').mockResolvedValueOnce({ ok: false, status: 500, json: async () => ({}) } as Response)
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: false, status: 500, json: async () => ({}) } as Response)
 
     render(<HomePage />)
 
@@ -113,7 +144,7 @@ describe('HomePage Component - API Integration Tests', () => {
   })
 
   it('sets error state when initial fetch rejects with non-AbortError', async () => {
-    vi.spyOn(global, 'fetch').mockRejectedValueOnce(new Error('Network failed'))
+    vi.spyOn(globalThis, 'fetch').mockRejectedValueOnce(new Error('Network failed'))
 
     render(<HomePage />)
 
@@ -121,8 +152,9 @@ describe('HomePage Component - API Integration Tests', () => {
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument()
   })
 
+
   it('displays error when pokemon detail fetch fails', async () => {
-    vi.spyOn(global, 'fetch')
+    vi.spyOn(globalThis, 'fetch')
       .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList }) } as Response)
       .mockResolvedValueOnce({ ok: false, status: 500, json: async () => ({}) } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonSpecies } as Response)
@@ -134,7 +166,7 @@ describe('HomePage Component - API Integration Tests', () => {
   })
 
   it('displays error when pokemon species fetch fails', async () => {
-    vi.spyOn(global, 'fetch')
+    vi.spyOn(globalThis, 'fetch')
       .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList }) } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonDetail } as Response)
       .mockResolvedValueOnce({ ok: false, status: 404, json: async () => ({}) } as Response)
@@ -148,7 +180,7 @@ describe('HomePage Component - API Integration Tests', () => {
 
 describe('HomePage Component - State Management Tests', () => {
   it('updates component state based on API responses', async () => {
-    vi.spyOn(global, 'fetch')
+    vi.spyOn(globalThis, 'fetch')
       .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList }) } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonDetail } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonSpecies } as Response)
@@ -167,7 +199,7 @@ describe('HomePage Component - State Management Tests', () => {
 
     localStorage.setItem(SEARCH_KEY, 'bulb')
 
-    vi.spyOn(global, 'fetch')
+    vi.spyOn(globalThis, 'fetch')
       .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockFullList }) } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonDetail } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonSpecies } as Response)
@@ -188,3 +220,112 @@ describe('HomePage Component - State Management Tests', () => {
     expect(screen.queryByText('bulbasaur')).not.toBeInTheDocument()
   })
 })
+
+describe('HomePage - Pagination (handlePageChange)', () => {
+  it('should change page, trigger navigate with correct search params, and scroll to top', async () => {
+    localStorage.setItem(SEARCH_KEY, 'bulb')
+
+    const fetchMock = vi.spyOn(globalThis, 'fetch')
+
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        results: mockPokemonList,
+      }),
+    } as Response)
+
+    mockPokemonDetails.forEach((pokemon) => {
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => pokemon,
+      } as Response)
+
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockPokemonSpecies,
+      } as Response)
+    })
+
+    render(<HomePage />);
+
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    });
+
+
+    const pageTwoButton = screen.getByRole('button', { name: /2/i });
+
+
+    fireEvent.click(pageTwoButton);
+
+
+    expect(mockNavigate).toHaveBeenCalledTimes(1);
+    expect(mockNavigate).toHaveBeenCalledWith({
+      search: {
+        filter: 'bulb',
+        page: 2,
+        limit: 4,
+      },
+    });
+
+
+    expect(window.scrollTo).toHaveBeenCalledTimes(1);
+    expect(window.scrollTo).toHaveBeenCalledWith({
+      top: 0,
+      behavior: 'smooth',
+    });
+  });
+});
+
+describe('HomePage - Items Per Page (handleSelectCount)', () => {
+  it('should change items per page limit, reset page to 1, trigger navigate, and scroll to top', async () => {
+    localStorage.setItem(SEARCH_KEY, 'bulb');
+
+    const fetchMock = vi.spyOn(globalThis, 'fetch');
+
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        results: mockPokemonList,
+      }),
+    } as Response);
+
+    mockPokemonDetails.forEach((pokemon) => {
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => pokemon,
+      } as Response);
+
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockPokemonSpecies,
+      } as Response);
+    });
+
+    render(<HomePage />);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    });
+
+    const selectElement = screen.getByRole('combobox');
+
+    fireEvent.change(selectElement, { target: { value: '8' } });
+
+    expect(mockNavigate).toHaveBeenCalledTimes(1);
+    expect(mockNavigate).toHaveBeenCalledWith({
+      search: {
+        filter: 'bulb',
+        page: 1,
+        limit: 8,
+      },
+    });
+
+    expect(window.scrollTo).toHaveBeenCalledTimes(1);
+    expect(window.scrollTo).toHaveBeenCalledWith({
+      top: 0,
+      behavior: 'smooth',
+    });
+  });
+});

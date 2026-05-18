@@ -17,7 +17,6 @@ describe('App - Router Integration Tests', () => {
 
     render(<RouterProvider router={router} />)
 
-    // Проверяем что корневой layout отрендерен
     await waitFor(() => {
     expect(screen.getByRole('banner')).toBeInTheDocument()  // Header
   })

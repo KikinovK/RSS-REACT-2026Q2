@@ -1,25 +1,37 @@
-/* eslint-disable react-refresh/only-export-components */
-import { createFileRoute } from '@tanstack/react-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import SearchSection from '../components/SearchSection';
 import ResultsSection from '../components/ResultsSection';
 import ProgressBar from '../components/ui/ProgressBar';
+import Pagination from '../components/ui/Pagination';
 import { fetchAllPokemon, fetchPokemonResult } from '../services/pokemonService';
+import { useLocalStorage } from '../utils/useLocalStorage';
+import { LIMIT_KEY, OPTIONS_COUNT_ITEMS, PAGE_KEY, SEARCH_KEY } from '../utils/const';
+import SelectCountItem from '../components/ui/SelectCountItem';
+import { Route } from '../routes';
 import type { PokemonListItem } from '../types/pokemon';
 import type { SearchResult } from '../types/SearchResult';
-import { useLocalStorage } from '../utils/useLocalStorage';
-import { SEARCH_KEY } from '../utils/const';
+import { CountItem } from '../types/CoutItem';
 
-export const HomePage = () => {
+const HomePage = () => {
   const [allPokemon, setAllPokemon] = useState<PokemonListItem[]>([]);
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [searchQuery, setSearchQuery] = useLocalStorage<string>(SEARCH_KEY, '');
+  const {
+    limit: itemsPerPage,
+    filter: searchQuery,
+    page: currentPage
+  } = Route.useSearch();
+  const navigate = Route.useNavigate()
+
+  const [ , setItemsPerPage] = useLocalStorage<CountItem>(LIMIT_KEY, OPTIONS_COUNT_ITEMS[0]);
+  const [ , setSearchQuery] = useLocalStorage<string>(SEARCH_KEY, '');
+  const [ , setCurrentPage] = useLocalStorage<number>(PAGE_KEY, 1);
 
   const abortControllerRef = useRef<AbortController | null>(null);
   const isInitialMount = useRef(true);
+
 
   const fetchResults = useCallback (async (allPokemon: PokemonListItem[], query: string) => {
     if (abortControllerRef.current) {
@@ -30,16 +42,14 @@ export const HomePage = () => {
     abortControllerRef.current = controller;
 
     const normalized = query.toLowerCase();
-    const filtered = normalized
-      ? allPokemon.filter((p) => p.name.includes(normalized))
-      : allPokemon.slice(0, 20);
+    const filtered = allPokemon.filter((p) => p.name.includes(normalized));
 
     setIsLoading(true);
     setError(null);
 
     try {
       const settled = await Promise.allSettled(
-        filtered.slice(0, 20).map((item) => fetchPokemonResult(item, controller.signal))
+        filtered.map((item) => fetchPokemonResult(item, controller.signal))
       );
 
       const successfulResults = settled
@@ -89,18 +99,49 @@ export const HomePage = () => {
 
     isInitialMount.current = false;
     setSearchQuery(query);
+    navigate({ search: { filter: query, page: 1, limit: itemsPerPage } });
     fetchResults(allPokemon, query);
   };
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    navigate({ search: { filter: searchQuery, page, limit: itemsPerPage } });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSelectCount = (count: CountItem) => {
+    if (count === itemsPerPage) return;
+
+    setItemsPerPage(count);
+    navigate({ search: { filter: searchQuery, page: 1, limit: count } });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const totalPages = Math.ceil(results.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedResults = results.slice(startIndex, startIndex + itemsPerPage);
+  console.log('Paginated Results:', paginatedResults);
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 pb-2">
       <ProgressBar isLoading={isLoading} />
       <SearchSection onSearch={handleSearch} />
-      <ResultsSection results={results} isLoading={isLoading} error={error} />
+      <ResultsSection results={paginatedResults} isLoading={isLoading} error={error} />
+      {totalPages > 1 && !isLoading && (
+        <div className="flex justify-center gap-8 items-center">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+          <SelectCountItem
+            defaultCount={itemsPerPage}
+            onSelect={handleSelectCount}
+          />
+        </div>
+      )}
     </div>
   );
-}
+};
 
-export const Route = createFileRoute('/')({
-  component: HomePage,
-});
+export default HomePage;
