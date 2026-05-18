@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import SearchInput from './ui/SearchInput';
 import Button from './ui/Button';
 import SearchIcon from '../assets/icons/search.svg?react';
-import { useLocalStorage } from '../utils/useLocalStorage';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 import { SEARCH_KEY } from '../utils/const';
 
 interface SearchBarProps {

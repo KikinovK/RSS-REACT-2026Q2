@@ -4,7 +4,7 @@ import ResultsSection from '../components/ResultsSection';
 import ProgressBar from '../components/ui/ProgressBar';
 import Pagination from '../components/ui/Pagination';
 import { fetchAllPokemon, fetchPokemonResult } from '../services/pokemonService';
-import { useLocalStorage } from '../utils/useLocalStorage';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 import { LIMIT_KEY, OPTIONS_COUNT_ITEMS, PAGE_KEY, SEARCH_KEY } from '../utils/const';
 import SelectCountItem from '../components/ui/SelectCountItem';
 import { Route } from '../routes/pokemons';
