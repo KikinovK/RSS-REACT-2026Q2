@@ -4,12 +4,11 @@ interface PaginationProps {
   currentPage: number
   totalPages: number
   onPageChange: (page: number) => void
-  isLoading?: boolean
 }
 
 const BASE_BUTTON_STYLES = "border border-stardust/30 text-stardust hover:bg-stardust/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors";
 
-const Pagination = ({ currentPage, totalPages, onPageChange, isLoading = false }: PaginationProps) => {
+const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
   const getPageNumbers = () => {
     const maxButtons = 5
     const halfMax = Math.floor(maxButtons / 2)
@@ -30,7 +29,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, isLoading = false }
 
       <Button
         onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1 || isLoading}
+        disabled={currentPage === 1}
         className={BASE_BUTTON_STYLES}
         ariaLabel="Previous page"
       >
@@ -41,7 +40,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange, isLoading = false }
         <>
           <Button
             onClick={() => onPageChange(1)}
-            disabled={isLoading}
             className={BASE_BUTTON_STYLES}
             ariaLabel="Page 1"
           >
@@ -55,7 +53,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange, isLoading = false }
         <Button
           key={page}
           onClick={() => onPageChange(page)}
-          disabled={isLoading}
           className={`border transition-colors disabled:cursor-not-allowed ${
             currentPage === page
               ? 'bg-guidepost-green text-deep-space border-guidepost-green font-semibold'
@@ -73,7 +70,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange, isLoading = false }
           {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && <span className="text-stardust/50">...</span>}
           <Button
             onClick={() => onPageChange(totalPages)}
-            disabled={isLoading}
             className={BASE_BUTTON_STYLES}
             ariaLabel={`Page ${totalPages}`}
           >
@@ -84,7 +80,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, isLoading = false }
 
       <Button
         onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages || isLoading}
+        disabled={currentPage === totalPages}
         className={BASE_BUTTON_STYLES}
         ariaLabel="Next page"
       >

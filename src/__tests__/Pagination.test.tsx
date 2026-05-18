@@ -11,7 +11,6 @@ describe('Pagination - Rendering', () => {
         currentPage={2}
         totalPages={5}
         onPageChange={onPageChangeMock}
-        isLoading={false}
       />
     );
 
@@ -34,7 +33,6 @@ describe('Pagination - Rendering', () => {
         currentPage={2}
         totalPages={5}
         onPageChange={onPageChangeMock}
-        isLoading={false}
       />
     );
 
@@ -82,23 +80,6 @@ describe('Pagination - Rendering', () => {
     expect(screen.getByText('1')).toBeInTheDocument()
     expect(screen.getByText('2')).toBeInTheDocument()
     expect(screen.getByText('3')).toBeInTheDocument()
-  })
-
-  it('disables buttons when loading', () => {
-    render(
-      <Pagination
-        currentPage={5}
-        totalPages={10}
-        onPageChange={() => {}}
-        isLoading
-      />
-    )
-
-    const buttons = screen.getAllByRole('button')
-
-    buttons.forEach(btn => {
-      expect(btn).toBeDisabled()
-    })
   })
 
   it('disables prev on first page and next on last page', () => {
