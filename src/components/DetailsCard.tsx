@@ -33,7 +33,6 @@ const DetailsCard = () => {
     init();
 
     return () => controller.abort();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [detailId]);
 
   const pokemonImage =
