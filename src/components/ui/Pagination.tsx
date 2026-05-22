@@ -25,7 +25,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) 
   const pageNumbers = getPageNumbers()
 
   return (
-    <div className="flex items-center justify-center gap-2">
+    <div className="flex items-center justify-center flex-wrap gap-2">
 
       <Button
         onClick={() => onPageChange(currentPage - 1)}
