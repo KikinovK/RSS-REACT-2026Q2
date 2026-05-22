@@ -1,5 +1,5 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
-import productsSearchSchema from '../utils/productsSearchSchema'
+import { createFileRoute, redirect } from '@tanstack/react-router';
+import productsSearchSchema from '../utils/productsSearchSchema';
 
 export const Route = createFileRoute('/')({
   validateSearch: (search) => productsSearchSchema.parse(search),
@@ -7,6 +7,6 @@ export const Route = createFileRoute('/')({
     throw redirect({
       to: '/pokemons',
       search,
-    })
+    });
   },
-})
+});

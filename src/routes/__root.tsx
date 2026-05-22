@@ -17,7 +17,7 @@ const RootLayout = () => {
       </div>
     </ErrorBoundary>
   );
-}
+};
 
 export const Route = createRootRoute({
   component: RootLayout,

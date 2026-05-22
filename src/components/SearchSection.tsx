@@ -14,6 +14,6 @@ const SearchSection = ({ onSearch, query }: SearchSectionProps) => {
       <SearchBar onSearch={onSearch} query={query} />
     </section>
   );
-}
+};
 
 export default SearchSection;

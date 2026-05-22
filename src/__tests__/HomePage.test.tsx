@@ -1,48 +1,47 @@
-import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import HomePage from '../pages/HomePage'
-import { SEARCH_KEY } from '../utils/const'
-import mockPokemonList from '../__mocks__/list'
-import mockPokemonDetails from '../__mocks__/details'
-import { AnchorHTMLAttributes, ReactNode } from 'react'
+import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import HomePage from '../pages/HomePage';
+import { SEARCH_KEY } from '../utils/const';
+import mockPokemonList from '../__mocks__/list';
+import mockPokemonDetails from '../__mocks__/details';
+import { AnchorHTMLAttributes, ReactNode } from 'react';
 
-
-const mockPokemonDetail = mockPokemonDetails[0]
+const mockPokemonDetail = mockPokemonDetails[0];
 const mockPokemonSpecies = {
   flavor_text_entries: [
     { language: { name: 'en' }, flavor_text: 'A strange seed was planted on its back at birth.' },
   ],
-}
+};
 
 const getMockFetch = (url: string) => {
-      if (url.includes('/pokemon?') || url.endsWith('/pokemon')) {
-        return Promise.resolve({
-          ok: true,
-          json: async () => ({ results: mockPokemonList })
-        } as Response);
-      }
+  if (url.includes('/pokemon?') || url.endsWith('/pokemon')) {
+    return Promise.resolve({
+      ok: true,
+      json: async () => ({ results: mockPokemonList }),
+    } as Response);
+  }
 
-      if (url.includes('/pokemon-species/')) {
-        return Promise.resolve({
-          ok: true,
-          json: async () => mockPokemonSpecies
-        } as Response);
-      }
+  if (url.includes('/pokemon-species/')) {
+    return Promise.resolve({
+      ok: true,
+      json: async () => mockPokemonSpecies,
+    } as Response);
+  }
 
-      if (url.includes('/pokemon/')) {
-        const foundPokemon = mockPokemonDetails.find((p) =>
-          url.includes(`/${p.name}`) || url.includes(`/${p.id}`)
-        );
+  if (url.includes('/pokemon/')) {
+    const foundPokemon = mockPokemonDetails.find(
+      (p) => url.includes(`/${p.name}`) || url.includes(`/${p.id}`)
+    );
 
-        return Promise.resolve({
-          ok: true,
-          json: async () => foundPokemon || mockPokemonDetails[0]
-        } as Response);
-      }
+    return Promise.resolve({
+      ok: true,
+      json: async () => foundPokemon || mockPokemonDetails[0],
+    } as Response);
+  }
 
-      return Promise.reject(new Error(`Unhandled fetch call to: ${url}`));
-    };
+  return Promise.reject(new Error(`Unhandled fetch call to: ${url}`));
+};
 
 const mockNavigate = vi.fn();
 
@@ -63,24 +62,24 @@ vi.mock('@tanstack/react-router', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@tanstack/react-router')>();
 
   interface MockLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
-    children?: ReactNode
-    to?: string
-    params?: Record<string, unknown>
-    search?: Record<string, unknown>
+    children?: ReactNode;
+    to?: string;
+    params?: Record<string, unknown>;
+    search?: Record<string, unknown>;
   }
 
   return {
     ...actual,
     Link: ({ children, to, params, search, ...props }: MockLinkProps) => {
-      const serializedParams = params ? JSON.stringify(params) : ''
-      const serializedSearch = search ? JSON.stringify(search) : ''
-      const fakeHref = to ? `${to}${serializedParams}${serializedSearch}` : '#'
+      const serializedParams = params ? JSON.stringify(params) : '';
+      const serializedSearch = search ? JSON.stringify(search) : '';
+      const fakeHref = to ? `${to}${serializedParams}${serializedSearch}` : '#';
 
       return (
         <a href={fakeHref} {...props}>
           {children}
         </a>
-      )
+      );
     },
     Outlet: () => <div data-testid="router-outlet" />,
     useMatchRoute: () => {
@@ -95,147 +94,177 @@ vi.mock('@tanstack/react-router', async (importOriginal) => {
 });
 
 beforeEach(() => {
-  vi.restoreAllMocks()
-  vi.clearAllMocks()
-  localStorage.clear()
+  vi.restoreAllMocks();
+  vi.clearAllMocks();
+  localStorage.clear();
   vi.unstubAllGlobals();
-})
+});
 
 beforeAll(() => {
-  window.scrollTo = vi.fn()
-})
+  window.scrollTo = vi.fn();
+});
 
 afterEach(() => {
-  vi.unstubAllGlobals()
-})
+  vi.unstubAllGlobals();
+});
 
 describe('HomePage Component - Integration Tests', () => {
-
   it('makes initial API call on component mount', async () => {
     const fetchMock = vi.fn(getMockFetch);
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />)
+    render(<HomePage />);
 
-    expect(screen.getByText('Loading...')).toBeInTheDocument()
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
 
-    await waitFor(() => expect(screen.getByText('bulbasaur')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText('bulbasaur')).toBeInTheDocument());
 
-    expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('https://pokeapi.co/api/v2/pokemon?limit=2000'), expect.any(Object))
-    expect(fetchMock).toHaveBeenCalledTimes(9)
-  })
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('https://pokeapi.co/api/v2/pokemon?limit=2000'),
+      expect.any(Object)
+    );
+    expect(fetchMock).toHaveBeenCalledTimes(9);
+  });
 
   it('handles search term from localStorage on initial load', async () => {
-    localStorage.setItem(SEARCH_KEY, 'bulb')
+    localStorage.setItem(SEARCH_KEY, 'bulb');
 
     const fetchMock = vi.fn(getMockFetch);
 
     vi.stubGlobal('fetch', fetchMock);
 
-
-    render(<HomePage />)
-    await waitFor(() => {expect(screen.queryByText('Loading...')).not.toBeInTheDocument();});
-    await waitFor(() => expect(screen.getByText('bulbasaur')).toBeInTheDocument())
-    expect(screen.getByDisplayValue('bulb')).toBeInTheDocument()
-    expect(fetchMock).toHaveBeenCalledTimes(9)
-  })
+    render(<HomePage />);
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    });
+    await waitFor(() => expect(screen.getByText('bulbasaur')).toBeInTheDocument());
+    expect(screen.getByDisplayValue('bulb')).toBeInTheDocument();
+    expect(fetchMock).toHaveBeenCalledTimes(9);
+  });
 
   it('manages loading states during API calls', async () => {
     const fetchMock = vi.fn(getMockFetch);
 
     vi.stubGlobal('fetch', fetchMock);
 
+    render(<HomePage />);
 
-    render(<HomePage />)
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
 
-    expect(screen.getByText('Loading...')).toBeInTheDocument()
-
-    await waitFor(() => expect(screen.queryByText('Loading...')).not.toBeInTheDocument())
-    expect(screen.getByText('bulbasaur')).toBeInTheDocument()
-  })
-})
+    await waitFor(() => expect(screen.queryByText('Loading...')).not.toBeInTheDocument());
+    expect(screen.getByText('bulbasaur')).toBeInTheDocument();
+  });
+});
 
 describe('HomePage Component - API Integration Tests', () => {
   it('calls API with correct parameters', async () => {
-    const fetchMock = vi.fn(getMockFetch)
+    const fetchMock = vi.fn(getMockFetch);
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />)
+    render(<HomePage />);
 
     await screen.findByText('bulbasaur');
 
-    expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('https://pokeapi.co/api/v2/pokemon?limit=2000'), expect.any(Object))
-    expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('https://pokeapi.co/api/v2/pokemon/1'), expect.any(Object))
-    expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('https://pokeapi.co/api/v2/pokemon-species/1'), expect.any(Object))
-  })
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('https://pokeapi.co/api/v2/pokemon?limit=2000'),
+      expect.any(Object)
+    );
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('https://pokeapi.co/api/v2/pokemon/1'),
+      expect.any(Object)
+    );
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('https://pokeapi.co/api/v2/pokemon-species/1'),
+      expect.any(Object)
+    );
+  });
 
   it('handles successful API responses', async () => {
-    const fetchMock = vi.fn()
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList.slice(0, 1) }) } as Response)
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ results: mockPokemonList.slice(0, 1) }),
+      } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonDetail } as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonSpecies } as Response)
+      .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonSpecies } as Response);
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />)
+    render(<HomePage />);
 
-    await waitFor(() => expect(screen.getByText('bulbasaur')).toBeInTheDocument())
-    expect(screen.getByText('A strange seed was planted on its back at birth.')).toBeInTheDocument()
-  })
+    await waitFor(() => expect(screen.getByText('bulbasaur')).toBeInTheDocument());
+    expect(
+      screen.getByText('A strange seed was planted on its back at birth.')
+    ).toBeInTheDocument();
+  });
 
   it('handles API error responses', async () => {
-    const fetchMock = vi.fn().mockResolvedValueOnce({ ok: false, status: 500, json: async () => ({}) } as Response)
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: false, status: 500, json: async () => ({}) } as Response);
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />)
+    render(<HomePage />);
 
-    await waitFor(() => expect(screen.getByText(/Failed to load Pokémon list/i)).toBeInTheDocument())
-    expect(screen.queryByText('Loading...')).not.toBeInTheDocument()
-  })
+    await waitFor(() =>
+      expect(screen.getByText(/Failed to load Pokémon list/i)).toBeInTheDocument()
+    );
+    expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+  });
 
   it('sets error state when initial fetch rejects with non-AbortError', async () => {
-    const fetchMock = vi.fn().mockRejectedValueOnce(new Error('Network failed'))
+    const fetchMock = vi.fn().mockRejectedValueOnce(new Error('Network failed'));
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />)
+    render(<HomePage />);
 
-    await waitFor(() => expect(screen.getByText('Network failed')).toBeInTheDocument())
-    expect(screen.queryByText('Loading...')).not.toBeInTheDocument()
-  })
-
+    await waitFor(() => expect(screen.getByText('Network failed')).toBeInTheDocument());
+    expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+  });
 
   it('displays error when pokemon detail fetch fails', async () => {
-    const fetchMock = vi.fn()
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList.slice(0, 1) }) } as Response)
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ results: mockPokemonList.slice(0, 1) }),
+      } as Response)
       .mockResolvedValueOnce({ ok: false, status: 500, json: async () => ({}) } as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonSpecies } as Response)
+      .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonSpecies } as Response);
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />)
+    render(<HomePage />);
 
-    await waitFor(() => expect(screen.getByText(/Failed to load bulbasaur/i)).toBeInTheDocument())
-    expect(screen.queryByText('Loading...')).not.toBeInTheDocument()
-  })
+    await waitFor(() => expect(screen.getByText(/Failed to load bulbasaur/i)).toBeInTheDocument());
+    expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+  });
 
   it('displays error when pokemon species fetch fails', async () => {
-    const fetchMock = vi.fn()
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList.slice(0, 1) }) } as Response)
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ results: mockPokemonList.slice(0, 1) }),
+      } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonDetail } as Response)
-      .mockResolvedValueOnce({ ok: false, status: 404, json: async () => ({}) } as Response)
+      .mockResolvedValueOnce({ ok: false, status: 404, json: async () => ({}) } as Response);
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />)
+    render(<HomePage />);
 
-    await waitFor(() => expect(screen.getByText(/Failed to load species for bulbasaur/i)).toBeInTheDocument())
-    expect(screen.queryByText('Loading...')).not.toBeInTheDocument()
-  })
-})
+    await waitFor(() =>
+      expect(screen.getByText(/Failed to load species for bulbasaur/i)).toBeInTheDocument()
+    );
+    expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+  });
+});
 
 describe('HomePage Component - State Management Tests', () => {
   it('updates component state based on API responses', async () => {
@@ -243,37 +272,37 @@ describe('HomePage Component - State Management Tests', () => {
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />)
+    render(<HomePage />);
 
-    await waitFor(() => expect(screen.queryByText('Loading...')).not.toBeInTheDocument())
-    expect(screen.getByText('bulbasaur')).toBeInTheDocument()
-  })
+    await waitFor(() => expect(screen.queryByText('Loading...')).not.toBeInTheDocument());
+    expect(screen.getByText('bulbasaur')).toBeInTheDocument();
+  });
 
   it('manages search term state correctly', async () => {
-    localStorage.setItem(SEARCH_KEY, 'bulb')
+    localStorage.setItem(SEARCH_KEY, 'bulb');
 
     const fetchMock = vi.fn(getMockFetch);
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />)
+    render(<HomePage />);
 
-    await waitFor(() => expect(screen.getByText('bulbasaur')).toBeInTheDocument())
-    expect(screen.getByDisplayValue('bulb')).toBeInTheDocument()
+    await waitFor(() => expect(screen.getByText('bulbasaur')).toBeInTheDocument());
+    expect(screen.getByDisplayValue('bulb')).toBeInTheDocument();
 
-    const input = screen.getByRole('textbox', { name: 'Search Pokémon' })
-    await userEvent.clear(input)
-    await userEvent.type(input, 'bamon')
-    await userEvent.click(screen.getByRole('button', { name: 'Search' }))
+    const input = screen.getByRole('textbox', { name: 'Search Pokémon' });
+    await userEvent.clear(input);
+    await userEvent.type(input, 'bamon');
+    await userEvent.click(screen.getByRole('button', { name: 'Search' }));
 
-    await waitFor(() => expect(screen.getByText('bulbamon')).toBeInTheDocument())
-    expect(screen.queryByText('bulbasaur')).not.toBeInTheDocument()
-  })
-})
+    await waitFor(() => expect(screen.getByText('bulbamon')).toBeInTheDocument());
+    expect(screen.queryByText('bulbasaur')).not.toBeInTheDocument();
+  });
+});
 
 describe('HomePage - Pagination (handlePageChange)', () => {
   it('should change page, trigger navigate with correct search params, and scroll to top', async () => {
-    localStorage.setItem(SEARCH_KEY, 'bulb')
+    localStorage.setItem(SEARCH_KEY, 'bulb');
 
     const fetchMock = vi.fn(getMockFetch);
 

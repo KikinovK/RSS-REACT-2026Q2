@@ -7,11 +7,19 @@ const ResultCard = ({ id, name, description, image }: SearchResult) => {
   const currentSearch = Route.useSearch();
   return (
     <li className="bg-white/6 rounded-(--radius-cards) p-4 flex flex-col gap-3">
-      <Link to="/pokemons/$detailId" params={{ detailId: String(id) }} search={currentSearch} className="h-full w-full flex flex-col" aria-label={`View details for ${name}`} >
+      <Link
+        to="/pokemons/$detailId"
+        params={{ detailId: String(id) }}
+        search={currentSearch}
+        className="h-full w-full flex flex-col"
+        aria-label={`View details for ${name}`}
+      >
         <div className="relative w-full aspect-square">
           {image && <PokemonImage src={image} alt={name} />}
         </div>
-        <h3 className="mb-2 text-center text-heading-sm font-medium text-stardust capitalize">{name}</h3>
+        <h3 className="mb-2 text-center text-heading-sm font-medium text-stardust capitalize">
+          {name}
+        </h3>
         <p className="text-body-sm text-muted-text leading-relaxed">{description}</p>
       </Link>
     </li>

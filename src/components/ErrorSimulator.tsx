@@ -20,6 +20,6 @@ const ErrorSimulator = () => {
       Simulate error
     </Button>
   );
-}
+};
 
 export default ErrorSimulator;

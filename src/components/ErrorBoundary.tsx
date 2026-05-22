@@ -30,11 +30,7 @@ class ErrorBoundary extends Component<{ children: React.ReactNode }, ErrorBounda
             <span className="text-6xl">⚠️</span>
             <h2 className="text-heading font-noigrotesk text-stardust">Something went wrong</h2>
             <p className="text-body text-muted-text max-w-md">{this.state.error?.message}</p>
-            <Button
-              onClick={this.handleReset}
-              ariaLabel="Try again"
-              className="bg-guidepost-green"
-            >
+            <Button onClick={this.handleReset} ariaLabel="Try again" className="bg-guidepost-green">
               Try again
             </Button>
           </section>

@@ -1,4 +1,4 @@
-import { PokemonDetail } from "../types/pokemon";
+import { PokemonDetail } from '../types/pokemon';
 
 const mockPokemonDetails: PokemonDetail[] = [
   {

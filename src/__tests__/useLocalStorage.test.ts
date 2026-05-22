@@ -2,16 +2,15 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
-  const TEST_KEY = 'test-key';
-  const INITIAL_VALUE = 'initial-value';
+const TEST_KEY = 'test-key';
+const INITIAL_VALUE = 'initial-value';
 
-  beforeEach(() => {
-    localStorage.clear();
-    vi.restoreAllMocks();
-  });
+beforeEach(() => {
+  localStorage.clear();
+  vi.restoreAllMocks();
+});
 
 describe('useLocalStorage Hook', () => {
-
   it('should return initialValue if there is no data in localStorage yet', () => {
     const { result } = renderHook(() => useLocalStorage(TEST_KEY, INITIAL_VALUE));
 

@@ -1,1 +1,2 @@
-export const getStoredQuery = (keyStorage: string): string => localStorage.getItem(keyStorage) ?? '';
+export const getStoredQuery = (keyStorage: string): string =>
+  localStorage.getItem(keyStorage) ?? '';

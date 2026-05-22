@@ -47,8 +47,7 @@ export const fetchPokemonResult = async (
   };
 };
 
-export const fetchPokemonData = async (id: string,
-  signal: AbortSignal): Promise<PokemonData> => {
+export const fetchPokemonData = async (id: string, signal: AbortSignal): Promise<PokemonData> => {
   const res = await fetch(`${BASE}/pokemon/${id}`, { signal });
   if (!res.ok) throw new ApiError(res.status, 'Failed to load Pokémon details');
   return res.json() as Promise<PokemonData>;

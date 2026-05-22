@@ -18,11 +18,13 @@ const PokemonImage = ({ src, alt }: PokemonImageProps) => {
     setLoaded(true);
   };
 
-  const fallbackSrc = "https://placehold.co/400x400?text=No+Image&font=roboto&bg=ffffff&fg=000000";
+  const fallbackSrc = 'https://placehold.co/400x400?text=No+Image&font=roboto&bg=ffffff&fg=000000';
 
   return (
     <>
-      {!loaded && !error && <div className="absolute inset-0 bg-white/10 animate-pulse rounded-lg" />}
+      {!loaded && !error && (
+        <div className="absolute inset-0 bg-white/10 animate-pulse rounded-lg" />
+      )}
       <img
         src={error ? fallbackSrc : src}
         alt={alt}
@@ -32,6 +34,6 @@ const PokemonImage = ({ src, alt }: PokemonImageProps) => {
       />
     </>
   );
-}
+};
 
 export default PokemonImage;

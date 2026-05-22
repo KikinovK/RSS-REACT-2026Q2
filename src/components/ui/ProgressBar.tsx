@@ -2,8 +2,7 @@ interface ProgressBarProps {
   isLoading: boolean;
 }
 
-const ProgressBar = ({ isLoading }:ProgressBarProps) => {
-
+const ProgressBar = ({ isLoading }: ProgressBarProps) => {
   if (!isLoading) return null;
 
   return (
@@ -19,6 +18,6 @@ const ProgressBar = ({ isLoading }:ProgressBarProps) => {
       <div className="h-full bg-guidepost-green animate-[progress_1.5s_ease-in-out_infinite]" />
     </div>
   );
-}
+};
 
 export default ProgressBar;

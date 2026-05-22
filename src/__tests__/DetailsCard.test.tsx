@@ -4,7 +4,6 @@ import DetailsCard from '../components/DetailsCard';
 import { fetchPokemonData } from '../services/pokemonService';
 import { PokemonData } from '../types/pokemon';
 
-
 vi.mock('../services/pokemonService', () => ({
   fetchPokemonData: vi.fn(),
 }));
@@ -27,9 +26,7 @@ const mockPokemon: PokemonData = {
       },
     },
   },
-  types: [
-    { type: { name: 'electric' } },
-  ],
+  types: [{ type: { name: 'electric' } }],
   stats: [
     { base_stat: 35, stat: { name: 'hp' } },
     { base_stat: 55, stat: { name: 'attack' } },

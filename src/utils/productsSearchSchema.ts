@@ -1,4 +1,3 @@
-
 import { z } from 'zod';
 import { LIMIT_KEY, OPTIONS_COUNT_ITEMS, PAGE_KEY, SEARCH_KEY } from '../utils/const';
 import { getStoredQuery } from '../utils/storage';
@@ -35,9 +34,7 @@ const productsSearchSchema = z.object({
     .catch(() => getDefaultLimit())
     .transform((val) => val as CountItem),
 
-  filter: z
-    .string()
-    .catch(() => getDefaultFilter()),
+  filter: z.string().catch(() => getDefaultFilter()),
 });
 
 export default productsSearchSchema;
