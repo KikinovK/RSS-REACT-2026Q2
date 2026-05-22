@@ -18,6 +18,9 @@ export interface PokemonDetail {
       };
     };
   };
+  species: {
+    url: string;
+  };
 }
 
 export interface PokemonSpecies {

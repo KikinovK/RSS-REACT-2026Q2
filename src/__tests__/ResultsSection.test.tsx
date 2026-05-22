@@ -52,24 +52,24 @@ const mockResults: SearchResult[] = [
 
 describe('ResultsSection - Rendering', () => {
   it('renders correct number of items when data is provided', () => {
-    render(<ResultsSection results={mockResults} isLoading={false} error={null} />)
+    render(<ResultsSection results={mockResults} isLoading={false} errors={null} />)
     expect(screen.getAllByRole('listitem')).toHaveLength(3)
   })
 
   it('displays "no results" message when data array is empty', () => {
-    render(<ResultsSection results={[]} isLoading={false} error={null} />)
+    render(<ResultsSection results={[]} isLoading={false} errors={null} />)
     expect(screen.getByText('No results found.')).toBeInTheDocument()
   })
 
   it('shows loading state while fetching data', () => {
-    render(<ResultsSection results={[]} isLoading={true} error={null} />)
+    render(<ResultsSection results={[]} isLoading={true} errors={null} />)
     expect(screen.getByText('Loading...')).toBeInTheDocument()
   })
 })
 
 describe('ResultsSection - Data Display', () => {
   it('correctly displays item names and descriptions', () => {
-    render(<ResultsSection results={mockResults} isLoading={false} error={null} />)
+    render(<ResultsSection results={mockResults} isLoading={false} errors={null} />)
     expect(screen.getByText('bulbasaur')).toBeInTheDocument()
     expect(screen.getByText('A strange seed.')).toBeInTheDocument()
     expect(screen.getByText('charmander')).toBeInTheDocument()
@@ -80,7 +80,7 @@ describe('ResultsSection - Data Display', () => {
     const incompleteResults: SearchResult[] = [
       { id: '1', name: 'bulbasaur', description: '', image: '' },
     ]
-    render(<ResultsSection results={incompleteResults} isLoading={false} error={null} />)
+    render(<ResultsSection results={incompleteResults} isLoading={false} errors={null} />)
     expect(screen.getByText('bulbasaur')).toBeInTheDocument()
     expect(screen.getAllByRole('listitem')).toHaveLength(1)
   })
@@ -88,7 +88,7 @@ describe('ResultsSection - Data Display', () => {
 
 describe('ResultsSection - Error Handling', () => {
   it('displays error message when API call fails', () => {
-    render(<ResultsSection results={[]} isLoading={false} error="Server error. Please try again later." />)
+    render(<ResultsSection results={[]} isLoading={false} errors={["Server error. Please try again later."]} />)
     expect(screen.getByText('Server error. Please try again later.')).toBeInTheDocument()
   })
 
@@ -99,7 +99,7 @@ describe('ResultsSection - Error Handling', () => {
     [503, 'Service unavailable. Please try again later.'],
   ])('shows appropriate error message for HTTP %i status code', (status, expectedMessage) => {
     const error = new ApiError(status)
-    render(<ResultsSection results={[]} isLoading={false} error={error.message} />)
+    render(<ResultsSection results={[]} isLoading={false} errors={ [error.message] } />)
     expect(screen.getByText(expectedMessage)).toBeInTheDocument()
   })
 })

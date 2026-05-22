@@ -1,4 +1,6 @@
-const mockPokemonList = [
+import { PokemonListItem } from "../types/pokemon"
+
+const mockPokemonList: PokemonListItem[] = [
   { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1' },
   { name: 'bulbamon', url: 'https://pokeapi.co/api/v2/pokemon/2' },
   { name: 'bulbaflare', url: 'https://pokeapi.co/api/v2/pokemon/3' },

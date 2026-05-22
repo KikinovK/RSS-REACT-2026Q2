@@ -44,7 +44,7 @@ const DetailsCard = () => {
     <ProgressBar isLoading={isLoading} />
       <div className="bg-white/6 rounded-(--radius-cards) p-6 border border-white/10 max-w-md mx-auto flex flex-col gap-6 text-stardust">
         {isLoading && <p className="text-body text-muted-text">Loading...</p>}
-        {error && <ErrorMessage message={error|| 'Pokemon not found in the PokeAPI database'} />}
+        {error && <ErrorMessage messages={[error|| 'Pokemon not found in the PokeAPI database']} />}
         {!isLoading && !error && !pokemon && (
           <p className="text-body text-muted-text">No results found.</p>
         )}

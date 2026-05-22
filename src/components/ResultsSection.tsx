@@ -5,16 +5,16 @@ import type { SearchResult } from '../types/SearchResult';
 interface ResultsSectionProps {
   results: SearchResult[];
   isLoading: boolean;
-  error: string | null;
+  errors: string[] | null;
 }
 
-const ResultsSection  = ({ results, isLoading, error }: ResultsSectionProps) => {
+const ResultsSection  = ({ results, isLoading, errors }: ResultsSectionProps) => {
   return (
     <section className="w-full flex-1 px-8 py-6 flex flex-col gap-4">
       <h2 className="text-heading font-noigrotesk text-stardust">Results</h2>
       {isLoading && <p className="text-body text-muted-text">Loading...</p>}
-      {error && <ErrorMessage message={error} />}
-      {!isLoading && !error && results.length === 0 && (
+      {errors && <ErrorMessage messages={errors} />}
+      {!isLoading && !errors && results.length === 0 && (
         <p className="text-body text-muted-text">No results found.</p>
       )}
       {!isLoading && results.length > 0 && (

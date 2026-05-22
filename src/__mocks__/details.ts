@@ -1,4 +1,6 @@
-const mockPokemonDetails = [
+import { PokemonDetail } from "../types/pokemon";
+
+const mockPokemonDetails: PokemonDetail[] = [
   {
     id: 1,
     name: 'bulbasaur',
@@ -8,6 +10,9 @@ const mockPokemonDetails = [
           front_default: 'https://example.com/bulbasaur.png',
         },
       },
+    },
+    species: {
+      url: 'https://pokeapi.co/api/v2/pokemon-species/1/',
     },
   },
   {
@@ -20,6 +25,9 @@ const mockPokemonDetails = [
         },
       },
     },
+    species: {
+      url: 'https://pokeapi.co/api/v2/pokemon-species/2/',
+    },
   },
   {
     id: 3,
@@ -30,6 +38,9 @@ const mockPokemonDetails = [
           front_default: 'https://example.com/bulbaflare.png',
         },
       },
+    },
+    species: {
+      url: 'https://pokeapi.co/api/v2/pokemon-species/3/',
     },
   },
   {
@@ -42,6 +53,9 @@ const mockPokemonDetails = [
         },
       },
     },
+    species: {
+      url: 'https://pokeapi.co/api/v2/pokemon-species/4/',
+    },
   },
   {
     id: 5,
@@ -52,6 +66,9 @@ const mockPokemonDetails = [
           front_default: 'https://example.com/bulbabeast.png',
         },
       },
+    },
+    species: {
+      url: 'https://pokeapi.co/api/v2/pokemon-species/5/',
     },
   },
   {
@@ -64,6 +81,9 @@ const mockPokemonDetails = [
         },
       },
     },
+    species: {
+      url: 'https://pokeapi.co/api/v2/pokemon-species/6/',
+    },
   },
   {
     id: 7,
@@ -74,6 +94,9 @@ const mockPokemonDetails = [
           front_default: 'https://example.com/bulbadrake.png',
         },
       },
+    },
+    species: {
+      url: 'https://pokeapi.co/api/v2/pokemon-species/7/',
     },
   },
   {
@@ -86,6 +109,9 @@ const mockPokemonDetails = [
         },
       },
     },
+    species: {
+      url: 'https://pokeapi.co/api/v2/pokemon-species/8/',
+    },
   },
   {
     id: 9,
@@ -96,6 +122,9 @@ const mockPokemonDetails = [
           front_default: 'https://example.com/bulbawing.png',
         },
       },
+    },
+    species: {
+      url: 'https://pokeapi.co/api/v2/pokemon-species/9/',
     },
   },
   {
@@ -108,7 +137,10 @@ const mockPokemonDetails = [
         },
       },
     },
+    species: {
+      url: 'https://pokeapi.co/api/v2/pokemon-species/10/',
+    },
   },
-]
+];
 
-export default mockPokemonDetails
+export default mockPokemonDetails;

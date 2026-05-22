@@ -17,8 +17,9 @@ import Button from '../components/ui/Button';
 const HomePage = () => {
   const [allPokemon, setAllPokemon] = useState<PokemonListItem[]>([]);
   const [results, setResults] = useState<SearchResult[]>([]);
+  const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string[] | null>(null);
 
   const {
     limit: itemsPerPage,
@@ -39,7 +40,7 @@ const HomePage = () => {
   const isInitialMount = useRef(true);
 
 
-  const fetchResults = useCallback (async (allPokemon: PokemonListItem[], query: string) => {
+  const fetchResults = useCallback (async (allPokemon: PokemonListItem[], query: string, currentPage: number, itemsPerPage: number) => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
@@ -49,59 +50,101 @@ const HomePage = () => {
 
     const normalized = query.toLowerCase();
     const filtered = allPokemon.filter((p) => p.name.includes(normalized));
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const filteredPaginated = filtered.slice(startIndex, startIndex + itemsPerPage);
 
+    setTotalPages(Math.ceil(filtered.length / itemsPerPage));
     setIsLoading(true);
     setError(null);
 
     try {
       const settled = await Promise.allSettled(
-        filtered.map((item) => fetchPokemonResult(item, controller.signal))
+        filteredPaginated.map((item) => fetchPokemonResult(item, controller.signal))
       );
 
       const successfulResults = settled
         .filter((r): r is PromiseFulfilledResult<SearchResult> => r.status === 'fulfilled')
         .map((r) => r.value);
 
-      const firstError = settled.find(
+      const errors = settled.filter(
         (r): r is PromiseRejectedResult => r.status === 'rejected' && r.reason?.name !== 'AbortError'
-      );
+      ).map((r) => r.reason?.message);
 
       setResults(successfulResults);
-      if (firstError) setError(firstError.reason?.message);
+      if (errors.length > 0) setError((prev) => [...(prev ?? []), ...errors]);
     } catch (e) {
       if ((e as Error).name !== 'AbortError') {
-        setError((e as Error).message);
+        setError((prev) => [...(prev ?? []), (e as Error).message]);
       }
     } finally {
-      setIsLoading(false);
+      if (!controller.signal.aborted) {
+        setIsLoading(false);
+      }
     }
   }, []);
 
   useEffect(() => {
+    console.log('add to local storage')
     setItemsPerPage(itemsPerPage);
     setSearchQuery(searchQuery);
     setCurrentPage(currentPage);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [itemsPerPage, searchQuery, currentPage]);
+
+  useEffect(() => {
+    if (allPokemon.length > 0 ) return;
+
     const controller = new AbortController();
 
-    const init = async () => {
+    const loadAllPokemon = async () => {
+      console.log('loadAllPokemon')
       setIsLoading(true);
+
       try {
         const list = await fetchAllPokemon(controller.signal);
         setAllPokemon(list);
-        await fetchResults(list, searchQuery);
       } catch (e) {
         if ((e as Error).name !== 'AbortError') {
-          setError((e as Error).message);
+          setError((prev) => [...(prev ?? []), (e as Error).message]);
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadAllPokemon();
+
+    return () => controller.abort();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (allPokemon.length === 0) return;
+
+    const controller = new AbortController();
+
+    const runFiltering = async () => {
+      console.log('runFiltering')
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        await fetchResults(allPokemon, searchQuery, currentPage, itemsPerPage);
+      } catch (e) {
+        if ((e as Error).name !== 'AbortError') {
+          setError((prev) => [...(prev ?? []), (e as Error).message]);
+        }
+      } finally {
+        if (!controller.signal.aborted) {
           setIsLoading(false);
         }
       }
     };
 
-    init();
+    runFiltering();
 
     return () => controller.abort();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allPokemon, currentPage, itemsPerPage, searchQuery]);
 
   const handleSearch = (query: string) => {
     if (query === searchQuery && !isInitialMount.current) return;
@@ -109,7 +152,6 @@ const HomePage = () => {
     isInitialMount.current = false;
     setSearchQuery(query);
     navigate({ search: { filter: query, page: 1, limit: itemsPerPage } });
-    fetchResults(allPokemon, query);
   };
 
   const handlePageChange = (page: number) => {
@@ -137,17 +179,13 @@ const HomePage = () => {
     });
   };
 
-  const totalPages = Math.ceil(results.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedResults = results.slice(startIndex, startIndex + itemsPerPage);
-
   return (
     <div className="space-y-8 pb-2">
       <ProgressBar isLoading={isLoading} />
       <SearchSection onSearch={handleSearch} query={searchQuery}/>
-      <ResultsSection results={paginatedResults} isLoading={isLoading} error={error} />
+      <ResultsSection results={results} isLoading={isLoading} errors={error} />
       {totalPages > 1 && !isLoading && (
-        <div className="flex justify-center gap-8 items-center">
+        <div className="flex justify-center flex-wrap gap-8 items-center">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

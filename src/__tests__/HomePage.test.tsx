@@ -15,6 +15,35 @@ const mockPokemonSpecies = {
   ],
 }
 
+const getMockFetch = (url: string) => {
+      if (url.includes('/pokemon?') || url.endsWith('/pokemon')) {
+        return Promise.resolve({
+          ok: true,
+          json: async () => ({ results: mockPokemonList })
+        } as Response);
+      }
+
+      if (url.includes('/pokemon-species/')) {
+        return Promise.resolve({
+          ok: true,
+          json: async () => mockPokemonSpecies
+        } as Response);
+      }
+
+      if (url.includes('/pokemon/')) {
+        const foundPokemon = mockPokemonDetails.find((p) =>
+          url.includes(`/${p.name}`) || url.includes(`/${p.id}`)
+        );
+
+        return Promise.resolve({
+          ok: true,
+          json: async () => foundPokemon || mockPokemonDetails[0]
+        } as Response);
+      }
+
+      return Promise.reject(new Error(`Unhandled fetch call to: ${url}`));
+    };
+
 const mockNavigate = vi.fn();
 
 vi.mock('../routes/pokemons', () => {
@@ -69,21 +98,23 @@ beforeEach(() => {
   vi.restoreAllMocks()
   vi.clearAllMocks()
   localStorage.clear()
+  vi.unstubAllGlobals();
 })
 
 beforeAll(() => {
   window.scrollTo = vi.fn()
 })
 
+afterEach(() => {
+  vi.unstubAllGlobals()
+})
 
 describe('HomePage Component - Integration Tests', () => {
 
   it('makes initial API call on component mount', async () => {
-    const fetchMock = vi
-      .spyOn(globalThis, 'fetch')
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList.slice(0, 1) }) } as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonDetail } as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonSpecies } as Response)
+    const fetchMock = vi.fn(getMockFetch);
+
+    vi.stubGlobal('fetch', fetchMock);
 
     render(<HomePage />)
 
@@ -91,31 +122,30 @@ describe('HomePage Component - Integration Tests', () => {
 
     await waitFor(() => expect(screen.getByText('bulbasaur')).toBeInTheDocument())
 
-    expect(fetchMock).toHaveBeenCalledWith('https://pokeapi.co/api/v2/pokemon?limit=2000', expect.any(Object))
-    expect(fetchMock).toHaveBeenCalledTimes(3)
+    expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('https://pokeapi.co/api/v2/pokemon?limit=2000'), expect.any(Object))
+    expect(fetchMock).toHaveBeenCalledTimes(9)
   })
 
   it('handles search term from localStorage on initial load', async () => {
     localStorage.setItem(SEARCH_KEY, 'bulb')
 
-    const fetchMock = vi
-      .spyOn(globalThis, 'fetch')
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList.slice(0, 1) }) } as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonDetail } as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonSpecies } as Response)
+    const fetchMock = vi.fn(getMockFetch);
+
+    vi.stubGlobal('fetch', fetchMock);
+
 
     render(<HomePage />)
     await waitFor(() => {expect(screen.queryByText('Loading...')).not.toBeInTheDocument();});
     await waitFor(() => expect(screen.getByText('bulbasaur')).toBeInTheDocument())
     expect(screen.getByDisplayValue('bulb')).toBeInTheDocument()
-    expect(fetchMock).toHaveBeenCalledTimes(3)
+    expect(fetchMock).toHaveBeenCalledTimes(9)
   })
 
   it('manages loading states during API calls', async () => {
-    vi.spyOn(globalThis, 'fetch')
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList.slice(0, 1) }) } as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonDetail } as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonSpecies } as Response)
+    const fetchMock = vi.fn(getMockFetch);
+
+    vi.stubGlobal('fetch', fetchMock);
+
 
     render(<HomePage />)
 
@@ -128,41 +158,26 @@ describe('HomePage Component - Integration Tests', () => {
 
 describe('HomePage Component - API Integration Tests', () => {
   it('calls API with correct parameters', async () => {
-    const fetchMock = vi.spyOn(globalThis, 'fetch')
+    const fetchMock = vi.fn(getMockFetch)
 
-    fetchMock.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        results: mockPokemonList,
-      }),
-    } as Response)
-
-    mockPokemonDetails.forEach((pokemon) => {
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        json: async () => pokemon,
-      } as Response)
-
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockPokemonSpecies,
-      } as Response)
-    })
+    vi.stubGlobal('fetch', fetchMock);
 
     render(<HomePage />)
 
-    await waitFor(() => expect(screen.getByText('bulbasaur')).toBeInTheDocument())
+    await screen.findByText('bulbasaur');
 
-    expect(fetchMock).toHaveBeenCalledWith('https://pokeapi.co/api/v2/pokemon?limit=2000', expect.any(Object))
-    expect(fetchMock).toHaveBeenCalledWith('https://pokeapi.co/api/v2/pokemon/1', expect.any(Object))
-    expect(fetchMock).toHaveBeenCalledWith('https://pokeapi.co/api/v2/pokemon-species/bulbasaur', expect.any(Object))
+    expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('https://pokeapi.co/api/v2/pokemon?limit=2000'), expect.any(Object))
+    expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('https://pokeapi.co/api/v2/pokemon/1'), expect.any(Object))
+    expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('https://pokeapi.co/api/v2/pokemon-species/1'), expect.any(Object))
   })
 
   it('handles successful API responses', async () => {
-    vi.spyOn(globalThis, 'fetch')
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList }) } as Response)
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList.slice(0, 1) }) } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonDetail } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonSpecies } as Response)
+
+    vi.stubGlobal('fetch', fetchMock);
 
     render(<HomePage />)
 
@@ -171,7 +186,9 @@ describe('HomePage Component - API Integration Tests', () => {
   })
 
   it('handles API error responses', async () => {
-    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: false, status: 500, json: async () => ({}) } as Response)
+    const fetchMock = vi.fn().mockResolvedValueOnce({ ok: false, status: 500, json: async () => ({}) } as Response)
+
+    vi.stubGlobal('fetch', fetchMock);
 
     render(<HomePage />)
 
@@ -180,7 +197,9 @@ describe('HomePage Component - API Integration Tests', () => {
   })
 
   it('sets error state when initial fetch rejects with non-AbortError', async () => {
-    vi.spyOn(globalThis, 'fetch').mockRejectedValueOnce(new Error('Network failed'))
+    const fetchMock = vi.fn().mockRejectedValueOnce(new Error('Network failed'))
+
+    vi.stubGlobal('fetch', fetchMock);
 
     render(<HomePage />)
 
@@ -190,10 +209,12 @@ describe('HomePage Component - API Integration Tests', () => {
 
 
   it('displays error when pokemon detail fetch fails', async () => {
-    vi.spyOn(globalThis, 'fetch')
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList }) } as Response)
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList.slice(0, 1) }) } as Response)
       .mockResolvedValueOnce({ ok: false, status: 500, json: async () => ({}) } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonSpecies } as Response)
+
+    vi.stubGlobal('fetch', fetchMock);
 
     render(<HomePage />)
 
@@ -202,10 +223,12 @@ describe('HomePage Component - API Integration Tests', () => {
   })
 
   it('displays error when pokemon species fetch fails', async () => {
-    vi.spyOn(globalThis, 'fetch')
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList }) } as Response)
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList.slice(0, 1) }) } as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonDetail } as Response)
       .mockResolvedValueOnce({ ok: false, status: 404, json: async () => ({}) } as Response)
+
+    vi.stubGlobal('fetch', fetchMock);
 
     render(<HomePage />)
 
@@ -216,10 +239,9 @@ describe('HomePage Component - API Integration Tests', () => {
 
 describe('HomePage Component - State Management Tests', () => {
   it('updates component state based on API responses', async () => {
-    vi.spyOn(globalThis, 'fetch')
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockPokemonList.slice(0, 1) }) } as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonDetail } as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonSpecies } as Response)
+    const fetchMock = vi.fn(getMockFetch);
+
+    vi.stubGlobal('fetch', fetchMock);
 
     render(<HomePage />)
 
@@ -228,19 +250,11 @@ describe('HomePage Component - State Management Tests', () => {
   })
 
   it('manages search term state correctly', async () => {
-    const mockFullList = [
-      { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1' },
-      { name: 'ivysaur', url: 'https://pokeapi.co/api/v2/pokemon/2' }
-    ];
-
     localStorage.setItem(SEARCH_KEY, 'bulb')
 
-    vi.spyOn(globalThis, 'fetch')
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ results: mockFullList }) } as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonDetail } as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => mockPokemonSpecies } as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ id: 2, name: 'ivysaur', sprites: { other: { 'official-artwork': { front_default: 'https://example.com/ivysaur.png' } } } }) } as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ flavor_text_entries: [{ language: { name: 'en' }, flavor_text: 'When the bulb on its back grows large, it HomePageears to lose the ability to stand on its hind legs.' }] }) } as Response)
+    const fetchMock = vi.fn(getMockFetch);
+
+    vi.stubGlobal('fetch', fetchMock);
 
     render(<HomePage />)
 
@@ -249,10 +263,10 @@ describe('HomePage Component - State Management Tests', () => {
 
     const input = screen.getByRole('textbox', { name: 'Search Pokémon' })
     await userEvent.clear(input)
-    await userEvent.type(input, 'ivy')
+    await userEvent.type(input, 'bamon')
     await userEvent.click(screen.getByRole('button', { name: 'Search' }))
 
-    await waitFor(() => expect(screen.getByText('ivysaur')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText('bulbamon')).toBeInTheDocument())
     expect(screen.queryByText('bulbasaur')).not.toBeInTheDocument()
   })
 })
@@ -261,40 +275,19 @@ describe('HomePage - Pagination (handlePageChange)', () => {
   it('should change page, trigger navigate with correct search params, and scroll to top', async () => {
     localStorage.setItem(SEARCH_KEY, 'bulb')
 
-    const fetchMock = vi.spyOn(globalThis, 'fetch')
+    const fetchMock = vi.fn(getMockFetch);
 
-    fetchMock.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        results: mockPokemonList,
-      }),
-    } as Response)
-
-    mockPokemonDetails.forEach((pokemon) => {
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        json: async () => pokemon,
-      } as Response)
-
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockPokemonSpecies,
-      } as Response)
-    })
+    vi.stubGlobal('fetch', fetchMock);
 
     render(<HomePage />);
-
 
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
     });
 
-
     const pageTwoButton = screen.getByRole('button', { name: /2/i });
 
-
     fireEvent.click(pageTwoButton);
-
 
     expect(mockNavigate).toHaveBeenCalledTimes(1);
     expect(mockNavigate).toHaveBeenCalledWith({
@@ -304,7 +297,6 @@ describe('HomePage - Pagination (handlePageChange)', () => {
         limit: 4,
       },
     });
-
 
     expect(window.scrollTo).toHaveBeenCalledTimes(1);
     expect(window.scrollTo).toHaveBeenCalledWith({
@@ -318,26 +310,9 @@ describe('HomePage - Items Per Page (handleSelectCount)', () => {
   it('should change items per page limit, reset page to 1, trigger navigate, and scroll to top', async () => {
     localStorage.setItem(SEARCH_KEY, 'bulb');
 
-    const fetchMock = vi.spyOn(globalThis, 'fetch');
+    const fetchMock = vi.fn(getMockFetch);
 
-    fetchMock.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        results: mockPokemonList,
-      }),
-    } as Response);
-
-    mockPokemonDetails.forEach((pokemon) => {
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        json: async () => pokemon,
-      } as Response);
-
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockPokemonSpecies,
-      } as Response);
-    });
+    vi.stubGlobal('fetch', fetchMock);
 
     render(<HomePage />);
 

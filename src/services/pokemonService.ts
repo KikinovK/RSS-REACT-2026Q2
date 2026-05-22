@@ -21,16 +21,17 @@ export const fetchPokemonResult = async (
   item: PokemonListItem,
   signal: AbortSignal
 ): Promise<SearchResult> => {
-  const [detail, species] = await Promise.all([
-    fetch(item.url, { signal }).then((r) => {
-      if (!r.ok) throw new ApiError(r.status, `Failed to load ${item.name}`);
-      return r.json() as Promise<PokemonDetail>;
-    }),
-    fetch(`${BASE}/pokemon-species/${item.name}`, { signal }).then((r) => {
-      if (!r.ok) throw new ApiError(r.status, `Failed to load species for ${item.name}`);
-      return r.json() as Promise<PokemonSpecies>;
-    }),
-  ]);
+  const detailResponse = await fetch(item.url, { signal });
+  if (!detailResponse.ok) {
+    throw new ApiError(detailResponse.status, `Failed to load ${item.name}`);
+  }
+  const detail = await (detailResponse.json() as Promise<PokemonDetail>);
+
+  const speciesResponse = await fetch(detail.species.url, { signal });
+  if (!speciesResponse.ok) {
+    throw new ApiError(speciesResponse.status, `Failed to load species for ${item.name}`);
+  }
+  const species = await (speciesResponse.json() as Promise<PokemonSpecies>);
 
   const flavor = detail.sprites.other['official-artwork'].front_default;
   const description =
