@@ -1,0 +1,78 @@
+import { create } from 'zustand';
+// import { persist } from 'zustand/middleware';
+import { fetchAllPokemon, fetchPokemonResult } from '../api/pokemonApi';
+import { PokemonListItem } from '../types/pokemon';
+import { SearchResult } from '../types/SearchResult';
+
+interface PokemonState {
+  allPokemon: PokemonListItem[];
+  results: SearchResult[];
+  totalPages: number;
+  isLoading: boolean;
+  errors: string[] | null;
+  loadAllPokemon: (signal: AbortSignal) => Promise<void>;
+  filterAndFetch: (
+    query: string,
+    page: number,
+    limit: number,
+    signal: AbortSignal
+  ) => Promise<void>;
+  reset: () => void;
+}
+
+export const usePokemonStore = create<PokemonState>()((set, get) => ({
+  allPokemon: [],
+  results: [],
+  totalPages: 0,
+  isLoading: false,
+  errors: null,
+
+  loadAllPokemon: async (signal: AbortSignal) => {
+    set({ isLoading: true });
+    try {
+      const list = await fetchAllPokemon(signal);
+      set({ allPokemon: list, isLoading: false });
+    } catch (e) {
+      set({ errors: [...(get().errors ?? []), (e as Error).message], isLoading: false });
+    }
+  },
+
+  filterAndFetch: async (query: string, page: number, limit: number, signal: AbortSignal) => {
+    const { allPokemon } = get();
+    set({ isLoading: true, errors: null });
+    const normalized = query.toLowerCase();
+
+    try {
+      const filtered = allPokemon.filter((p) => p.name.includes(normalized));
+      const startIndex = (page - 1) * limit;
+      const paginated = filtered.slice(startIndex, startIndex + limit);
+
+      const settled = await Promise.allSettled(
+        paginated.map((item) => fetchPokemonResult(item, signal))
+      );
+
+      const successful = settled
+        .filter((r): r is PromiseFulfilledResult<SearchResult> => r.status === 'fulfilled')
+        .map((r) => r.value);
+      const errors = settled
+        .filter(
+          (r): r is PromiseRejectedResult =>
+            r.status === 'rejected' && r.reason?.name !== 'AbortError'
+        )
+        .map((r) => r.reason?.message);
+
+      set({
+        errors: [...(get().errors ?? []), ...errors],
+        results: successful,
+        isLoading: false,
+        totalPages: Math.ceil(filtered.length / limit),
+      });
+    } catch (e) {
+      if ((e as Error).name !== 'AbortError') {
+        set({ errors: [...(get().errors ?? []), (e as Error).message], isLoading: false });
+      }
+    }
+  },
+
+  reset: () => set({ allPokemon: [], errors: null, results: [] }),
+}));
