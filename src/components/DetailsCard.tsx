@@ -4,7 +4,7 @@ import ProgressBar from './ui/ProgressBar';
 import ErrorMessage from './ui/ErrorMessage';
 import PokemonImage from './ui/PokemonImage';
 import { PokemonData } from '../types/pokemon';
-import { fetchPokemonData } from '../services/pokemonService';
+import { fetchPokemonData } from '../api/pokemonApi';
 
 const DetailsCard = () => {
   const { detailId } = useParams({ from: '/pokemons/$detailId' });
@@ -67,7 +67,6 @@ const DetailsCard = () => {
 
             <hr className="border-white/10" />
 
-            {/* Основные параметры */}
             <div className="grid grid-cols-2 gap-4 text-center">
               <div className="bg-white/4 p-2 rounded-lg">
                 <p className="text-body-xs text-muted-text uppercase tracking-wider">Рост</p>
@@ -79,7 +78,6 @@ const DetailsCard = () => {
               </div>
             </div>
 
-            {/* Типы покемона */}
             <div>
               <h4 className="text-body-sm font-medium text-muted-text mb-2">Тип</h4>
               <div className="flex gap-2 flex-wrap">
@@ -94,7 +92,6 @@ const DetailsCard = () => {
               </div>
             </div>
 
-            {/* Базовые характеристики */}
             <div>
               <h4 className="text-body-sm font-medium text-muted-text mb-3">
                 Базовые характеристики
@@ -102,17 +99,13 @@ const DetailsCard = () => {
               <div className="flex flex-col gap-2.5">
                 {pokemon.stats.map(({ base_stat, stat }) => (
                   <div key={stat.name} className="flex items-center gap-4 text-body-sm">
-                    {/* Название статы */}
                     <span className="w-24 text-muted-text capitalize truncate">
                       {stat.name.replace('-', ' ')}
                     </span>
-                    {/* Числовое значение */}
                     <span className="w-8 font-mono text-right font-medium">{base_stat}</span>
-                    {/* Прогресс-бар */}
                     <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-stardust rounded-full transition-all duration-500"
-                        // Ограничиваем макс ширину (условно 255 — максимальная базовая стата в игре)
                         style={{ width: `${Math.min((base_stat / 200) * 100, 100)}%` }}
                       />
                     </div>

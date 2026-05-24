@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import DetailsCard from '../components/DetailsCard';
-import { fetchPokemonData } from '../services/pokemonService';
+import { fetchPokemonData } from '../api/pokemonApi';
 import { PokemonData } from '../types/pokemon';
 
-vi.mock('../services/pokemonService', () => ({
+vi.mock('../api/pokemonApi', () => ({
   fetchPokemonData: vi.fn(),
 }));
 
@@ -40,7 +40,7 @@ describe('DetailsCard Component', () => {
   });
 
   it('should display the loading status (Loading...) during mounting', async () => {
-    vi.mocked(fetchPokemonData).mockReturnValueOnce(new Promise(() => {}));
+    vi.mocked(fetchPokemonData).mockImplementation(() => new Promise(() => {}));
 
     render(<DetailsCard />);
 
@@ -105,7 +105,7 @@ describe('DetailsCard Component', () => {
   });
 
   it('should correctly respond to changes in the detailId parameter', async () => {
-    vi.mocked(fetchPokemonData).mockResolvedValue(mockPokemon);
+    vi.mocked(fetchPokemonData).mockResolvedValueOnce(mockPokemon);
 
     const { rerender } = render(<DetailsCard />);
 
