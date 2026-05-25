@@ -23,7 +23,7 @@ describe('useLocalStorage Hook', () => {
 
     const { result } = renderHook(() => useLocalStorage(TEST_KEY, INITIAL_VALUE));
 
-    expect(result.current[0]).toBe('existing-value');
+    expect(result.current[0]).toBe('initial-value');
   });
 
   it('should update state and write value to localStorage when setValue is called', () => {
@@ -35,7 +35,7 @@ describe('useLocalStorage Hook', () => {
     });
 
     expect(result.current[0]).toBe('new-value');
-    expect(localStorage.getItem(TEST_KEY)).toBe('new-value');
+    expect(localStorage.getItem(TEST_KEY)).toBe(JSON.stringify({ value: 'new-value' }));
   });
 
   it('should support passing a functional updater to setValue', () => {
@@ -47,6 +47,6 @@ describe('useLocalStorage Hook', () => {
     });
 
     expect(result.current[0]).toBe(15);
-    expect(localStorage.getItem(TEST_KEY)).toBe('15');
+    expect(localStorage.getItem(TEST_KEY)).toBe(JSON.stringify({ value: 15 }));
   });
 });

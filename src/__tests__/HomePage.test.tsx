@@ -28,7 +28,7 @@ const getMockFetch = (url: string) => {
   }
 
   if (url.includes('/pokemon-species/')) {
-    const foundPokemon = mockPokemonSpecies.find((p, index) => url.includes(`/${index + 1}`));
+    const foundPokemon = mockPokemonSpecies.find((_, index) => url.includes(`/${index + 1}`));
 
     return Promise.resolve({
       ok: true,
@@ -44,11 +44,22 @@ const mockNavigate = vi.fn();
 vi.mock('../routes/pokemons', () => {
   return {
     Route: {
-      useSearch: () => ({
-        limit: 4,
-        filter: localStorage.getItem(SEARCH_KEY) || '',
-        page: 1,
-      }),
+       useSearch: () => {
+        let filter = '';
+        try {
+          const stored = localStorage.getItem(SEARCH_KEY);
+          const data = stored ? JSON.parse(stored) : {};
+          filter = data.value || '';
+        } catch {
+          filter = '';
+        }
+
+        return {
+          limit: 4,
+          filter,
+          page: 1,
+        };
+      },
       useNavigate: () => mockNavigate,
     },
   };
@@ -125,7 +136,7 @@ describe('HomePage Component - Integration Tests', () => {
   });
 
   it('handles search term from localStorage on initial load', async () => {
-    localStorage.setItem(SEARCH_KEY, 'bulb');
+    localStorage.setItem(SEARCH_KEY, JSON.stringify({ value: 'bulb' }));
 
     const fetchMock = vi.fn(getMockFetch);
 
@@ -270,7 +281,7 @@ describe('HomePage Component - State Management Tests', () => {
 
 describe('HomePage - Pagination (handlePageChange)', () => {
   it('should change page, trigger navigate with correct search params, and scroll to top', async () => {
-    localStorage.setItem(SEARCH_KEY, 'bulb');
+    localStorage.setItem(SEARCH_KEY, JSON.stringify({ value: 'bulb' }));
 
     const fetchMock = vi.fn(getMockFetch);
 
@@ -305,7 +316,7 @@ describe('HomePage - Pagination (handlePageChange)', () => {
 
 describe('HomePage - Items Per Page (handleSelectCount)', () => {
   it('should change items per page limit, reset page to 1, trigger navigate, and scroll to top', async () => {
-    localStorage.setItem(SEARCH_KEY, 'bulb');
+    localStorage.setItem(SEARCH_KEY, JSON.stringify({ value: 'bulb' }));
 
     const fetchMock = vi.fn(getMockFetch);
 

@@ -32,7 +32,7 @@ describe('Search Component - localStorage', () => {
   });
 
   it('displays previously saved search term from localStorage on mount', () => {
-    localStorage.setItem(SEARCH_KEY, 'pikachu');
+    localStorage.setItem(SEARCH_KEY, JSON.stringify({ value: 'pikachu' }));
     render(<SearchBar onSearch={vi.fn()} />);
     expect(screen.getByRole('textbox')).toHaveValue('pikachu');
   });
@@ -43,13 +43,13 @@ describe('Search Component - localStorage', () => {
   });
 
   it('overwrites existing localStorage value when new search is performed', async () => {
-    localStorage.setItem(SEARCH_KEY, 'pikachu');
+    localStorage.setItem(SEARCH_KEY, JSON.stringify({ value: 'pikachu' }));
     render(<SearchBar onSearch={vi.fn()} />);
     const input = screen.getByRole('textbox');
     await userEvent.clear(input);
     await userEvent.type(input, 'bulbasaur');
     await userEvent.click(screen.getByRole('button'));
-    expect(localStorage.getItem(SEARCH_KEY)).toBe('bulbasaur');
+    expect(localStorage.getItem(SEARCH_KEY)).toBe(JSON.stringify({ value: 'bulbasaur' }));
   });
 });
 
@@ -70,7 +70,7 @@ describe('Search Component - User Interaction', () => {
     const input = screen.getByRole('textbox');
     await userEvent.type(input, 'bulbasaur');
     await userEvent.click(screen.getByRole('button'));
-    expect(localStorage.getItem(SEARCH_KEY)).toBe('bulbasaur');
+    expect(localStorage.getItem(SEARCH_KEY)).toBe(JSON.stringify({ value: 'bulbasaur' }));
   });
 
   it('trims whitespace from search input before saving', async () => {
@@ -78,7 +78,7 @@ describe('Search Component - User Interaction', () => {
     const input = screen.getByRole('textbox');
     await userEvent.type(input, '  pikachu  ');
     await userEvent.click(screen.getByRole('button'));
-    expect(localStorage.getItem(SEARCH_KEY)).toBe('pikachu');
+    expect(localStorage.getItem(SEARCH_KEY)).toBe(JSON.stringify({ value: 'pikachu' }));
   });
 
   it('triggers search callback with correct parameters', async () => {
