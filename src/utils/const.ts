@@ -7,3 +7,5 @@ export const PAGE_KEY = 'current_page';
 export const OPTIONS_COUNT_ITEMS = [4, 8, 12, 16, 20] as const;
 
 export const SELECTION_STORE_KEY = 'pokemon-selection-store';
+
+export const THEME_KEY = 'theme';

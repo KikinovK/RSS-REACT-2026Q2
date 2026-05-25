@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router';
+import SwitchTheme from './SwithcTheme';
 
 const Header = () => {
   return (
@@ -31,6 +32,7 @@ const Header = () => {
               About
             </Link>
           </div>
+          <SwitchTheme />
         </div>
       </nav>
     </header>

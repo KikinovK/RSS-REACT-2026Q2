@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { createMemoryHistory, createRouter, RouterProvider } from '@tanstack/react-router';
 import { routeTree } from '../routeTree.gen';
+import { ThemeProvider } from '../context/ThemeContext';
 
 describe('App - Router Integration Tests', () => {
   beforeEach(() => {
@@ -15,7 +16,11 @@ describe('App - Router Integration Tests', () => {
     });
     const router = createRouter({ routeTree, history: memoryHistory });
 
-    render(<RouterProvider router={router} />);
+    render(
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    );
 
     await waitFor(() => {
       expect(screen.getByRole('banner')).toBeInTheDocument(); // Header
@@ -30,7 +35,11 @@ describe('App - Router Integration Tests', () => {
     });
     const router = createRouter({ routeTree, history: memoryHistory });
 
-    render(<RouterProvider router={router} />);
+    render(
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    );
 
     await waitFor(() => {
       expect(screen.getByText('About Pokémon Search')).toBeInTheDocument();
@@ -45,7 +54,11 @@ describe('App - Router Integration Tests', () => {
 
     vi.spyOn(globalThis, 'fetch').mockRejectedValueOnce(new Error('Network error'));
 
-    render(<RouterProvider router={router} />);
+    render(
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    );
 
     await waitFor(() => {
       expect(screen.getByText('Network error')).toBeInTheDocument();
