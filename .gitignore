@@ -33,3 +33,5 @@ coverage/
 .vite
 
 .tanstack/
+
+*.tsbuildinfo
