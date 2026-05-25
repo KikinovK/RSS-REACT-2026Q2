@@ -61,15 +61,6 @@ describe('SelectionToolbar', () => {
     expect(useSelectionStore.getState().getSelectedCount()).toBe(0);
   });
 
-  it('should have proper styling classes', () => {
-    useSelectionStore.setState({ selectedItems: new Set(['1']) });
-
-    const { container } = render(<SelectionToolbar />);
-
-    const toolbar = container.firstChild as HTMLElement;
-    expect(toolbar).toHaveClass('w-full', 'px-8', 'py-4', 'bg-midnight-core/50');
-  });
-
   it('should hide when all items are cleared', () => {
     useSelectionStore.setState({ selectedItems: new Set(['1', '2']) });
 

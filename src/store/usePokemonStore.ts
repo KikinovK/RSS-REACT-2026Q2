@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { fetchAllPokemon, fetchPokemonResult } from '../api/pokemonApi';
 import { PokemonListItem } from '../types/pokemon';
 import { SearchResult } from '../types/SearchResult';
+import { extractLastSegment } from '../utils/utils';
 
 interface PokemonState {
   allPokemon: PokemonListItem[];
@@ -17,6 +18,8 @@ interface PokemonState {
     limit: number,
     signal: AbortSignal
   ) => Promise<void>;
+  fetchPokemon: (pokemonItem: PokemonListItem, signal: AbortSignal) => Promise<SearchResult>;
+  fetchSelectedPokemon: (ids: string[], signal: AbortSignal) => Promise<SearchResult[]>;
   reset: () => void;
 }
 
@@ -35,6 +38,37 @@ export const usePokemonStore = create<PokemonState>()((set, get) => ({
     } catch (e) {
       set({ errors: [...(get().errors ?? []), (e as Error).message], isLoading: false });
     }
+  },
+
+  fetchPokemon: async (pokemonItem: PokemonListItem, signal: AbortSignal) => {
+    set({ isLoading: true });
+    try {
+      const result = await fetchPokemonResult(pokemonItem, signal);
+      return result;
+    } catch (e) {
+      set({ errors: [...(get().errors ?? []), (e as Error).message], isLoading: false });
+    } finally {
+      set({ isLoading: false });
+    }
+    return { id: '', name: '', description: '', image: '' };
+  },
+
+  fetchSelectedPokemon: async (ids: string[], signal: AbortSignal) => {
+    set({ isLoading: true });
+    try {
+      const results = await Promise.all(
+        ids.map((id) => {
+          const pokemonItem = get().allPokemon.find((p) => extractLastSegment(p.url) === id);
+          return pokemonItem
+            ? get().fetchPokemon(pokemonItem, signal)
+            : Promise.resolve({ id: '', name: '', description: '', image: '' });
+        })
+      );
+      return results;
+    } catch (e) {
+      set({ errors: [...(get().errors ?? []), (e as Error).message], isLoading: false });
+    }
+    return [];
   },
 
   filterAndFetch: async (query: string, page: number, limit: number, signal: AbortSignal) => {
