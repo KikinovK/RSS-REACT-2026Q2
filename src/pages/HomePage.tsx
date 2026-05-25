@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import SearchSection from '../components/SearchSection';
 import ResultsSection from '../components/ResultsSection';
+import SelectionToolbar from '../components/SelectionToolbar';
 import ProgressBar from '../components/ui/ProgressBar';
 import Pagination from '../components/ui/Pagination';
 import { useLocalStorage } from '../hooks/useLocalStorage';
@@ -85,6 +86,7 @@ const HomePage = () => {
     <div className="space-y-8 pb-2">
       <ProgressBar isLoading={isLoading} />
       <SearchSection />
+      <SelectionToolbar />
       <ResultsSection results={results} isLoading={isLoading} errors={errors} />
       {totalPages > 1 && !isLoading && (
         <div className="flex justify-center flex-wrap gap-8 items-center">

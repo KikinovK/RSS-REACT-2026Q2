@@ -5,7 +5,7 @@ import { CountItem } from '../types/CoutItem';
 const getDefaultFilter = (): string => {
   const saved = getStoredData<{ value: string }>(SEARCH_KEY);
   return saved?.value || '';
-}
+};
 
 const getDefaultPage = (): number => {
   const saved = Number(getStoredData(PAGE_KEY));

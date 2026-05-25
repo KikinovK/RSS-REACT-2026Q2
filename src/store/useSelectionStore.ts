@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { SELECTION_STORE_KEY } from '../utils/const';
+import { getStoredData, removeStoredData, setStoredData } from '../utils/storage';
 
 interface SelectionState {
   selectedItems: Set<string>;
@@ -39,23 +41,18 @@ export const useSelectionStore = create<SelectionState>()(
       },
     }),
     {
-      name: 'pokemon-selection-store',
+      name: SELECTION_STORE_KEY,
       storage: {
         getItem: (name) => {
-          const item = localStorage.getItem(name);
+          const item = getStoredData<{ state: { selectedItems: string[] }; version: number }>(name);
           if (!item) return null;
-          try {
-            const parsed = JSON.parse(item);
-            return {
-              state: {
-                ...parsed.state,
-                selectedItems: new Set(parsed.state.selectedItems || []),
-              },
-              version: parsed.version,
-            };
-          } catch {
-            return null;
-          }
+          return {
+            state: {
+              ...item.state,
+              selectedItems: new Set(item.state.selectedItems || []),
+            },
+            version: item.version,
+          };
         },
         setItem: (name, value) => {
           const serialized = {
@@ -65,9 +62,9 @@ export const useSelectionStore = create<SelectionState>()(
             },
             version: value.version,
           };
-          localStorage.setItem(name, JSON.stringify(serialized));
+          setStoredData(name, serialized);
         },
-        removeItem: (name) => localStorage.removeItem(name),
+        removeItem: (name) => removeStoredData(name),
       },
     }
   )

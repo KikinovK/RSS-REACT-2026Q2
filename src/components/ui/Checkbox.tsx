@@ -6,7 +6,13 @@ interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'typ
   onChange?: (checked: boolean) => void;
 }
 
-const Checkbox = ({ ariaLabel, checked = false, onChange, className = '', ...props }: CheckboxProps) => {
+const Checkbox = ({
+  ariaLabel,
+  checked = false,
+  onChange,
+  className = '',
+  ...props
+}: CheckboxProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange?.(e.target.checked);
   };

@@ -44,7 +44,7 @@ const mockNavigate = vi.fn();
 vi.mock('../routes/pokemons', () => {
   return {
     Route: {
-       useSearch: () => {
+      useSearch: () => {
         let filter = '';
         try {
           const stored = localStorage.getItem(SEARCH_KEY);
