@@ -24,7 +24,7 @@ const ResultCard = ({
   };
 
   return (
-    <li className="bg-white/6 rounded-(--radius-cards) p-4 flex flex-col gap-3 relative">
+    <li className="bg-black/6 dark:bg-white/6 rounded-(--radius-cards) p-4 flex flex-col gap-3 relative">
       <div className="absolute top-4 left-4 z-10">
         <Checkbox
           checked={isSelected}

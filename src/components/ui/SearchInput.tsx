@@ -18,7 +18,7 @@ const SearchInput = ({
       placeholder={placeholder}
       aria-label={ariaLabel}
       onChange={(e) => onChange?.(e.target.value)}
-      className="flex-1 px-6 py-3 bg-stardust text-deep-space placeholder-deep-space border border-midnight-core rounded-(--radius-inputs) outline-none focus:ring-2 focus:ring-guidepost-green text-body"
+      className="flex-1 px-6 py-3 bg-midnight-core text-muted-text placeholder:text-muted-text border border-midnight-core rounded-(--radius-inputs) outline-none focus:ring-2 focus:ring-guidepost-green text-body"
     />
   );
 };

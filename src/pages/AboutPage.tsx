@@ -26,7 +26,7 @@ const AboutPage = () => {
           </p>
         </header>
 
-        <section className="bg-white/6 border border-white/10 rounded-3xl p-6 flex flex-col gap-4 backdrop-blur-md">
+        <section className="bg-black/6 dark:bg-white/6 border border-black/10 dark:border-white/10 rounded-3xl p-6 flex flex-col gap-4 backdrop-blur-md">
           <h2 className="text-heading-sm font-medium text-stardust tracking-tight">
             Author Profile
           </h2>
@@ -40,7 +40,7 @@ const AboutPage = () => {
           </div>
         </section>
 
-        <section className="flex flex-col md:flex-row items-center justify-between gap-6 bg-midnight-core/50 border border-white/5 rounded-3xl p-6">
+        <section className="flex flex-col md:flex-row items-center justify-between gap-6 bg-midnight-core/50 border border-black/5 dark:border-white/5 rounded-3xl p-6">
           <div className="flex flex-col gap-1 text-center md:text-left">
             <h4 className="text-body font-medium text-stardust">RS School React Course</h4>
             <p className="text-body-sm text-muted-text">

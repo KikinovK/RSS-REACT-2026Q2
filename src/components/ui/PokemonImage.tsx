@@ -23,7 +23,7 @@ const PokemonImage = ({ src, alt }: PokemonImageProps) => {
   return (
     <>
       {!loaded && !error && (
-        <div className="absolute inset-0 bg-white/10 animate-pulse rounded-lg" />
+        <div className="absolute inset-0 bg-black/10 dark:bg-white/10 animate-pulse rounded-lg" />
       )}
       <img
         src={error ? fallbackSrc : src}

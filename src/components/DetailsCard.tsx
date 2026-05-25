@@ -41,7 +41,7 @@ const DetailsCard = () => {
   return (
     <>
       <ProgressBar isLoading={isLoading} />
-      <div className="bg-white/6 rounded-(--radius-cards) p-6 border border-white/10 max-w-md mx-auto flex flex-col gap-6 text-stardust">
+      <div className="bg-black/6 dark:bg-white/6 rounded-(--radius-cards) p-6 border border-black/10 dark:border-white/10 max-w-md mx-auto flex flex-col gap-6 text-stardust">
         {isLoading && <p className="text-body text-muted-text">Loading...</p>}
         {error && (
           <ErrorMessage messages={[error || 'Pokemon not found in the PokeAPI database']} />
@@ -65,14 +65,14 @@ const DetailsCard = () => {
               </h2>
             </div>
 
-            <hr className="border-white/10" />
+            <hr className="border-black/10 dark:border-white/10" />
 
             <div className="grid grid-cols-2 gap-4 text-center">
-              <div className="bg-white/4 p-2 rounded-lg">
+              <div className="bg-black/4 dark:bg-white/4 p-2 rounded-lg">
                 <p className="text-body-xs text-muted-text uppercase tracking-wider">Рост</p>
                 <p className="text-body-md font-medium">{(pokemon.height / 10).toFixed(1)} м</p>
               </div>
-              <div className="bg-white/4 p-2 rounded-lg">
+              <div className="bg-black/4 dark:bg-white/4 p-2 rounded-lg">
                 <p className="text-body-xs text-muted-text uppercase tracking-wider">Вес</p>
                 <p className="text-body-md font-medium">{(pokemon.weight / 10).toFixed(1)} кг</p>
               </div>
@@ -84,7 +84,7 @@ const DetailsCard = () => {
                 {pokemon.types.map(({ type }) => (
                   <span
                     key={type.name}
-                    className="px-3 py-1 text-body-xs font-semibold tracking-wider rounded-full bg-white/10 border border-white/5 shadow-sm capitalize"
+                    className="px-3 py-1 text-body-xs font-semibold tracking-wider rounded-full bg-black/10 dark:bg-white/10 border border-black/5 dark:border-white/5 shadow-sm capitalize"
                   >
                     {type.name}
                   </span>
@@ -103,7 +103,7 @@ const DetailsCard = () => {
                       {stat.name.replace('-', ' ')}
                     </span>
                     <span className="w-8 font-mono text-right font-medium">{base_stat}</span>
-                    <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
+                    <div className="flex-1 h-2 bg-black/10 dark:bg-white/10 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-stardust rounded-full transition-all duration-500"
                         style={{ width: `${Math.min((base_stat / 200) * 100, 100)}%` }}
