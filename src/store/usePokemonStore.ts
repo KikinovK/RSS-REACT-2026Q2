@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-// import { persist } from 'zustand/middleware';
 import { fetchAllPokemon, fetchPokemonResult } from '../api/pokemonApi';
 import { PokemonListItem } from '../types/pokemon';
 import { SearchResult } from '../types/SearchResult';
