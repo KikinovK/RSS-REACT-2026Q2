@@ -32,7 +32,6 @@ const HomePage = () => {
   const [, setSearchQuery] = useLocalStorage<string>(SEARCH_KEY, '');
   const [, setCurrentPage] = useLocalStorage<number>(PAGE_KEY, 1);
 
-  const abortControllerRef = useRef<AbortController | null>(null);
   const isInitialMount = useRef(true);
 
   const fetchResults = useCallback(
@@ -40,14 +39,9 @@ const HomePage = () => {
       allPokemon: PokemonListItem[],
       query: string,
       currentPage: number,
-      itemsPerPage: number
+      itemsPerPage: number,
+      signal: AbortSignal
     ) => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-
-      const controller = new AbortController();
-      abortControllerRef.current = controller;
 
       const normalized = query.toLowerCase();
       const filtered = allPokemon.filter((p) => p.name.includes(normalized));
@@ -60,7 +54,7 @@ const HomePage = () => {
 
       try {
         const settled = await Promise.allSettled(
-          filteredPaginated.map((item) => fetchPokemonResult(item, controller.signal))
+          filteredPaginated.map((item) => fetchPokemonResult(item, signal))
         );
 
         const successfulResults = settled
@@ -81,9 +75,7 @@ const HomePage = () => {
           setError((prev) => [...(prev ?? []), (e as Error).message]);
         }
       } finally {
-        if (!controller.signal.aborted) {
           setIsLoading(false);
-        }
       }
     },
     []
@@ -134,7 +126,7 @@ const HomePage = () => {
       setError(null);
 
       try {
-        await fetchResults(allPokemon, searchQuery, currentPage, itemsPerPage);
+        await fetchResults(allPokemon, searchQuery, currentPage, itemsPerPage, controller.signal);
       } catch (e) {
         if ((e as Error).name !== 'AbortError') {
           setError((prev) => [...(prev ?? []), (e as Error).message]);
