@@ -18,10 +18,10 @@ describe('App - Router Integration Tests', () => {
     render(<RouterProvider router={router} />);
 
     await waitFor(() => {
-      expect(screen.getByRole('banner')).toBeInTheDocument(); // Header
+      expect(screen.getByRole('banner')).toBeInTheDocument();
     });
-    expect(screen.getByRole('main')).toBeInTheDocument(); // Outlet
-    expect(screen.getByRole('contentinfo')).toBeInTheDocument(); // Footer
+    expect(screen.getByRole('main')).toBeInTheDocument();
+    expect(screen.getByRole('contentinfo')).toBeInTheDocument();
   });
 
   it('navigates to about page', async () => {
