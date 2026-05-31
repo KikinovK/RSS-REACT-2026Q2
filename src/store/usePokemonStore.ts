@@ -1,12 +1,13 @@
 import { create } from 'zustand';
-import { fetchAllPokemon, fetchPokemonResult } from '../api/pokemonApi';
-import { PokemonListItem } from '../types/pokemon';
+import { fetchAllPokemon, fetchPokemonData, fetchPokemonResult } from '../api/pokemonApi';
+import { PokemonData, PokemonListItem } from '../types/pokemon';
 import { SearchResult } from '../types/SearchResult';
 import { extractLastSegment } from '../utils/utils';
 
 interface PokemonState {
   allPokemon: PokemonListItem[];
   results: SearchResult[];
+  pokemonDetails: PokemonData | null;
   totalPages: number;
   isLoading: boolean;
   errors: string[] | null;
@@ -19,12 +20,14 @@ interface PokemonState {
   ) => Promise<void>;
   fetchPokemon: (pokemonItem: PokemonListItem, signal: AbortSignal) => Promise<SearchResult>;
   fetchSelectedPokemon: (ids: string[], signal: AbortSignal) => Promise<SearchResult[]>;
+  fetchDetails: (id: string, signal: AbortSignal) => Promise<void>;
   reset: () => void;
 }
 
 export const usePokemonStore = create<PokemonState>()((set, get) => ({
   allPokemon: [],
   results: [],
+  pokemonDetails: null,
   totalPages: 0,
   isLoading: false,
   errors: null,
@@ -65,7 +68,9 @@ export const usePokemonStore = create<PokemonState>()((set, get) => ({
       );
       return results;
     } catch (e) {
-      set({ errors: [...(get().errors ?? []), (e as Error).message], isLoading: false });
+      set({ errors: [...(get().errors ?? []), (e as Error).message] });
+    } finally {
+      set({ isLoading: false });
     }
     return [];
   },
@@ -105,6 +110,20 @@ export const usePokemonStore = create<PokemonState>()((set, get) => ({
         set({ errors: [...(get().errors ?? []), (e as Error).message], isLoading: false });
       }
     }
+  },
+
+  fetchDetails: async (id: string, signal: AbortSignal) => {
+    set({ pokemonDetails: null, isLoading: true });
+      try {
+        const result = await fetchPokemonData(id, signal);
+        set({ pokemonDetails: result });
+      } catch (e) {
+        if ((e as Error).name !== 'AbortError') {
+          set({ errors: [...(get().errors ?? []), (e as Error).message], isLoading: false });
+        }
+      } finally {
+        set({ isLoading: false });
+      }
   },
 
   reset: () => set({ allPokemon: [], errors: null, results: [] }),
