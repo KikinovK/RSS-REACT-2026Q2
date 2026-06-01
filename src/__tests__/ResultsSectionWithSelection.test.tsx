@@ -73,7 +73,7 @@ describe('ResultsSection with Selection', () => {
   });
 
   it('renders results list', () => {
-    render(<ResultsSection results={mockResults} isLoading={false} errors={null} />);
+    render(<ResultsSection results={mockResults} isLoading={false} />);
 
     expect(screen.getByText('bulbasaur')).toBeInTheDocument();
     expect(screen.getByText('ivysaur')).toBeInTheDocument();
@@ -81,13 +81,13 @@ describe('ResultsSection with Selection', () => {
   });
 
   it('renders Results heading', () => {
-    render(<ResultsSection results={mockResults} isLoading={false} errors={null} />);
+    render(<ResultsSection results={mockResults} isLoading={false} />);
 
     expect(screen.getByText('Results')).toBeInTheDocument();
   });
 
   it('does not show selection count when no items are selected', () => {
-    render(<ResultsSection results={mockResults} isLoading={false} errors={null} />);
+    render(<ResultsSection results={mockResults} isLoading={false} />);
 
     expect(screen.queryByText(/selected$/)).not.toBeInTheDocument();
   });
@@ -95,7 +95,7 @@ describe('ResultsSection with Selection', () => {
   it('toggles item selection when checkbox is clicked', async () => {
     const user = userEvent.setup();
 
-    render(<ResultsSection results={mockResults} isLoading={false} errors={null} />);
+    render(<ResultsSection results={mockResults} isLoading={false} />);
 
     const checkboxes = screen.getAllByRole('checkbox');
     await user.click(checkboxes[0]);
@@ -107,7 +107,7 @@ describe('ResultsSection with Selection', () => {
   it('handles selection of multiple items', async () => {
     const user = userEvent.setup();
 
-    render(<ResultsSection results={mockResults} isLoading={false} errors={null} />);
+    render(<ResultsSection results={mockResults} isLoading={false} />);
 
     const checkboxes = screen.getAllByRole('checkbox');
     await user.click(checkboxes[0]);
@@ -125,7 +125,7 @@ describe('ResultsSection with Selection', () => {
 
     useSelectionStore.setState({ selectedItems: new Set(['1', '2']) });
 
-    render(<ResultsSection results={mockResults} isLoading={false} errors={null} />);
+    render(<ResultsSection results={mockResults} isLoading={false} />);
 
     const checkboxes = screen.getAllByRole('checkbox');
     await user.click(checkboxes[0]);
@@ -138,7 +138,7 @@ describe('ResultsSection with Selection', () => {
   it('renders checkboxes in checked state for selected items', () => {
     useSelectionStore.setState({ selectedItems: new Set(['1', '2']) });
 
-    render(<ResultsSection results={mockResults} isLoading={false} errors={null} />);
+    render(<ResultsSection results={mockResults} isLoading={false} />);
 
     const checkboxes = screen.getAllByRole('checkbox') as HTMLInputElement[];
     expect(checkboxes[0].checked).toBe(true);
@@ -147,28 +147,20 @@ describe('ResultsSection with Selection', () => {
   });
 
   it('displays loading state', () => {
-    render(<ResultsSection results={[]} isLoading={true} errors={null} />);
+    render(<ResultsSection results={[]} isLoading={true} />);
 
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
-  it('displays error messages', () => {
-    const errors = ['Failed to load data', 'Network error'];
-    render(<ResultsSection results={[]} isLoading={false} errors={errors} />);
-
-    expect(screen.getByText('Failed to load data')).toBeInTheDocument();
-    expect(screen.getByText('Network error')).toBeInTheDocument();
-  });
-
   it('displays empty state message', () => {
-    render(<ResultsSection results={[]} isLoading={false} errors={null} />);
+    render(<ResultsSection results={[]} isLoading={false} />);
 
     expect(screen.getByText('No results found.')).toBeInTheDocument();
   });
 
   it('does not show results when loading', () => {
     const { container } = render(
-      <ResultsSection results={mockResults} isLoading={true} errors={null} />
+      <ResultsSection results={mockResults} isLoading={true} />
     );
 
     expect(screen.getByText('Loading...')).toBeInTheDocument();
@@ -178,7 +170,7 @@ describe('ResultsSection with Selection', () => {
 
   it('renders grid layout with correct structure', () => {
     const { container } = render(
-      <ResultsSection results={mockResults} isLoading={false} errors={null} />
+      <ResultsSection results={mockResults} isLoading={false} />
     );
 
     const ul = container.querySelector('ul');

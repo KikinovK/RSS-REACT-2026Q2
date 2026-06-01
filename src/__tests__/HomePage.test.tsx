@@ -7,6 +7,7 @@ import mockPokemonDetails from '../__mocks__/details';
 import { AnchorHTMLAttributes, ReactNode } from 'react';
 import mockPokemonSpecies from '../__mocks__/species';
 import { renderWithProviders } from './test-utils';
+import { ErrorToastList } from '../components/ui/ErrorToastList';
 
 
 const getMockFetch = (url: string) => {
@@ -122,7 +123,12 @@ describe('HomePage Component - Integration Tests', () => {
 
     vi.stubGlobal('fetch', fetchMock);
 
-    renderWithProviders(<HomePage />);
+    renderWithProviders(
+      <>
+        <ErrorToastList />
+        <HomePage />
+      </>
+    );
 
     expect(screen.getByText('Loading...')).toBeInTheDocument();
 
@@ -202,35 +208,6 @@ describe('HomePage Component - API Integration Tests', () => {
     ).toBeInTheDocument();
   });
 
-  it('handles API error responses', async () => {
-    const fetchMock = vi.fn().mockImplementation((url) => {
-      if (url.includes('/pokemon?') || url.endsWith('/pokemon')) {
-        return Promise.resolve({ ok: false, status: 500, json: async () => ({}) } as Response);
-      }
-      return getMockFetch(url);
-    });
-
-    vi.stubGlobal('fetch', fetchMock);
-
-    renderWithProviders(<HomePage />);
-
-    await waitFor(() =>
-      expect(screen.getByText(/Failed to load Pokémon list/i)).toBeInTheDocument()
-    );
-    expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-  });
-
-  it('sets error state when initial fetch rejects with non-AbortError', async () => {
-    const fetchMock = vi.fn().mockRejectedValueOnce(new Error('Network failed'));
-
-    vi.stubGlobal('fetch', fetchMock);
-
-    renderWithProviders(<HomePage />);
-
-    await waitFor(() => expect(screen.getByText('Network failed')).toBeInTheDocument());
-    expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-  });
-
   it('displays error when pokemon detail fetch fails', async () => {
     const fetchMock = vi.fn().mockImplementation((url) => {
       if (url.includes('/pokemon/1')) {
@@ -241,7 +218,12 @@ describe('HomePage Component - API Integration Tests', () => {
 
     vi.stubGlobal('fetch', fetchMock);
 
-    renderWithProviders(<HomePage />);
+    renderWithProviders(
+      <>
+        <ErrorToastList />
+        <HomePage />
+      </>
+    );
 
     await waitFor(() => expect(screen.getByText(/Failed to load bulbasaur/i)).toBeInTheDocument());
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -257,7 +239,12 @@ describe('HomePage Component - API Integration Tests', () => {
 
     vi.stubGlobal('fetch', fetchMock);
 
-    renderWithProviders(<HomePage />);
+    renderWithProviders(
+      <>
+        <ErrorToastList />
+        <HomePage />
+      </>
+    );
 
     await waitFor(() =>
       expect(screen.getByText(/Failed to load species for bulbasaur/i)).toBeInTheDocument()

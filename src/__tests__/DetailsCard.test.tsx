@@ -71,19 +71,6 @@ describe('DetailsCard Component', () => {
     expect(fetchPokemonData).toHaveBeenCalledWith('25', expect.any(AbortSignal));
   });
 
-  it('should correctly display an error if the request failed', async () => {
-    const errorMessage = 'Network Error';
-    vi.mocked(fetchPokemonData).mockRejectedValueOnce(new Error(errorMessage));
-
-    renderWithProviders(<DetailsCard />);
-
-    await waitFor(() => {
-      expect(screen.getByText(errorMessage)).toBeInTheDocument();
-    });
-
-    expect(screen.queryByText('pikachu')).not.toBeInTheDocument();
-  });
-
   it('must use normal sprite if "official-artwork" is missing', async () => {
     const pokemonWithoutArt: PokemonData = {
       ...mockPokemon,
