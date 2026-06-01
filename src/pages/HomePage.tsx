@@ -1,24 +1,30 @@
 import { useEffect } from 'react';
+import { Outlet, useMatchRoute } from '@tanstack/react-router';
+
+import { Route } from '../routes/pokemons';
 import SearchSection from '../components/SearchSection';
 import ResultsSection from '../components/ResultsSection';
 import SelectionToolbar from '../components/SelectionToolbar';
 import ProgressBar from '../components/ui/ProgressBar';
 import Pagination from '../components/ui/Pagination';
-import { useLocalStorage } from '../hooks/useLocalStorage';
-import { LIMIT_KEY, OPTIONS_COUNT_ITEMS, PAGE_KEY, SEARCH_KEY } from '../utils/const';
 import SelectCountItem from '../components/ui/SelectCountItem';
-import { Route } from '../routes/pokemons';
-import { CountItem } from '../types/CoutItem';
-import { Outlet, useMatchRoute } from '@tanstack/react-router';
 import Button from '../components/ui/Button';
-import { usePokemonStore } from '../store/usePokemonStore';
+
+import { useLocalStorage } from '../hooks/useLocalStorage';
+import { usePokemonSearch } from '../hooks/usePokemonQueries';
+
+import { LIMIT_KEY, OPTIONS_COUNT_ITEMS, PAGE_KEY, SEARCH_KEY } from '../utils/const';
+
+import { CountItem } from '../types/CoutItem';
 
 const HomePage = () => {
-  const { allPokemon, results, totalPages, errors, isLoading, loadAllPokemon, filterAndFetch } =
-    usePokemonStore();
-
   const { limit: itemsPerPage, filter: searchQuery, page: currentPage } = Route.useSearch();
   const navigate = Route.useNavigate();
+
+  const { data, isLoading, error } = usePokemonSearch(searchQuery, currentPage, itemsPerPage);
+
+  const errorsArray = error ? [(error as Error).message] : null;
+  console.log('errorsArray', errorsArray);
 
   const matchRoute = useMatchRoute();
   const isDetailsRouteActive = matchRoute({ to: '/pokemons/$detailId' });
@@ -34,28 +40,6 @@ const HomePage = () => {
     setCurrentPage(currentPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemsPerPage, searchQuery, currentPage]);
-
-  useEffect(() => {
-    if (allPokemon.length > 0) return;
-
-    const controller = new AbortController();
-
-    loadAllPokemon(controller.signal);
-
-    return () => controller.abort();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (allPokemon.length === 0) return;
-
-    const controller = new AbortController();
-
-    filterAndFetch(searchQuery, currentPage, itemsPerPage, controller.signal);
-
-    return () => controller.abort();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allPokemon, currentPage, itemsPerPage, searchQuery]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -87,12 +71,12 @@ const HomePage = () => {
       <ProgressBar isLoading={isLoading} />
       <SearchSection />
       <SelectionToolbar />
-      <ResultsSection results={results} isLoading={isLoading} errors={errors} />
-      {totalPages > 1 && !isLoading && (
+      <ResultsSection results={data?.results || []} isLoading={isLoading} errors={errorsArray} />
+      {data && data.totalPages > 1 && !isLoading && (
         <div className="flex justify-center flex-wrap gap-8 items-center">
           <Pagination
             currentPage={currentPage}
-            totalPages={totalPages}
+            totalPages={data.totalPages}
             onPageChange={handlePageChange}
           />
           <SelectCountItem defaultCount={itemsPerPage} onSelect={handleSelectCount} />

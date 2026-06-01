@@ -114,16 +114,16 @@ export const usePokemonStore = create<PokemonState>()((set, get) => ({
 
   fetchDetails: async (id: string, signal: AbortSignal) => {
     set({ pokemonDetails: null, isLoading: true });
-      try {
-        const result = await fetchPokemonData(id, signal);
-        set({ pokemonDetails: result });
-      } catch (e) {
-        if ((e as Error).name !== 'AbortError') {
-          set({ errors: [...(get().errors ?? []), (e as Error).message], isLoading: false });
-        }
-      } finally {
-        set({ isLoading: false });
+    try {
+      const result = await fetchPokemonData(id, signal);
+      set({ pokemonDetails: result });
+    } catch (e) {
+      if ((e as Error).name !== 'AbortError') {
+        set({ errors: [...(get().errors ?? []), (e as Error).message], isLoading: false });
       }
+    } finally {
+      set({ isLoading: false });
+    }
   },
 
   reset: () => set({ allPokemon: [], errors: null, results: [] }),

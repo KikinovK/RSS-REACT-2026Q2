@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, RenderOptions, screen, waitFor } from '@testing-library/react';
 import HomePage from '../pages/HomePage';
 import { SEARCH_KEY } from '../utils/const';
 import mockPokemonList from '../__mocks__/list';
@@ -7,6 +7,27 @@ import mockPokemonDetails from '../__mocks__/details';
 import { AnchorHTMLAttributes, ReactNode } from 'react';
 import mockPokemonSpecies from '../__mocks__/species';
 import { usePokemonStore } from '../store/usePokemonStore';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const createTestQueryClient = () => {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+};
+
+const TestWrapper = ({ children }: { children: ReactNode }) => {
+  const testQueryClient = createTestQueryClient();
+
+  return <QueryClientProvider client={testQueryClient}>{children}</QueryClientProvider>;
+};
+
+const renderWithProviders = (ui: ReactNode, options?: Omit<RenderOptions, 'wrapper'>) => {
+  return render(ui, { wrapper: TestWrapper, ...options });
+};
 
 const getMockFetch = (url: string) => {
   if (url.includes('/pokemon?') || url.endsWith('/pokemon')) {
@@ -122,7 +143,7 @@ describe('HomePage Component - Integration Tests', () => {
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />);
+    renderWithProviders(<HomePage />);
 
     expect(screen.getByText('Loading...')).toBeInTheDocument();
 
@@ -142,7 +163,7 @@ describe('HomePage Component - Integration Tests', () => {
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />);
+    renderWithProviders(<HomePage />);
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
     });
@@ -156,7 +177,7 @@ describe('HomePage Component - Integration Tests', () => {
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />);
+    renderWithProviders(<HomePage />);
 
     expect(screen.getByText('Loading...')).toBeInTheDocument();
 
@@ -171,7 +192,7 @@ describe('HomePage Component - API Integration Tests', () => {
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />);
+    renderWithProviders(<HomePage />);
 
     await screen.findByText('bulbasaur');
 
@@ -194,7 +215,7 @@ describe('HomePage Component - API Integration Tests', () => {
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />);
+    renderWithProviders(<HomePage />);
 
     await waitFor(() => expect(screen.getByText('bulbasaur')).toBeInTheDocument());
     expect(
@@ -212,7 +233,7 @@ describe('HomePage Component - API Integration Tests', () => {
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />);
+    renderWithProviders(<HomePage />);
 
     await waitFor(() =>
       expect(screen.getByText(/Failed to load Pokémon list/i)).toBeInTheDocument()
@@ -225,7 +246,7 @@ describe('HomePage Component - API Integration Tests', () => {
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />);
+    renderWithProviders(<HomePage />);
 
     await waitFor(() => expect(screen.getByText('Network failed')).toBeInTheDocument());
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -241,7 +262,7 @@ describe('HomePage Component - API Integration Tests', () => {
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />);
+    renderWithProviders(<HomePage />);
 
     await waitFor(() => expect(screen.getByText(/Failed to load bulbasaur/i)).toBeInTheDocument());
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -257,7 +278,7 @@ describe('HomePage Component - API Integration Tests', () => {
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />);
+    renderWithProviders(<HomePage />);
 
     await waitFor(() =>
       expect(screen.getByText(/Failed to load species for bulbasaur/i)).toBeInTheDocument()
@@ -272,7 +293,7 @@ describe('HomePage Component - State Management Tests', () => {
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />);
+    renderWithProviders(<HomePage />);
 
     await waitFor(() => expect(screen.queryByText('Loading...')).not.toBeInTheDocument());
     expect(screen.getByText('bulbasaur')).toBeInTheDocument();
@@ -287,7 +308,7 @@ describe('HomePage - Pagination (handlePageChange)', () => {
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />);
+    renderWithProviders(<HomePage />);
 
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -322,7 +343,7 @@ describe('HomePage - Items Per Page (handleSelectCount)', () => {
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<HomePage />);
+    renderWithProviders(<HomePage />);
 
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();

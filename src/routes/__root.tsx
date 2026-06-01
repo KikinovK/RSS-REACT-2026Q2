@@ -1,9 +1,14 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createRootRoute, Outlet } from '@tanstack/react-router';
+import { createRootRouteWithContext, Outlet } from '@tanstack/react-router';
 import ErrorBoundary from '../components/ErrorBoundary';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import NotFoundPage from '../pages/NotFoundPage';
+import { QueryClient } from '@tanstack/react-query';
+
+interface MyRouterContext {
+  queryClient: QueryClient;
+}
 
 const RootLayout = () => {
   return (
@@ -19,7 +24,7 @@ const RootLayout = () => {
   );
 };
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: RootLayout,
   notFoundComponent: NotFoundPage,
 });
