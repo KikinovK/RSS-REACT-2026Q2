@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import SwitchTheme from './SwithcTheme';
+import { RefreshPokemonButton } from './RefreshPokemonButton';
 
 const Header = () => {
   return (
@@ -33,6 +34,7 @@ const Header = () => {
             </Link>
           </div>
           <SwitchTheme />
+          <RefreshPokemonButton />
         </div>
       </nav>
     </header>
