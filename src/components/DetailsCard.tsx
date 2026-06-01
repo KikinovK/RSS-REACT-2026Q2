@@ -1,13 +1,12 @@
 import { useParams } from '@tanstack/react-router';
 import ProgressBar from './ui/ProgressBar';
-import ErrorMessage from './ui/ErrorMessage';
 import PokemonImage from './ui/PokemonImage';
 import { usePokemonDetails } from '../hooks/usePokemonQueries';
 
 const DetailsCard = () => {
   const { detailId } = useParams({ from: '/pokemons/$detailId' });
 
-  const { data: pokemon, isLoading, error } = usePokemonDetails(detailId);
+  const { data: pokemon, isLoading } = usePokemonDetails(detailId);
 
   const pokemonImage =
     pokemon?.sprites.other?.['official-artwork']?.front_default || pokemon?.sprites.front_default;
@@ -17,10 +16,8 @@ const DetailsCard = () => {
       <ProgressBar isLoading={isLoading} />
       <div className="bg-black/6 dark:bg-white/6 rounded-(--radius-cards) p-6 border border-black/10 dark:border-white/10 max-w-md mx-auto flex flex-col gap-6 text-stardust">
         {isLoading && <p className="text-body text-muted-text">Loading...</p>}
-        {error && (
-          <ErrorMessage messages={[error.message || 'Pokemon not found in the PokeAPI database']} />
-        )}
-        {!isLoading && !error && !pokemon && (
+
+        {!isLoading && !pokemon && (
           <p className="text-body text-muted-text">No results found.</p>
         )}
         {!isLoading && pokemon && (

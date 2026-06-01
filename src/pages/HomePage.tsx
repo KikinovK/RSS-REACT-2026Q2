@@ -16,17 +16,17 @@ import { usePokemonSearch } from '../hooks/usePokemonQueries';
 import { LIMIT_KEY, OPTIONS_COUNT_ITEMS, PAGE_KEY, SEARCH_KEY } from '../utils/const';
 
 import { CountItem } from '../types/CoutItem';
+import { useErrorStore } from '../store/useErrorStore';
 
 const HomePage = () => {
   const { limit: itemsPerPage, filter: searchQuery, page: currentPage } = Route.useSearch();
   const navigate = Route.useNavigate();
 
-  const { data, isLoading, error } = usePokemonSearch(searchQuery, currentPage, itemsPerPage);
+  const { data, isLoading } = usePokemonSearch(searchQuery, currentPage, itemsPerPage);
 
-  const errorsArray = [
-  ...(data?.errors || []),
-  ...(error ? [error instanceof Error ? error.message : String(error)] : []),
-];
+  if (data?.errors && data.errors.length > 0) data?.errors.forEach((err) => {
+    useErrorStore.getState().addError(err);
+  });
 
   const matchRoute = useMatchRoute();
   const isDetailsRouteActive = matchRoute({ to: '/pokemons/$detailId' });
@@ -73,7 +73,7 @@ const HomePage = () => {
       <ProgressBar isLoading={isLoading} />
       <SearchSection />
       <SelectionToolbar />
-      <ResultsSection results={data?.results || []} isLoading={isLoading} errors={errorsArray} />
+      <ResultsSection results={data?.results || []} isLoading={isLoading} />
       {data && data.totalPages > 1 && !isLoading && (
         <div className="flex justify-center flex-wrap gap-8 items-center">
           <Pagination

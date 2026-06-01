@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import NotFoundPage from '../pages/NotFoundPage';
 import { QueryClient } from '@tanstack/react-query';
+import { ErrorToastList } from '../components/ui/ErrorToastList';
 
 interface MyRouterContext {
   queryClient: QueryClient;
@@ -13,6 +14,7 @@ interface MyRouterContext {
 const RootLayout = () => {
   return (
     <ErrorBoundary>
+      <ErrorToastList />
       <div className="min-h-screen flex flex-col bg-deep-space text-stardust font-noigrotesk">
         <Header />
         <main className="flex-1 w-full">

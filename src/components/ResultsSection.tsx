@@ -1,15 +1,13 @@
 import ResultCard from './ui/ResultCard';
-import ErrorMessage from './ui/ErrorMessage';
 import type { SearchResult } from '../types/SearchResult';
 import { useSelectionStore } from '../store/useSelectionStore';
 
 interface ResultsSectionProps {
   results: SearchResult[];
   isLoading: boolean;
-  errors: string[] | undefined;
 }
 
-const ResultsSection = ({ results, isLoading, errors }: ResultsSectionProps) => {
+const ResultsSection = ({ results, isLoading }: ResultsSectionProps) => {
   const { isSelected, toggleItem } = useSelectionStore();
 
   const handleSelectionChange = (id: string) => {
@@ -22,8 +20,7 @@ const ResultsSection = ({ results, isLoading, errors }: ResultsSectionProps) => 
         <h2 className="text-heading font-noigrotesk text-stardust">Results</h2>
       </div>
       {isLoading && <p className="text-body text-muted-text">Loading...</p>}
-      {!isLoading && errors && <ErrorMessage messages={errors} />}
-      {!isLoading && !errors && results.length === 0 && (
+      {!isLoading && results.length === 0 && (
         <p className="text-body text-muted-text">No results found.</p>
       )}
       {!isLoading && results.length > 0 && (
