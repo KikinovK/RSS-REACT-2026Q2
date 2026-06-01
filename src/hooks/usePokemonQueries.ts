@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchAllPokemon, fetchPokemonData, fetchPokemonResult } from '../api/pokemonApi';
 import { SearchResult } from '../types/SearchResult';
+import { queryClient } from '../config/queryClient';
 
 export const pokemonKeys = {
   all: ['pokemon'] as const,
+  allBase: () => [...pokemonKeys.all, 'base-list'] as const,
   lists: () => [...pokemonKeys.all, 'list'] as const,
   list: (query: string, page: number, limit: number) =>
     [...pokemonKeys.lists(), { query, page, limit }] as const,
@@ -23,7 +25,10 @@ export const usePokemonSearch = (query: string, page: number, limit: number) => 
   return useQuery({
     queryKey: pokemonKeys.list(query, page, limit),
     queryFn: async ({ signal }) => {
-      const allPokemon = await fetchAllPokemon(signal);
+      const allPokemon = await queryClient.fetchQuery({
+        queryKey: pokemonKeys.allBase(),
+        queryFn: ({ signal }) => fetchAllPokemon(signal),
+      });
 
       const normalized = query.toLowerCase();
       const filtered = allPokemon.filter((p) => p.name.includes(normalized));

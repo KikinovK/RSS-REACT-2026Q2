@@ -22,11 +22,12 @@ const HomePage = () => {
   const { limit: itemsPerPage, filter: searchQuery, page: currentPage } = Route.useSearch();
   const navigate = Route.useNavigate();
 
-  const { data, isLoading } = usePokemonSearch(searchQuery, currentPage, itemsPerPage);
+  const { data, isFetching } = usePokemonSearch(searchQuery, currentPage, itemsPerPage);
 
-  if (data?.errors && data.errors.length > 0) data?.errors.forEach((err) => {
-    useErrorStore.getState().addError(err);
-  });
+  if (data?.errors && data.errors.length > 0)
+    data?.errors.forEach((err) => {
+      useErrorStore.getState().addError(err);
+    });
 
   const matchRoute = useMatchRoute();
   const isDetailsRouteActive = matchRoute({ to: '/pokemons/$detailId' });
@@ -70,11 +71,11 @@ const HomePage = () => {
 
   return (
     <div className="space-y-8 pb-2">
-      <ProgressBar isLoading={isLoading} />
+      <ProgressBar isLoading={isFetching} />
       <SearchSection />
       <SelectionToolbar />
-      <ResultsSection results={data?.results || []} isLoading={isLoading} />
-      {data && data.totalPages > 1 && !isLoading && (
+      <ResultsSection results={data?.results || []} isLoading={isFetching} />
+      {data && data.totalPages > 1 && !isFetching && (
         <div className="flex justify-center flex-wrap gap-8 items-center">
           <Pagination
             currentPage={currentPage}

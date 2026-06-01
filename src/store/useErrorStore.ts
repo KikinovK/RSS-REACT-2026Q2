@@ -16,21 +16,23 @@ interface ErrorState {
 export const useErrorStore = create<ErrorState>()((set) => ({
   errors: [],
 
-  addError: (message) => set((state) => {
-    const isDuplicate = state.errors.some((err) => err.message === message);
-    if (isDuplicate) return state;
+  addError: (message) =>
+    set((state) => {
+      const isDuplicate = state.errors.some((err) => err.message === message);
+      if (isDuplicate) return state;
 
-    const newError: AppError = {
-      id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      message,
-      timestamp: new Date(),
-    };
-    return { errors: [...state.errors, newError] };
-  }),
+      const newError: AppError = {
+        id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        message,
+        timestamp: new Date(),
+      };
+      return { errors: [...state.errors, newError] };
+    }),
 
-  removeError: (id) => set((state) => ({
-    errors: state.errors.filter((err) => err.id !== id),
-  })),
+  removeError: (id) =>
+    set((state) => ({
+      errors: state.errors.filter((err) => err.id !== id),
+    })),
 
   clearAllErrors: () => set({ errors: [] }),
 }));

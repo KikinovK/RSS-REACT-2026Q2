@@ -28,7 +28,6 @@ describe('ThemeContext', () => {
     document.documentElement.className = '';
   });
 
-
   it('should initialize with default light theme when no theme is stored', () => {
     render(
       <ThemeProvider>
@@ -41,7 +40,6 @@ describe('ThemeContext', () => {
     const storedTheme = JSON.parse(localStorage.getItem(THEME_KEY) || 'null');
     expect(storedTheme).toBe('light');
   });
-
 
   it('should toggle theme from light to dark and back to light', async () => {
     const user = userEvent.setup();

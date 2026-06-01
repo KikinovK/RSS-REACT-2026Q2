@@ -6,21 +6,19 @@ import { usePokemonDetails } from '../hooks/usePokemonQueries';
 const DetailsCard = () => {
   const { detailId } = useParams({ from: '/pokemons/$detailId' });
 
-  const { data: pokemon, isLoading } = usePokemonDetails(detailId);
+  const { data: pokemon, isFetching } = usePokemonDetails(detailId);
 
   const pokemonImage =
     pokemon?.sprites.other?.['official-artwork']?.front_default || pokemon?.sprites.front_default;
 
   return (
     <>
-      <ProgressBar isLoading={isLoading} />
+      <ProgressBar isLoading={isFetching} />
       <div className="bg-black/6 dark:bg-white/6 rounded-(--radius-cards) p-6 border border-black/10 dark:border-white/10 max-w-md mx-auto flex flex-col gap-6 text-stardust">
-        {isLoading && <p className="text-body text-muted-text">Loading...</p>}
+        {isFetching && <p className="text-body text-muted-text">Loading...</p>}
 
-        {!isLoading && !pokemon && (
-          <p className="text-body text-muted-text">No results found.</p>
-        )}
-        {!isLoading && pokemon && (
+        {!isFetching && !pokemon && <p className="text-body text-muted-text">No results found.</p>}
+        {!isFetching && pokemon && (
           <>
             <div className="text-center">
               {pokemonImage && (

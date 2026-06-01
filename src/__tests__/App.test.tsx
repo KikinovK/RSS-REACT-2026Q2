@@ -17,25 +17,28 @@ describe('App - Router Integration Tests', () => {
   });
 
   const mockFetchSuccess = () => {
-    vi.stubGlobal('fetch', vi.fn((url: string) => {
-      if (url.includes('/pokemon?')) {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((url: string) => {
+        if (url.includes('/pokemon?')) {
+          return Promise.resolve({
+            ok: true,
+            json: async () => ({ results: [] }),
+          } as Response);
+        }
         return Promise.resolve({
           ok: true,
-          json: async () => ({ results: [] }),
+          json: async () => ({}),
         } as Response);
-      }
-      return Promise.resolve({
-        ok: true,
-        json: async () => ({}),
-      } as Response);
-    }));
+      })
+    );
   };
 
   const createTestRouter = () => {
     const queryClient = new QueryClient({
       defaultOptions: {
-        queries: { retry: false, staleTime: Infinity }
-      }
+        queries: { retry: false, staleTime: Infinity },
+      },
     });
 
     const memoryHistory = createMemoryHistory({
@@ -45,7 +48,7 @@ describe('App - Router Integration Tests', () => {
     const router = createRouter({
       routeTree,
       history: memoryHistory,
-      context: { queryClient }
+      context: { queryClient },
     });
 
     return { queryClient, router };
@@ -64,9 +67,12 @@ describe('App - Router Integration Tests', () => {
       </QueryClientProvider>
     );
 
-    await waitFor(() => {
-      expect(screen.getByRole('banner')).toBeInTheDocument();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(screen.getByRole('banner')).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
     expect(screen.getByRole('main')).toBeInTheDocument();
     expect(screen.getByRole('contentinfo')).toBeInTheDocument();
   });
@@ -75,7 +81,7 @@ describe('App - Router Integration Tests', () => {
     mockFetchSuccess();
 
     const queryClient = new QueryClient({
-      defaultOptions: { queries: { retry: false } }
+      defaultOptions: { queries: { retry: false } },
     });
 
     const memoryHistory = createMemoryHistory({
@@ -85,7 +91,7 @@ describe('App - Router Integration Tests', () => {
     const router = createRouter({
       routeTree,
       history: memoryHistory,
-      context: { queryClient }
+      context: { queryClient },
     });
 
     render(

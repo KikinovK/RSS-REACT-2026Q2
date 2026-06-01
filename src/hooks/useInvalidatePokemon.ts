@@ -13,6 +13,8 @@ export const useInvalidatePokemon = () => {
   };
 
   const invalidateLists = () => {
+    queryClient.removeQueries({ queryKey: pokemonKeys.allBase() });
+
     queryClient.invalidateQueries({ queryKey: pokemonKeys.lists() });
   };
 

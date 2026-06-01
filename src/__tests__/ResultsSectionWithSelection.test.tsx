@@ -159,9 +159,7 @@ describe('ResultsSection with Selection', () => {
   });
 
   it('does not show results when loading', () => {
-    const { container } = render(
-      <ResultsSection results={mockResults} isLoading={true} />
-    );
+    const { container } = render(<ResultsSection results={mockResults} isLoading={true} />);
 
     expect(screen.getByText('Loading...')).toBeInTheDocument();
     const resultsList = container.querySelector('ul');
@@ -169,9 +167,7 @@ describe('ResultsSection with Selection', () => {
   });
 
   it('renders grid layout with correct structure', () => {
-    const { container } = render(
-      <ResultsSection results={mockResults} isLoading={false} />
-    );
+    const { container } = render(<ResultsSection results={mockResults} isLoading={false} />);
 
     const ul = container.querySelector('ul');
     expect(ul).toHaveClass('grid', 'grid-cols-1', 'sm:grid-cols-2');

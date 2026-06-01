@@ -9,7 +9,6 @@ import mockPokemonSpecies from '../__mocks__/species';
 import { renderWithProviders } from './test-utils';
 import { ErrorToastList } from '../components/ui/ErrorToastList';
 
-
 const getMockFetch = (url: string) => {
   if (url.includes('/pokemon?') || url.endsWith('/pokemon')) {
     return Promise.resolve({

@@ -5,14 +5,15 @@ import Button from './ui/Button';
 import RefreshIcon from '../assets/icons/refresh.svg?react';
 
 export const RefreshPokemonButton = () => {
-  const { invalidateAll } = useInvalidatePokemon();
+  const { invalidateLists } = useInvalidatePokemon();
 
-  const isFetchingAnyPokemon = useIsFetching({
-    queryKey: pokemonKeys.all
-  }) > 0;
+  const isFetchingAnyPokemon =
+    useIsFetching({
+      queryKey: pokemonKeys.all,
+    }) > 0;
 
   const handleRefresh = async () => {
-    await invalidateAll();
+    await invalidateLists();
   };
 
   return (
@@ -22,7 +23,7 @@ export const RefreshPokemonButton = () => {
       className={`flex items-center gap-2 bg-guidepost-green ${isFetchingAnyPokemon ? 'cursor-not-allowed opacity-50' : ''}`}
     >
       <RefreshIcon className={`h-4 w-4 ${isFetchingAnyPokemon ? 'animate-spin ' : ''}`} />
-      {isFetchingAnyPokemon ? "Synchronizing..." : "Refresh Data"}
+      {isFetchingAnyPokemon ? 'Synchronizing...' : 'Refresh Data'}
     </Button>
   );
 };
