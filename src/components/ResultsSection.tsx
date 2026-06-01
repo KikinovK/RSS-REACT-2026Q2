@@ -6,7 +6,7 @@ import { useSelectionStore } from '../store/useSelectionStore';
 interface ResultsSectionProps {
   results: SearchResult[];
   isLoading: boolean;
-  errors: string[] | null;
+  errors: string[] | undefined;
 }
 
 const ResultsSection = ({ results, isLoading, errors }: ResultsSectionProps) => {

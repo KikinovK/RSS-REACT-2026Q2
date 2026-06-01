@@ -39,9 +39,14 @@ export const usePokemonSearch = (query: string, page: number, limit: number) => 
         .filter((r): r is PromiseFulfilledResult<SearchResult> => r.status === 'fulfilled')
         .map((r) => r.value);
 
+      const errors: string[] = settled
+        .filter((r): r is PromiseRejectedResult => r.status === 'rejected')
+        .map((r) => r.reason?.message || 'Unknown error');
+
       return {
         results: successful,
         totalPages: Math.ceil(filtered.length / limit),
+        errors,
       };
     },
     placeholderData: (previousData) => previousData,

@@ -23,8 +23,10 @@ const HomePage = () => {
 
   const { data, isLoading, error } = usePokemonSearch(searchQuery, currentPage, itemsPerPage);
 
-  const errorsArray = error ? [(error as Error).message] : null;
-  console.log('errorsArray', errorsArray);
+  const errorsArray = [
+  ...(data?.errors || []),
+  ...(error ? [error instanceof Error ? error.message : String(error)] : []),
+];
 
   const matchRoute = useMatchRoute();
   const isDetailsRouteActive = matchRoute({ to: '/pokemons/$detailId' });
