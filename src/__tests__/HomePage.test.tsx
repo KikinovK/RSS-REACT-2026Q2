@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
-import { fireEvent, render, RenderOptions, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import HomePage from '../pages/HomePage';
 import { SEARCH_KEY } from '../utils/const';
 import mockPokemonList from '../__mocks__/list';
@@ -7,27 +7,8 @@ import mockPokemonDetails from '../__mocks__/details';
 import { AnchorHTMLAttributes, ReactNode } from 'react';
 import mockPokemonSpecies from '../__mocks__/species';
 import { usePokemonStore } from '../store/usePokemonStore';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { renderWithProviders } from './test-utils';
 
-const createTestQueryClient = () => {
-  return new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
-};
-
-const TestWrapper = ({ children }: { children: ReactNode }) => {
-  const testQueryClient = createTestQueryClient();
-
-  return <QueryClientProvider client={testQueryClient}>{children}</QueryClientProvider>;
-};
-
-const renderWithProviders = (ui: ReactNode, options?: Omit<RenderOptions, 'wrapper'>) => {
-  return render(ui, { wrapper: TestWrapper, ...options });
-};
 
 const getMockFetch = (url: string) => {
   if (url.includes('/pokemon?') || url.endsWith('/pokemon')) {

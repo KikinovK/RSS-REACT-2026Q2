@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import DetailsCard from '../components/DetailsCard';
 import { fetchPokemonData } from '../api/pokemonApi';
 import { PokemonData } from '../types/pokemon';
+import { renderWithProviders } from './test-utils';
 
 vi.mock('../api/pokemonApi', () => ({
   fetchPokemonData: vi.fn(),
@@ -42,7 +43,7 @@ describe('DetailsCard Component', () => {
   it('should display the loading status (Loading...) during mounting', async () => {
     vi.mocked(fetchPokemonData).mockImplementation(() => new Promise(() => {}));
 
-    render(<DetailsCard />);
+    renderWithProviders(<DetailsCard />);
 
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
@@ -50,7 +51,7 @@ describe('DetailsCard Component', () => {
   it('should successfully render the Pokemon`s parameters when responding from the API', async () => {
     vi.mocked(fetchPokemonData).mockResolvedValueOnce(mockPokemon);
 
-    render(<DetailsCard />);
+    renderWithProviders(<DetailsCard />);
 
     await waitFor(() => {
       expect(screen.getByText('pikachu')).toBeInTheDocument();
@@ -74,7 +75,7 @@ describe('DetailsCard Component', () => {
     const errorMessage = 'Network Error';
     vi.mocked(fetchPokemonData).mockRejectedValueOnce(new Error(errorMessage));
 
-    render(<DetailsCard />);
+    renderWithProviders(<DetailsCard />);
 
     await waitFor(() => {
       expect(screen.getByText(errorMessage)).toBeInTheDocument();
@@ -94,7 +95,7 @@ describe('DetailsCard Component', () => {
 
     vi.mocked(fetchPokemonData).mockResolvedValueOnce(pokemonWithoutArt);
 
-    render(<DetailsCard />);
+    renderWithProviders(<DetailsCard />);
 
     await waitFor(() => {
       expect(screen.getByText('pikachu')).toBeInTheDocument();
@@ -107,7 +108,7 @@ describe('DetailsCard Component', () => {
   it('should correctly respond to changes in the detailId parameter', async () => {
     vi.mocked(fetchPokemonData).mockResolvedValueOnce(mockPokemon);
 
-    const { rerender } = render(<DetailsCard />);
+    const { rerender } = renderWithProviders(<DetailsCard />);
 
     await waitFor(() => {
       expect(fetchPokemonData).toHaveBeenCalledWith('25', expect.any(AbortSignal));
