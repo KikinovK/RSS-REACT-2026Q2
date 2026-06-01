@@ -6,7 +6,6 @@ import mockPokemonList from '../__mocks__/list';
 import mockPokemonDetails from '../__mocks__/details';
 import { AnchorHTMLAttributes, ReactNode } from 'react';
 import mockPokemonSpecies from '../__mocks__/species';
-import { usePokemonStore } from '../store/usePokemonStore';
 import { renderWithProviders } from './test-utils';
 
 
@@ -103,7 +102,6 @@ vi.mock('@tanstack/react-router', async (importOriginal) => {
 });
 
 beforeEach(() => {
-  usePokemonStore.getState().reset();
   vi.restoreAllMocks();
   vi.clearAllMocks();
   localStorage.clear();

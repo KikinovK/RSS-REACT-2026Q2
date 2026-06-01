@@ -1,12 +1,15 @@
-import { usePokemonStore } from '../store/usePokemonStore';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSelectionStore } from '../store/useSelectionStore';
 import { downloadCSV } from '../utils/csvExport';
 import Button from './ui/Button';
+import { fetchAllPokemon, fetchPokemonResult } from '../api/pokemonApi';
+import { extractLastSegment } from '../utils/utils';
+import { pokemonKeys } from '../hooks/usePokemonQueries';
 
 const SelectionToolbar = () => {
+  const queryClient = useQueryClient();
   const { getSelectedCount, clearSelections } = useSelectionStore();
   const selectedCount = getSelectedCount();
-  const { fetchSelectedPokemon } = usePokemonStore();
 
   if (selectedCount === 0) {
     return null;
@@ -14,9 +17,23 @@ const SelectionToolbar = () => {
 
   const handleDownload = async () => {
     const selectedItems = useSelectionStore.getState().selectedItems;
-    const selectedResults = await fetchSelectedPokemon(
-      Array.from(selectedItems),
-      new AbortController().signal
+    const selectedIds = Array.from(selectedItems);
+
+    const allPokemon = await queryClient.ensureQueryData({
+      queryKey: pokemonKeys.all,
+      queryFn: ({ signal }) => fetchAllPokemon(signal),
+    });
+    const selectedResults = await Promise.all(
+      selectedIds.map((id) => {
+        const pokemonItem = allPokemon.find((p) => extractLastSegment(p.url) === id);
+
+        if (!pokemonItem) return Promise.resolve({ id: '', name: '', description: '', image: '' });
+
+        return queryClient.fetchQuery({
+          queryKey: ['pokemon', 'detail', id],
+          queryFn: ({ signal }) => fetchPokemonResult(pokemonItem, signal),
+        });
+      })
     );
 
     downloadCSV(selectedResults);
