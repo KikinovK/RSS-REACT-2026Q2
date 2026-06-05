@@ -1,0 +1,65 @@
+@import 'tailwindcss';
+
+@keyframes progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@theme {
+  --color-deep-space: #f1f1f1;
+  --color-midnight-core: #ebeae3;
+  --color-cosmic-gray: #fadcd9;
+  --color-stardust: #0a0a0a;
+  --color-guidepost-green: #19045d;
+  --color-muted-text: #333333;
+
+  --font-noigrotesk:
+    'NoiGrotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
+  --font-sansplomb:
+    'SansPlomb', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
+
+  --text-caption: 12px;
+  --text-body-sm: 14px;
+  --text-body: 16px;
+  --text-subheading: 20px;
+  --text-heading-sm: 22px;
+  --text-heading: 28px;
+  --text-heading-lg: 40px;
+  --text-display: 201px;
+
+  --spacing-8: 8px;
+  --spacing-16: 16px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-64: 64px;
+  --spacing-80: 80px;
+  --spacing-120: 120px;
+
+  --radius-tags: 9999px;
+  --radius-cards: 24px;
+  --radius-inputs: 24px;
+  --radius-buttons: 8px;
+  --radius-buttons-large: 12px;
+  --radius-navigationitems: 8px;
+}
+
+@variant dark (&:where(.dark, .dark *));
+
+.dark {
+  --color-deep-space: #000000;
+  --color-midnight-core: #14151c;
+  --color-cosmic-gray: #052326;
+  --color-stardust: #ffffff;
+  --color-guidepost-green: #d3fb52;
+  --color-muted-text: #666666;
+}
