@@ -6,7 +6,6 @@ export const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error) => {
       if (error.name === 'AbortError') return;
-      console.log('Query error:', error);
       useErrorStore.getState().addError(error.message);
     },
   }),
