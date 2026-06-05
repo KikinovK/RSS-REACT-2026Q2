@@ -1,46 +1,102 @@
-# RSS React 2026 Q2 — Pokémon Search
+# React: Unit Testing
 
-A React application built with class components that allows users to search and browse Pokémon using the [PokéAPI](https://pokeapi.co/).
+A React application demonstrating comprehensive unit testing practices using Vitest and React Testing Library. This project showcases various testing patterns including component testing, integration testing, API mocking, error handling tests, and state management testing.
 
-🔗 **Demo:** [https://kikinovk.github.io/RSS-REACT-2026Q2/class-components/](https://kikinovk.github.io/RSS-REACT-2026Q2/class-components/)
+🔗 **Task:** [React: Unit Testing](https://github.com/rolling-scopes-school/tasks/blob/master/react/modules/tasks/tests.md)
+
+🌐 **Demo:** [https://kikinovk.github.io/RSS-REACT-2026Q2/unit-testing/](https://kikinovk.github.io/RSS-REACT-2026Q2/unit-testing/)
 
 ## Features
 
-- Search Pokémon by name with local storage persistence
-- Browse initial list of 20 Pokémon on load
-- Pokémon cards with official artwork, name and description
-- Image skeleton loader while artwork is loading
-- Progress bar during API requests
-- Error boundary with fallback UI
-- Full error handling with human-readable messages
+- **Comprehensive Test Coverage**: Unit tests for all major components with coverage thresholds (80% statements, 50% branches/functions/lines)
+- **Component Testing**: Tests for UI components including buttons, cards, search inputs, and more
+- **Integration Testing**: End-to-end tests for the App component simulating real user interactions
+- **API Mocking**: Mock fetch API calls using Vitest spies for predictable test scenarios
+- **Error Handling Tests**: Tests for error boundaries, API failures, and network errors
+- **State Management Tests**: Tests for component state updates and localStorage persistence
+- **User Interaction Testing**: Tests using @testing-library/user-event for realistic user simulations
+- **Happy-DOM Environment**: Fast test execution using happy-dom instead of jsdom
+- **Coverage Reports**: Detailed coverage analysis with configurable thresholds
 
 ## Tech Stack
 
-- [React 19](https://react.dev/) — class components
+- [React 19](https://react.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Vite](https://vitejs.dev/)
 - [Tailwind CSS v4](https://tailwindcss.com/)
+- [Vitest](https://vitest.dev/) - Fast unit test framework for Vite
+- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) - DOM testing utilities for React
+- [User Event](https://testing-library.com/docs/user-event/intro) - Simulate user interactions
+- [Happy-DOM](https://github.com/capricorn86/happy-dom) - Lightweight DOM implementation
 - [PokéAPI](https://pokeapi.co/)
 
 ## Project Structure
 
 ```
-src/
-├── components/
-│   ├── ui/             # Reusable UI components (Button, SearchInput, ResultCard, ...)
-│   ├── ErrorBoundary   # App-level error boundary
-│   ├── ErrorSimulator  # Test button to simulate errors
-│   ├── ResultsSection  # Results grid
-│   ├── SearchBar       # Search input + button with localStorage
-│   └── SearchSection   # Top layout section
-├── services/
-│   └── pokemonService  # PokéAPI fetch functions
-├── types/              # TypeScript interfaces
-├── utils/
-│   ├── ApiError        # Custom error class with status messages
-│   └── storage         # localStorage helpers
-├── App.tsx
-└── main.tsx
+src
+ ┣ __tests__
+ ┃ ┣ App.test.tsx              # Integration and state management tests
+ ┃ ┣ ErrorBoundary.test.tsx    # Error boundary component tests
+ ┃ ┣ ErrorSimulator.test.tsx   # Error simulation tests
+ ┃ ┣ PokemonImage.test.tsx     # Image component tests
+ ┃ ┣ ProgressBar.test.tsx      # Progress bar component tests
+ ┃ ┣ ResultCard.test.tsx       # Result card component tests
+ ┃ ┣ ResultsSection.test.tsx   # Results section tests
+ ┃ ┣ SearchBar.test.tsx        # Search bar component tests
+ ┃ ┗ SearchSection.test.tsx    # Search section tests
+ ┣ assets
+ ┃ ┗ icons
+ ┃ ┃ ┗ search.svg
+ ┣ components
+ ┃ ┣ ui
+ ┃ ┃ ┣ Button.tsx
+ ┃ ┃ ┣ ErrorMessage.tsx
+ ┃ ┃ ┣ Pagination.tsx
+ ┃ ┃ ┣ PokemonImage.tsx
+ ┃ ┃ ┣ ProgressBar.tsx
+ ┃ ┃ ┣ ResultCard.tsx
+ ┃ ┃ ┣ SearchInput.tsx
+ ┃ ┃ ┗ SelectCountItem.tsx
+ ┃ ┣ DetailsCard.tsx
+ ┃ ┣ ErrorBoundary.tsx
+ ┃ ┣ ErrorSimulator.tsx
+ ┃ ┣ Footer.tsx
+ ┃ ┣ Header.tsx
+ ┃ ┣ ResultsSection.tsx
+ ┃ ┣ SearchBar.tsx
+ ┃ ┗ SearchSection.tsx
+ ┣ hooks
+ ┃ ┗ useLocalStorage.ts
+ ┣ pages
+ ┃ ┣ AboutPage.tsx
+ ┃ ┣ HomePage.tsx
+ ┃ ┗ NotFoundPage.tsx
+ ┣ routes
+ ┃ ┣ about.ts
+ ┃ ┣ index.ts
+ ┃ ┣ pokemons.$detailId.ts
+ ┃ ┣ pokemons.ts
+ ┃ ┗ __root.tsx
+ ┣ services
+ ┃ ┗ pokemonService.ts
+ ┣ types
+ ┃ ┣ CountItem.ts
+ ┃ ┣ pokemon.ts
+ ┃ ┗ SearchResult.ts
+ ┣ utils
+ ┃ ┣ ApiError.ts
+ ┃ ┣ const.ts
+ ┃ ┣ csvExport.ts
+ ┃ ┣ productsSearchSchema.ts
+ ┃ ┣ storage.ts
+ ┃ ┗ utils.ts
+ ┣ App.tsx
+ ┣ index.css
+ ┣ main.tsx
+ ┣ router.tsx
+ ┣ routeTree.gen.ts
+ ┣ setupTests.ts
+ ┗ vite-env.d.ts
 ```
 
 ## Getting Started
@@ -83,11 +139,38 @@ npm run preview
 
 ## Scripts
 
-| Script             | Description               |
-| ------------------ | ------------------------- |
-| `npm run dev`      | Start development server  |
-| `npm run build`    | Build for production      |
-| `npm run preview`  | Preview production build  |
-| `npm run lint`     | Run ESLint                |
-| `npm run lint:fix` | Run ESLint with auto-fix  |
-| `npm run format`   | Format code with Prettier |
+| Script                    | Description                          |
+| ------------------------- | ------------------------------------ |
+| `npm run dev`             | Start development server             |
+| `npm run build`           | Build for production                 |
+| `npm run preview`         | Preview production build             |
+| `npm run lint`            | Run ESLint                           |
+| `npm run lint:fix`        | Run ESLint with auto-fix             |
+| `npm run format`          | Format code with Prettier            |
+| `npm run test`            | Run tests using Vitest (watch mode)  |
+| `npm run test:coverage`   | Run tests with coverage report       |
+
+## Testing Details
+
+### Test Environment
+
+- **Runner**: Vitest with happy-dom environment
+- **Setup File**: `src/setupTests.ts` - Configures Testing Library matchers
+- **Coverage Provider**: v8 for accurate coverage metrics
+
+### Coverage Thresholds
+
+| Metric     | Threshold |
+| ---------- | --------- |
+| Statements | 80%       |
+| Branches   | 50%       |
+| Functions  | 50%       |
+| Lines      | 50%       |
+
+### Test Categories
+
+1. **Component Tests**: Test individual UI components in isolation
+2. **Integration Tests**: Test component interactions and data flow
+3. **API Tests**: Mock API responses and test data fetching logic
+4. **Error Tests**: Test error boundaries and error state handling
+5. **State Tests**: Test component state management and updates
