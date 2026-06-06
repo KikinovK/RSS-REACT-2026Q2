@@ -13,19 +13,19 @@
 }
 
 @theme {
-  --color-deep-space: #f1f1f1;
-  --color-midnight-core: #ebeae3;
-  --color-cosmic-gray: #fadcd9;
-  --color-stardust: #0a0a0a;
-  --color-guidepost-green: #19045d;
-  --color-muted-text: #333333;
+  --color-deep-space: #000000;
+  --color-midnight-core: #14151c;
+  --color-cosmic-gray: #052326;
+  --color-stardust: #ffffff;
+  --color-guidepost-green: #d3fb52;
+  --color-muted-text: #666666;
 
   --font-noigrotesk:
-    'NoiGrotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    sans-serif;
+    'NoiGrotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, sans-serif;
   --font-sansplomb:
-    'SansPlomb', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    sans-serif;
+    'SansPlomb', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, sans-serif;
 
   --text-caption: 12px;
   --text-body-sm: 14px;
@@ -51,15 +51,4 @@
   --radius-buttons: 8px;
   --radius-buttons-large: 12px;
   --radius-navigationitems: 8px;
-}
-
-@variant dark (&:where(.dark, .dark *));
-
-.dark {
-  --color-deep-space: #000000;
-  --color-midnight-core: #14151c;
-  --color-cosmic-gray: #052326;
-  --color-stardust: #ffffff;
-  --color-guidepost-green: #d3fb52;
-  --color-muted-text: #666666;
 }
