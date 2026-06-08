@@ -143,9 +143,6 @@ const UnControlledForm = () => {
             onBlur={() =>
               handleBlur('age', ageRef.current?.value || '')
             }
-            type="number"
-            min="18"
-            max="120"
           />
           <FieldSelect
             label="Gender"

@@ -7,14 +7,44 @@ export const formSchema = z.object({
     .string()
     .min(2, 'Name must be at least 2 characters')
     .max(50, 'Name must not exceed 50 characters')
+    .refine((val) => val.length > 0 && val[0] === val[0].toUpperCase(), {
+      message: 'First letter must be uppercase',
+    })
     .regex(/^[a-zA-Z\s]*$/, 'Name can only contain letters and spaces'),
   email: z
     .string()
     .min(1, 'Email is required')
-    .email('Please enter a valid email address'),
+    .refine((val) => val.split('@').length === 2, {
+      message: 'Email must contain exactly one @ symbol',
+    })
+    .refine(
+      (val) => {
+        const parts = val.split('@');
+        if (parts.length !== 2) return false;
+
+        const [localPart, domainPart] = parts;
+
+        const isLocalValid = localPart.trim().length > 0;
+
+        const isDomainValid =
+          domainPart.includes('.') &&
+          !domainPart.startsWith('.') &&
+          !domainPart.endsWith('.');
+
+        return isLocalValid && isDomainValid;
+      },
+      {
+        message: 'Email must have a non-empty local part and a valid domain with a dot',
+      }
+    ),
   age: z
     .string()
-    .min(1, 'Age is required')
+    .min(1, 'Age is required').refine((val) => !isNaN(Number(val)) && val.trim() !== '', {
+      message: 'Age must be a valid number',
+    })
+    .refine((val) => Number(val) >= 0, {
+      message: 'Age cannot be negative',
+    })
     .refine((val) => !isNaN(Number(val)) && Number(val) >= 18 && Number(val) <= 120, {
       message: 'Age must be between 18 and 120',
     }),

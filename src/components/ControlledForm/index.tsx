@@ -61,9 +61,6 @@ const ControlledForm = () => {
             className="mb-4"
             error={errors.age?.message}
             {...register('age')}
-            type="number"
-            min="18"
-            max="120"
           />
           <FieldSelect
             label="Gender"
