@@ -41,7 +41,7 @@ const FieldPasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(({
           text-cosmic-gray
         "
       >
-        {isVisible ? <EyeIcon /> : <EyeOffIcon />}
+        {isVisible ? <EyeOffIcon /> : <EyeIcon />}
       </Button>
     </FieldInput>
   );
