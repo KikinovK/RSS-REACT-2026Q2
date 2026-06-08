@@ -47,7 +47,7 @@ const Modal = ({ isOpen, onClose, children }: ModalProps) => {
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-md transform overflow-hidden rounded-(--radius-cards) bg-midnight-core border border-white/10 p-6 text-left align-middle shadow-xl transition-all"
+        className="relative w-full max-w-md md:max-w-5xl transform overflow-hidden rounded-(--radius-cards) bg-midnight-core border border-white/10 p-6 text-left align-middle shadow-xl transition-all"
         onClick={handleContentClick}
       >
         <Button

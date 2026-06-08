@@ -35,7 +35,7 @@ const ControlledForm = () => {
 
   return (
     <>
-      <h2 className="text-xl font-semibold mb-4 text-stardust">
+      <h2 className="text-xl font-semibold mb-4 text-stardust text-center">
         Controlled Form with React Hook Form & Zod
       </h2>
       {isSubmitSuccessful && (
@@ -43,34 +43,26 @@ const ControlledForm = () => {
           Form submitted successfully!
         </div>
       )}
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <FieldInput
-          label="Name"
-          id="name"
-          className="mb-4"
-          error={errors.name?.message}
-          {...register('name')}
-          autoComplete="name"
-        />
-        <FieldInput
-          label="Email"
-          id="email"
-          className="mb-4"
-          error={errors.email?.message}
-          {...register('email')}
-          type="email"
-          autoComplete="email"
-        />
-        <FieldPasswordFields
-          passwordId="password"
-          confirmPasswordId="confirmPassword"
-          passwordError={errors.password?.message}
-          confirmPasswordError={errors.confirmPassword?.message}
-          passwordProps={{...register('password'), value: passwordValue}}
-          confirmPasswordProps={register('confirmPassword')}
-          className="mb-4"
-        />
-        <div className="grid grid-cols-2 gap-4 mb-4">
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="md:grid grid-cols-2 gap-4 w-full">
+        <div >
+          <FieldInput
+            label="Name"
+            id="name"
+            className="mb-4"
+            error={errors.name?.message}
+            {...register('name')}
+            autoComplete="name"
+          />
+          <FieldInput
+            label="Email"
+            id="email"
+            className="mb-4"
+            error={errors.email?.message}
+            {...register('email')}
+            type="email"
+            autoComplete="email"
+          />
+          <div className="grid grid-cols-2 gap-4 mb-4">
           <FieldInput
             label="Age"
             id="age"
@@ -93,37 +85,53 @@ const ControlledForm = () => {
             placeholder="Select gender"
           />
         </div>
-        <Controller
-          control={control}
-          name="image"
-          render={({ field, fieldState }) => (
-            <ImageUploader
-              id="image"
-              label="Profile image"
-              className="mb-4"
-              value={field.value ?? ''}
-              onChange={(val) => {
-                field.onChange(val);
-                if (val) {
-                  setImageValidationError(undefined);
-                }
-              }}
-              onBlur={field.onBlur}
-              error={imageValidationError ?? fieldState.error?.message}
-              onValidationError={setImageValidationError}
-            />
-          )}
-        />
+        </div>
+        <div>
+          <FieldPasswordFields
+            passwordId="password"
+            confirmPasswordId="confirmPassword"
+            passwordError={errors.password?.message}
+            confirmPasswordError={errors.confirmPassword?.message}
+            passwordProps={{...register('password'), value: passwordValue}}
+            confirmPasswordProps={register('confirmPassword')}
+            className="mb-4"
+          />
+          <Controller
+            control={control}
+            name="image"
+            render={({ field, fieldState }) => (
+              <ImageUploader
+                id="image"
+                label="Profile image"
+                className="mb-4"
+                value={field.value ?? ''}
+                onChange={(val) => {
+                  field.onChange(val);
+                  if (val) {
+                    setImageValidationError(undefined);
+                  }
+                }}
+                onBlur={field.onBlur}
+                error={imageValidationError ?? fieldState.error?.message}
+                onValidationError={setImageValidationError}
+              />
+            )}
+          />
+        </div>
+
+
+
+
         <FieldCheckbox
           label="I agree to the terms and conditions"
           id="terms"
-          className="mb-4"
+          className="mb-4 col-span-2"
           error={errors.terms?.message}
           {...register('terms')}
         />
         <Button
           type="submit"
-          className="w-full"
+          className="w-full col-span-2"
           disabled={isSubmitting}
         >
           {isSubmitting ? 'Submitting...' : 'Submit'}

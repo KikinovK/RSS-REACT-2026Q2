@@ -118,91 +118,95 @@ const UnControlledForm = () => {
           Form submitted successfully!
         </div>
       )}
-      <form onSubmit={handleSubmit} noValidate>
-        <FieldInput
-          label="Name"
-          id="name"
-          ref={nameRef}
-          className="mb-4"
-          error={errors.name}
-          onBlur={() =>
-            handleBlur('name', nameRef.current?.value || '')
-          }
-          autoComplete="name"
-        />
-        <FieldInput
-          label="Email"
-          id="email"
-          ref={emailRef}
-          className="mb-4"
-          error={errors.email}
-          onBlur={() =>
-            handleBlur('email', emailRef.current?.value || '')
-          }
-          type="email"
-          autoComplete="email"
-        />
-        <FieldPasswordFields
-          passwordId="password"
-          confirmPasswordId="confirmPassword"
-          passwordError={errors.password}
-          confirmPasswordError={errors.confirmPassword}
-          passwordProps={{
-            ref: passwordRef,
-            onBlur: () => handleBlur('password', passwordRef.current?.value || ''),
-          }}
-          confirmPasswordProps={{
-            ref: confirmPasswordRef,
-            onBlur: () => handleBlur('confirmPassword', confirmPasswordRef.current?.value || ''),
-          }}
-          className="mb-4"
-        />
-        <div className="grid grid-cols-2 gap-4 mb-4">
+      <form onSubmit={handleSubmit} noValidate className="md:grid grid-cols-2 gap-4 w-full">
+        <div>
           <FieldInput
-            label="Age"
-            id="age"
-            ref={ageRef}
+            label="Name"
+            id="name"
+            ref={nameRef}
             className="mb-4"
-            error={errors.age}
+            error={errors.name}
             onBlur={() =>
-              handleBlur('age', ageRef.current?.value || '')
+              handleBlur('name', nameRef.current?.value || '')
             }
+            autoComplete="name"
           />
-          <FieldSelect
-            label="Gender"
-            id="gender"
-            ref={genderRef}
+          <FieldInput
+            label="Email"
+            id="email"
+            ref={emailRef}
             className="mb-4"
-            error={errors.gender}
+            error={errors.email}
             onBlur={() =>
-              handleBlur('gender', genderRef.current?.value || '')
+              handleBlur('email', emailRef.current?.value || '')
             }
-            options={[
-              { value: '', label: 'Select gender' },
-              { value: 'male', label: 'Male' },
-              { value: 'female', label: 'Female' },
-              { value: 'other', label: 'Other' },
-            ]}
-            placeholder="Select gender"
+            type="email"
+            autoComplete="email"
+          />
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <FieldInput
+              label="Age"
+              id="age"
+              ref={ageRef}
+              className="mb-4"
+              error={errors.age}
+              onBlur={() =>
+                handleBlur('age', ageRef.current?.value || '')
+              }
+            />
+            <FieldSelect
+              label="Gender"
+              id="gender"
+              ref={genderRef}
+              className="mb-4"
+              error={errors.gender}
+              onBlur={() =>
+                handleBlur('gender', genderRef.current?.value || '')
+              }
+              options={[
+                { value: '', label: 'Select gender' },
+                { value: 'male', label: 'Male' },
+                { value: 'female', label: 'Female' },
+                { value: 'other', label: 'Other' },
+              ]}
+              placeholder="Select gender"
+            />
+          </div>
+        </div>
+        <div>
+          <FieldPasswordFields
+            passwordId="password"
+            confirmPasswordId="confirmPassword"
+            passwordError={errors.password}
+            confirmPasswordError={errors.confirmPassword}
+            passwordProps={{
+              ref: passwordRef,
+              onBlur: () => handleBlur('password', passwordRef.current?.value || ''),
+            }}
+            confirmPasswordProps={{
+              ref: confirmPasswordRef,
+              onBlur: () => handleBlur('confirmPassword', confirmPasswordRef.current?.value || ''),
+            }}
+            className="mb-4"
+          />
+          <ImageUploader
+            id="image"
+            label="Profile image"
+            className="mb-4"
+            value={imageValue}
+            onChange={(val) => {
+              setImageValue(val);
+              setErrors((prev) => ({ ...prev, image: undefined }));
+            }}
+            onBlur={() => handleBlur('image', imageValue)}
+            error={errors.image}
           />
         </div>
-        <ImageUploader
-          id="image"
-          label="Profile image"
-          className="mb-4"
-          value={imageValue}
-          onChange={(val) => {
-            setImageValue(val);
-            setErrors((prev) => ({ ...prev, image: undefined }));
-          }}
-          onBlur={() => handleBlur('image', imageValue)}
-          error={errors.image}
-        />
         <FieldCheckbox
           label="I agree to the terms and conditions"
           id="terms"
           ref={termsRef}
-          className="mb-4"
+          className="mb-4 col-span-2"
           error={errors.terms}
           onChange={() => {
             handleBlur('terms', termsRef.current?.checked || false);
@@ -210,7 +214,7 @@ const UnControlledForm = () => {
         />
         <Button
           type="submit"
-          className="w-full"
+          className="w-full col-span-2"
           disabled={isSubmitting}
         >
           {isSubmitting ? 'Submitting...' : 'Submit'}
