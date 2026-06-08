@@ -4,6 +4,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   id: string;
+  children?: ReactNode;
 }
 
 interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
@@ -46,6 +47,7 @@ const FieldInput = forwardRef<HTMLInputElement, InputProps>(({
   label,
   error,
   id,
+  children,
   className,
   ...props
 }, ref) => {
@@ -54,31 +56,34 @@ const FieldInput = forwardRef<HTMLInputElement, InputProps>(({
   return (
     <div className={`flex flex-col ${className || ''}`}>
       {label && <Label htmlFor={id}>{label}</Label>}
-      <input
-        {...props}
-        ref={ref}
-        id={id}
-        aria-invalid={!!error}
-        aria-describedby={describedBy}
-        className={`
-          w-full
-          px-6
-          py-3
-          bg-stardust
-          text-deep-space
-          text-body
-          border border-midnight-core
-          rounded-(--radius-inputs)
-          placeholder:text-deep-space
-          outline-none
-          transition-all
-          focus:border-guidepost-green
-          focus:ring-1 focus:ring-guidepost-green
-          disabled:opacity-50
-          disabled:cursor-not-allowed
-          ${error ? 'border-guidepost-green' : ''}
-        `}
-      />
+      <div className="relative">
+        <input
+          {...props}
+          ref={ref}
+          id={id}
+          aria-invalid={!!error}
+          aria-describedby={describedBy}
+          className={`
+            w-full
+            px-6
+            py-3
+            bg-stardust
+            text-deep-space
+            text-body
+            border border-midnight-core
+            rounded-(--radius-inputs)
+            placeholder:text-deep-space
+            outline-none
+            transition-all
+            focus:border-guidepost-green
+            focus:ring-1 focus:ring-guidepost-green
+            disabled:opacity-50
+            disabled:cursor-not-allowed
+            ${error ? 'border-guidepost-green' : ''}
+          `}
+        />
+        {children}
+      </div>
       <FieldError id={id}>{error}</FieldError>
     </div>
   );

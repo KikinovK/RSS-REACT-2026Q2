@@ -27,7 +27,7 @@ const FieldPasswordInput = ({
 
   return (
 
-    <FieldInput {...props} id={id} error={error} label={label} className={className}>
+    <FieldInput {...props} id={id} error={error} label={label} className={className} type={isVisible ? 'text' : 'password'}>
       <Button
         type="button"
         variant='icon'
@@ -42,7 +42,7 @@ const FieldPasswordInput = ({
           text-cosmic-gray
         "
       >
-        {isVisible ? <EyeOffIcon /> : <EyeIcon />}
+        {isVisible ? <EyeIcon /> : <EyeOffIcon />}
       </Button>
     </FieldInput>
   );
