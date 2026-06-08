@@ -3,6 +3,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFormStore } from '../../store/formStore';
 import Button from '../ui/Button';
+import FieldAutocomplete from '../ui/FieldAutocomplete';
 import FieldCheckbox from '../ui/FieldCheckbox';
 import FieldInput from '../ui/FieldInput';
 import FieldSelect from '../ui/FieldSelect';
@@ -12,6 +13,7 @@ import { type FormData, formSchema } from '../../validate';
 
 const ControlledForm = () => {
   const addControlledSubmission = useFormStore((state) => state.addControlledSubmission);
+  const countries = useFormStore((state) => state.countries);
   const [imageValidationError, setImageValidationError] = useState<string | undefined>(undefined);
   const {
     register,
@@ -85,6 +87,23 @@ const ControlledForm = () => {
             placeholder="Select gender"
           />
         </div>
+        <Controller
+          control={control}
+          name="country"
+          render={({ field, fieldState }) => (
+            <FieldAutocomplete
+              id="country"
+              label="Country"
+              className="mb-4"
+              options={countries}
+              value={field.value ?? ''}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              error={fieldState.error?.message}
+              placeholder="Type to search country..."
+            />
+          )}
+        />
         </div>
         <div>
           <FieldPasswordFields

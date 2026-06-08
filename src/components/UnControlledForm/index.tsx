@@ -3,6 +3,7 @@ import * as z from 'zod';
 import { useFormStore } from '../../store/formStore';
 
 import Button from '../ui/Button';
+import FieldAutocomplete from '../ui/FieldAutocomplete';
 import FieldCheckbox from '../ui/FieldCheckbox';
 import FieldInput from '../ui/FieldInput';
 import FieldSelect from '../ui/FieldSelect';
@@ -15,10 +16,12 @@ type FieldErrors = Partial<Record<keyof FormData, string>>;
 
 const UnControlledForm = () => {
   const addUncontrolledSubmission = useFormStore((state) => state.addUncontrolledSubmission);
+  const countries = useFormStore((state) => state.countries);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
   const [imageValue, setImageValue] = useState<string>('');
+  const [countryValue, setCountryValue] = useState<string>('');
 
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -52,6 +55,7 @@ const UnControlledForm = () => {
       age: ageRef.current?.value || '',
       gender: genderRef.current?.value || '',
       terms: termsRef.current?.checked || false,
+      country: countryValue,
       image: imageValue,
     };
 
@@ -71,7 +75,7 @@ const UnControlledForm = () => {
     }
 
     return formData;
-  }, [validateField, imageValue]);
+  }, [validateField, imageValue, countryValue]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -90,6 +94,7 @@ const UnControlledForm = () => {
     const form = e.target as HTMLFormElement;
     form.reset();
     setImageValue('');
+    setCountryValue('');
     setErrors({});
     setIsSubmitting(false);
     setIsSubmitSuccessful(true);
@@ -172,6 +177,20 @@ const UnControlledForm = () => {
               placeholder="Select gender"
             />
           </div>
+          <FieldAutocomplete
+            id="country"
+            label="Country"
+            className="mb-4"
+            options={countries}
+            value={countryValue}
+            onChange={(val) => {
+              setCountryValue(val);
+              setErrors((prev) => ({ ...prev, country: undefined }));
+            }}
+            onBlur={() => handleBlur('country', countryValue)}
+            error={errors.country}
+            placeholder="Type to search country..."
+          />
         </div>
         <div>
           <FieldPasswordFields

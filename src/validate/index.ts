@@ -30,7 +30,6 @@ const isDataUrlImage = (val: string): boolean => {
 
   if (!ACCEPTED_IMAGE_TYPES.includes(mimeType)) return false;
 
-  // Approximate byte size from base64 length (4 chars => 3 bytes, padding adjusts).
   const padding = (base64.endsWith('==') ? 2 : base64.endsWith('=') ? 1 : 0);
   const approxBytes = Math.floor((base64.length * 3) / 4) - padding;
   return approxBytes <= MAX_IMAGE_SIZE_BYTES;
@@ -102,6 +101,9 @@ export const formSchema = z.object({
   confirmPassword: z
     .string()
     .min(1, 'Please confirm your password'),
+  country: z
+    .string()
+    .min(1, 'Please select a country'),
   image: z
     .string()
     .min(1, 'Please upload an image')

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 import type { FormData } from '../validate';
+import { COUNTRIES } from './constants';
 
 export interface FormSubmission {
   id: string;
@@ -10,6 +11,7 @@ export interface FormSubmission {
 }
 
 interface FormStore {
+  countries: string[];
   controlledSubmissions: FormSubmission[];
   uncontrolledSubmissions: FormSubmission[];
   addControlledSubmission: (data: FormData) => void;
@@ -22,6 +24,7 @@ interface FormStore {
 export const useFormStore = create<FormStore>()(
   persist(
     (set) => ({
+      countries: COUNTRIES,
       controlledSubmissions: [],
       uncontrolledSubmissions: [],
 
@@ -64,6 +67,10 @@ export const useFormStore = create<FormStore>()(
     {
       name: 'form-storage',
       storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        controlledSubmissions: state.controlledSubmissions,
+        uncontrolledSubmissions: state.uncontrolledSubmissions,
+      }),
     }
   )
 );
