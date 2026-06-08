@@ -5,6 +5,7 @@ import Button from '../ui/Button';
 import FieldCheckbox from '../ui/FieldCheckbox';
 import FieldInput from '../ui/FieldInput';
 import FieldSelect from '../ui/FieldSelect';
+import FieldPasswordFields from '../ui/FieldPasswordFields';
 import { type FormData, formSchema } from '../../validate';
 
 const ControlledForm = () => {
@@ -53,6 +54,15 @@ const ControlledForm = () => {
           {...register('email')}
           type="email"
           autoComplete="email"
+        />
+        <FieldPasswordFields
+          passwordId="password"
+          confirmPasswordId="confirmPassword"
+          passwordError={errors.password?.message}
+          confirmPasswordError={errors.confirmPassword?.message}
+          passwordProps={register('password')}
+          confirmPasswordProps={register('confirmPassword')}
+          className="mb-4"
         />
         <div className="grid grid-cols-2 gap-4 mb-4">
           <FieldInput

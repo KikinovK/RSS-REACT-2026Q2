@@ -1,4 +1,4 @@
-import { type InputHTMLAttributes } from 'react';
+import { forwardRef, type InputHTMLAttributes } from 'react';
 
 import FieldInput from '../FieldInput';
 import Button from '../Button';
@@ -14,7 +14,7 @@ interface PasswordInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>,
   onToggleVisibility: () => void;
 }
 
-const FieldPasswordInput = ({
+const FieldPasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(({
   label,
   error,
   id,
@@ -22,12 +22,11 @@ const FieldPasswordInput = ({
   onToggleVisibility,
   className,
   ...props
-}: PasswordInputProps) => {
-
+}, ref) => {
 
   return (
 
-    <FieldInput {...props} id={id} error={error} label={label} className={className} type={isVisible ? 'text' : 'password'}>
+    <FieldInput ref={ref} {...props} id={id} error={error} label={label} className={className} type={isVisible ? 'text' : 'password'}>
       <Button
         type="button"
         variant='icon'
@@ -46,6 +45,8 @@ const FieldPasswordInput = ({
       </Button>
     </FieldInput>
   );
-};
+});
+
+FieldPasswordInput.displayName = 'FieldPasswordInput';
 
 export default FieldPasswordInput;

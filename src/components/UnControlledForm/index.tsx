@@ -6,6 +6,7 @@ import Button from '../ui/Button';
 import FieldCheckbox from '../ui/FieldCheckbox';
 import FieldInput from '../ui/FieldInput';
 import FieldSelect from '../ui/FieldSelect';
+import FieldPasswordFields from '../ui/FieldPasswordFields';
 
 import { type FormData, formSchema } from '../../validate';
 
@@ -19,6 +20,8 @@ const UnControlledForm = () => {
 
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const confirmPasswordRef = useRef<HTMLInputElement>(null);
   const ageRef = useRef<HTMLInputElement>(null);
   const genderRef = useRef<HTMLSelectElement>(null);
   const termsRef = useRef<HTMLInputElement>(null);
@@ -42,6 +45,8 @@ const UnControlledForm = () => {
     const formData: FormData = {
       name: nameRef.current?.value || '',
       email: emailRef.current?.value || '',
+      password: passwordRef.current?.value || '',
+      confirmPassword: confirmPasswordRef.current?.value || '',
       age: ageRef.current?.value || '',
       gender: genderRef.current?.value || '',
       terms: termsRef.current?.checked || false,
@@ -132,6 +137,21 @@ const UnControlledForm = () => {
           }
           type="email"
           autoComplete="email"
+        />
+        <FieldPasswordFields
+          passwordId="password"
+          confirmPasswordId="confirmPassword"
+          passwordError={errors.password}
+          confirmPasswordError={errors.confirmPassword}
+          passwordProps={{
+            ref: passwordRef,
+            onBlur: () => handleBlur('password', passwordRef.current?.value || ''),
+          }}
+          confirmPasswordProps={{
+            ref: confirmPasswordRef,
+            onBlur: () => handleBlur('confirmPassword', confirmPasswordRef.current?.value || ''),
+          }}
+          className="mb-4"
         />
         <div className="grid grid-cols-2 gap-4 mb-4">
           <FieldInput
