@@ -7,6 +7,7 @@ import FieldCheckbox from '../ui/FieldCheckbox';
 import FieldInput from '../ui/FieldInput';
 import FieldSelect from '../ui/FieldSelect';
 import FieldPasswordFields from '../ui/FieldPasswordFields';
+import ImageUploader from '../ui/ImageUploader';
 
 import { type FormData, formSchema } from '../../validate';
 
@@ -17,6 +18,7 @@ const UnControlledForm = () => {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
+  const [imageValue, setImageValue] = useState<string>('');
 
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -50,6 +52,7 @@ const UnControlledForm = () => {
       age: ageRef.current?.value || '',
       gender: genderRef.current?.value || '',
       terms: termsRef.current?.checked || false,
+      image: imageValue,
     };
 
     const newErrors: FieldErrors = {};
@@ -68,7 +71,7 @@ const UnControlledForm = () => {
     }
 
     return formData;
-  }, [validateField]);
+  }, [validateField, imageValue]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -86,6 +89,7 @@ const UnControlledForm = () => {
 
     const form = e.target as HTMLFormElement;
     form.reset();
+    setImageValue('');
     setErrors({});
     setIsSubmitting(false);
     setIsSubmitSuccessful(true);
@@ -182,6 +186,18 @@ const UnControlledForm = () => {
             placeholder="Select gender"
           />
         </div>
+        <ImageUploader
+          id="image"
+          label="Profile image"
+          className="mb-4"
+          value={imageValue}
+          onChange={(val) => {
+            setImageValue(val);
+            setErrors((prev) => ({ ...prev, image: undefined }));
+          }}
+          onBlur={() => handleBlur('image', imageValue)}
+          error={errors.image}
+        />
         <FieldCheckbox
           label="I agree to the terms and conditions"
           id="terms"

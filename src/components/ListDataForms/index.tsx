@@ -18,6 +18,16 @@ const ListDataForms = ({ submissions }: ListDataFormsProps) => {
             <span className="font-semibold"><strong>Password:</strong> {submission.data.password}</span>
             <span className="font-semibold"><strong>Confirm Password:</strong> {submission.data.confirmPassword}</span>
             <span className="font-semibold"><strong>Terms:</strong> {submission.data.terms ? 'Accepted' : 'Not accepted'}</span>
+            {submission.data.image && (
+              <div className="col-span-2 flex flex-col gap-1">
+                <span className="font-semibold"><strong>Image:</strong></span>
+                <img
+                  src={submission.data.image}
+                  alt={`Profile image of ${submission.data.name}`}
+                  className="max-h-100 rounded border border-stardust/20 object-contain"
+                />
+              </div>
+            )}
             <span className="text-xs text-stardust/60 col-span-2">
               Submitted at: {new Date(submission.timestamp).toLocaleString()}
             </span>

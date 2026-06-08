@@ -1,4 +1,5 @@
-import { useForm } from 'react-hook-form';
+import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFormStore } from '../../store/formStore';
 import Button from '../ui/Button';
@@ -6,12 +7,15 @@ import FieldCheckbox from '../ui/FieldCheckbox';
 import FieldInput from '../ui/FieldInput';
 import FieldSelect from '../ui/FieldSelect';
 import FieldPasswordFields from '../ui/FieldPasswordFields';
+import ImageUploader from '../ui/ImageUploader';
 import { type FormData, formSchema } from '../../validate';
 
 const ControlledForm = () => {
   const addControlledSubmission = useFormStore((state) => state.addControlledSubmission);
+  const [imageValidationError, setImageValidationError] = useState<string | undefined>(undefined);
   const {
     register,
+    control,
     handleSubmit,
     watch,
     formState: { errors, isSubmitting, isSubmitSuccessful },
@@ -24,10 +28,9 @@ const ControlledForm = () => {
   const passwordValue = watch('password', '');
 
   const onSubmit = async (data: FormData) => {
-
     addControlledSubmission(data);
-
     reset();
+    setImageValidationError(undefined);
   };
 
   return (
@@ -90,6 +93,27 @@ const ControlledForm = () => {
             placeholder="Select gender"
           />
         </div>
+        <Controller
+          control={control}
+          name="image"
+          render={({ field, fieldState }) => (
+            <ImageUploader
+              id="image"
+              label="Profile image"
+              className="mb-4"
+              value={field.value ?? ''}
+              onChange={(val) => {
+                field.onChange(val);
+                if (val) {
+                  setImageValidationError(undefined);
+                }
+              }}
+              onBlur={field.onBlur}
+              error={imageValidationError ?? fieldState.error?.message}
+              onValidationError={setImageValidationError}
+            />
+          )}
+        />
         <FieldCheckbox
           label="I agree to the terms and conditions"
           id="terms"

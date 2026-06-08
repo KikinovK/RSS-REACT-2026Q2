@@ -1,5 +1,10 @@
 import * as z from 'zod';
 
+import {
+  ACCEPTED_IMAGE_TYPES,
+  MAX_IMAGE_SIZE_BYTES,
+} from '../components/ui/ImageUploader/constants';
+
 export type FormData = z.infer<typeof formSchema>;
 
 interface PasswordRequirement {
@@ -15,6 +20,21 @@ export const passwordRequirements: PasswordRequirement[] = [
   { id: 'number', message: 'At least one number', validator: (val) => /[0-9]/.test(val) },
   { id: 'special', message: 'At least one special character', validator: (val) => /[^A-Za-z0-9]/.test(val) },
 ];
+
+const isDataUrlImage = (val: string): boolean => {
+  if (!val.startsWith('data:')) return false;
+  const matches = val.match(/^data:([^;]+);base64,(.*)$/);
+  if (!matches) return false;
+  const mimeType = matches[1];
+  const base64 = matches[2];
+
+  if (!ACCEPTED_IMAGE_TYPES.includes(mimeType)) return false;
+
+  // Approximate byte size from base64 length (4 chars => 3 bytes, padding adjusts).
+  const padding = (base64.endsWith('==') ? 2 : base64.endsWith('=') ? 1 : 0);
+  const approxBytes = Math.floor((base64.length * 3) / 4) - padding;
+  return approxBytes <= MAX_IMAGE_SIZE_BYTES;
+};
 
 export const formSchema = z.object({
   name: z
@@ -82,6 +102,12 @@ export const formSchema = z.object({
   confirmPassword: z
     .string()
     .min(1, 'Please confirm your password'),
+  image: z
+    .string()
+    .min(1, 'Please upload an image')
+    .refine((val) => isDataUrlImage(val), {
+      message: 'Image must be a PNG or JPEG file under 2MB',
+    }),
 }).refine((data) => data.password === data.confirmPassword, {
   message: 'Passwords do not match',
   path: ['confirmPassword'],
