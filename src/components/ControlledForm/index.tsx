@@ -13,12 +13,15 @@ const ControlledForm = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting, isSubmitSuccessful },
     reset,
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     mode: 'onChange',
   });
+
+  const passwordValue = watch('password', '');
 
   const onSubmit = async (data: FormData) => {
 
@@ -60,7 +63,7 @@ const ControlledForm = () => {
           confirmPasswordId="confirmPassword"
           passwordError={errors.password?.message}
           confirmPasswordError={errors.confirmPassword?.message}
-          passwordProps={register('password')}
+          passwordProps={{...register('password'), value: passwordValue}}
           confirmPasswordProps={register('confirmPassword')}
           className="mb-4"
         />

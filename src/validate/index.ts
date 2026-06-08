@@ -2,6 +2,20 @@ import * as z from 'zod';
 
 export type FormData = z.infer<typeof formSchema>;
 
+interface PasswordRequirement {
+  id: string;
+  message: string;
+  validator: (val: string) => boolean;
+}
+
+export const passwordRequirements: PasswordRequirement[] = [
+  { id: 'min', message: 'At least 8 characters', validator: (val) => val.length >= 8 },
+  { id: 'upper', message: 'At least one uppercase letter', validator: (val) => /[A-Z]/.test(val) },
+  { id: 'lower', message: 'At least one lowercase letter', validator: (val) => /[a-z]/.test(val) },
+  { id: 'number', message: 'At least one number', validator: (val) => /[0-9]/.test(val) },
+  { id: 'special', message: 'At least one special character', validator: (val) => /[^A-Za-z0-9]/.test(val) },
+];
+
 export const formSchema = z.object({
   name: z
     .string()
@@ -9,8 +23,7 @@ export const formSchema = z.object({
     .max(50, 'Name must not exceed 50 characters')
     .refine((val) => val.length > 0 && val[0] === val[0].toUpperCase(), {
       message: 'First letter must be uppercase',
-    })
-    .regex(/^[a-zA-Z\s]*$/, 'Name can only contain letters and spaces'),
+    }),
   email: z
     .string()
     .min(1, 'Email is required')
@@ -56,13 +69,16 @@ export const formSchema = z.object({
     .refine((val) => val === true, {
       message: 'You must agree to the terms and conditions',
     }),
-  password: z
-    .string()
-    .min(8, 'Password must be at least 8 characters')
-    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
-    .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
-    .regex(/[0-9]/, 'Password must contain at least one number')
-    .regex(/[^A-Za-z0-9]/, 'Password must contain at least one special character'),
+  password: z.string().superRefine((val, ctx) => {
+    passwordRequirements.forEach((req) => {
+      if (!req.validator(val)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: req.message,
+        });
+      }
+    });
+  }),
   confirmPassword: z
     .string()
     .min(1, 'Please confirm your password'),

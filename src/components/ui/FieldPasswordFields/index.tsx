@@ -1,5 +1,6 @@
 import { useState, type Ref } from 'react';
 import FieldPasswordInput from '../FieldPasswordInput';
+import PasswordStrengthIndicator from './PasswordStrengthIndicator';
 
 interface PasswordFieldProps extends Omit<React.ComponentProps<typeof FieldPasswordInput>, 'isVisible' | 'onToggleVisibility' | 'id' | 'label' | 'error'> {
   ref?: Ref<HTMLInputElement>;
@@ -29,13 +30,21 @@ const FieldPasswordFields = ({
   className = '',
 }: FieldPasswordFieldsProps) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [localPasswordValue, setLocalPasswordValue] = useState('');
 
   const toggleVisibility = () => {
     setIsVisible(!isVisible);
   };
 
+  const handlePasswordChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setLocalPasswordValue(e.target.value);
+    passwordProps.onChange?.(e);
+  };
+
   const { ref: passwordRef, ...passwordRest } = passwordProps;
   const { ref: confirmPasswordRef, ...confirmPasswordRest } = confirmPasswordProps;
+
+  const passwordValue = passwordRest.value !== undefined ? String(passwordRest.value) : localPasswordValue;
 
   return (
     <div className={className}>
@@ -47,8 +56,10 @@ const FieldPasswordFields = ({
           isVisible={isVisible}
           onToggleVisibility={toggleVisibility}
           ref={passwordRef}
+          onChange={handlePasswordChange}
           {...passwordRest}
         />
+        <PasswordStrengthIndicator password={passwordValue} />
       </div>
       <div>
         <FieldPasswordInput
