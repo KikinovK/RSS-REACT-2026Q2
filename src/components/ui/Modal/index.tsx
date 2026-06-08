@@ -52,7 +52,7 @@ const Modal = ({ isOpen, onClose, children }: ModalProps) => {
       >
         <Button
           variant="icon"
-          className="absolute top-0.5 right-0.5"
+          className="absolute top-0.5 right-0.5 text-guidepost-green "
           onClick={onClose}
           aria-label="Close modal window"
         >
