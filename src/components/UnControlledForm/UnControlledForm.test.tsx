@@ -145,4 +145,21 @@ describe('UnControlledForm', () => {
       (screen.getByLabelText(/terms/i) as HTMLInputElement).checked
     ).toBe(false);
   });
+
+  it('invokes the onSubmitSuccess callback after a successful submission', async () => {
+    const user = userEvent.setup();
+    const onSubmitSuccess = vi.fn();
+    render(<UnControlledForm onSubmitSuccess={onSubmitSuccess} />);
+
+    await fillForm(user);
+    await user.click(screen.getByRole('button', { name: /submit/i }));
+
+    expect(onSubmitSuccess).not.toHaveBeenCalled();
+    await waitFor(
+      () => {
+        expect(onSubmitSuccess).toHaveBeenCalledTimes(1);
+      },
+      { timeout: 5000 }
+    );
+  }, 10000);
 });

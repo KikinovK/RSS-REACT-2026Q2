@@ -14,7 +14,11 @@ import { type FormData, formSchema } from '../../validate';
 
 type FieldErrors = Partial<Record<keyof FormData, string>>;
 
-const UnControlledForm = () => {
+interface UnControlledFormProps {
+  onSubmitSuccess?: () => void;
+}
+
+const UnControlledForm = ({ onSubmitSuccess }: UnControlledFormProps = {}) => {
   const addUncontrolledSubmission = useFormStore((state) => state.addUncontrolledSubmission);
   const countries = useFormStore((state) => state.countries);
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -100,6 +104,10 @@ const UnControlledForm = () => {
     setIsSubmitSuccessful(true);
 
     setTimeout(() => setIsSubmitSuccessful(false), 3000);
+
+    setTimeout(() => {
+      onSubmitSuccess?.();
+    }, 3000);
   };
 
   const handleBlur = useCallback(<K extends keyof FormData>(
@@ -234,7 +242,7 @@ const UnControlledForm = () => {
         <Button
           type="submit"
           className="w-full col-span-2"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isSubmitSuccessful}
         >
           {isSubmitting ? 'Submitting...' : 'Submit'}
         </Button>

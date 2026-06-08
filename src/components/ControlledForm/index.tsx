@@ -11,7 +11,11 @@ import FieldPasswordFields from '../ui/FieldPasswordFields';
 import ImageUploader from '../ui/ImageUploader';
 import { type FormData, formSchema } from '../../validate';
 
-const ControlledForm = () => {
+interface ControlledFormProps {
+  onSubmitSuccess?: () => void;
+}
+
+const ControlledForm = ({ onSubmitSuccess }: ControlledFormProps = {}) => {
   const addControlledSubmission = useFormStore((state) => state.addControlledSubmission);
   const countries = useFormStore((state) => state.countries);
   const [imageValidationError, setImageValidationError] = useState<string | undefined>(undefined);
@@ -33,6 +37,9 @@ const ControlledForm = () => {
     addControlledSubmission(data);
     reset();
     setImageValidationError(undefined);
+    setTimeout(() => {
+      onSubmitSuccess?.();
+    }, 3000);
   };
 
   return (
@@ -151,7 +158,7 @@ const ControlledForm = () => {
         <Button
           type="submit"
           className="w-full col-span-2"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isSubmitSuccessful}
         >
           {isSubmitting ? 'Submitting...' : 'Submit'}
         </Button>

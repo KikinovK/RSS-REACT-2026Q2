@@ -36,11 +36,11 @@ const App = () => {
       </div>
 
       <Modal isOpen={activeModal === 'UNCONTROLLED'} onClose={closeModal}>
-        <UnControlledForm />
+        <UnControlledForm onSubmitSuccess={closeModal} />
       </Modal>
 
       <Modal isOpen={activeModal === 'CONTROLLED'} onClose={closeModal}>
-        <ControlledForm />
+        <ControlledForm onSubmitSuccess={closeModal} />
       </Modal>
     </div>
   );
