@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useFormStore } from '../../store/formStore';
 import Button from '../ui/Button';
 import FieldCheckbox from '../ui/FieldCheckbox';
 import FieldInput from '../ui/FieldInput';
@@ -7,6 +8,7 @@ import FieldSelect from '../ui/FieldSelect';
 import { type FormData, formSchema } from '../../validate';
 
 const ControlledForm = () => {
+  const addControlledSubmission = useFormStore((state) => state.addControlledSubmission);
   const {
     register,
     handleSubmit,
@@ -18,8 +20,9 @@ const ControlledForm = () => {
   });
 
   const onSubmit = async (data: FormData) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log('Form submitted with data:', data);
+
+    addControlledSubmission(data);
+
     reset();
   };
 

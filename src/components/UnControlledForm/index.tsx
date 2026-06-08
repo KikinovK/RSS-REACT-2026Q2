@@ -1,5 +1,6 @@
 import { useRef, useState, useCallback } from 'react';
 import * as z from 'zod';
+import { useFormStore } from '../../store/formStore';
 
 import Button from '../ui/Button';
 import FieldCheckbox from '../ui/FieldCheckbox';
@@ -11,6 +12,7 @@ import { type FormData, formSchema } from '../../validate';
 type FieldErrors = Partial<Record<keyof FormData, string>>;
 
 const UnControlledForm = () => {
+  const addUncontrolledSubmission = useFormStore((state) => state.addUncontrolledSubmission);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
@@ -75,8 +77,7 @@ const UnControlledForm = () => {
       return;
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log('Form submitted with data:', formData);
+    addUncontrolledSubmission(formData);
 
     const form = e.target as HTMLFormElement;
     form.reset();
