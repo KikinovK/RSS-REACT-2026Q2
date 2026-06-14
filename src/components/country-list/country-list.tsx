@@ -1,3 +1,4 @@
+import { useMemo, memo } from 'react';
 import type { Country } from '../../types';
 import { CountryCard } from '../country-card/country-card';
 import { getPopulationForYear, createYearDataMap } from '../../utils/data-transformers';
@@ -15,41 +16,53 @@ type CountryListProps = {
   onYearChange: (year: number) => void;
 };
 
-export const CountryList = ({
-  countries,
-  searchQuery,
-  selectedColumns,
-  selectedRegion,
-  selectedYear,
-  sortField,
-  sortOrder,
-}: CountryListProps) => {
-  const filteredCountries = countries
-    .filter((c) => {
-      const matchesSearch = c.id.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesRegion = !selectedRegion || c.data.some((d) => d.region === selectedRegion);
-      return matchesSearch && matchesRegion;
-    })
-    .sort((a, b) => {
-      if (sortField === 'name') {
-        return sortOrder === 'asc' ? a.id.localeCompare(b.id) : b.id.localeCompare(a.id);
-      } else {
-        const popA = getPopulationForYear(createYearDataMap(a.data), selectedYear) || 0;
-        const popB = getPopulationForYear(createYearDataMap(b.data), selectedYear) || 0;
-        return sortOrder === 'asc' ? popA - popB : popB - popA;
-      }
-    });
+export const CountryList = memo(
+  ({
+    countries,
+    searchQuery,
+    selectedColumns,
+    selectedRegion,
+    selectedYear,
+    sortField,
+    sortOrder,
+  }: CountryListProps) => {
+    const countryYearDataMaps = useMemo(
+      () =>
+        Object.fromEntries(
+          countries.map((c) => [c.id, createYearDataMap(c.data)])
+        ),
+      [countries]
+    );
 
-  return (
-    <div className={styles.countryList}>
-      {filteredCountries.map((country, index) => (
-        <CountryCard
-          key={index}
-          country={country}
-          selectedYear={selectedYear}
-          selectedColumns={selectedColumns}
-        />
-      ))}
-    </div>
-  );
-};
+    const filteredCountries = useMemo(() => {
+      return countries
+        .filter((c) => {
+          const matchesSearch = c.id.toLowerCase().includes(searchQuery.toLowerCase());
+          const matchesRegion = !selectedRegion || c.data.some((d) => d.region === selectedRegion);
+          return matchesSearch && matchesRegion;
+        })
+        .sort((a, b) => {
+          if (sortField === 'name') {
+            return sortOrder === 'asc' ? a.id.localeCompare(b.id) : b.id.localeCompare(a.id);
+          } else {
+            const popA = getPopulationForYear(countryYearDataMaps[a.id], selectedYear) || 0;
+            const popB = getPopulationForYear(countryYearDataMaps[b.id], selectedYear) || 0;
+            return sortOrder === 'asc' ? popA - popB : popB - popA;
+          }
+        });
+    }, [countries, searchQuery, selectedRegion, selectedYear, sortField, sortOrder, countryYearDataMaps]);
+
+    return (
+      <div className={styles.countryList}>
+        {filteredCountries.map((country) => (
+          <CountryCard
+            key={country.id}
+            country={country}
+            selectedYear={selectedYear}
+            selectedColumns={selectedColumns}
+          />
+        ))}
+      </div>
+    );
+  }
+);
