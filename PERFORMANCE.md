@@ -12,7 +12,7 @@
 
 - **Commit duration**: 3.9s
 - **Render duration**: 446.8ms
-- **Screenshot**: ![screenshot](./performance-starter/screenshots/baseline/Screenshot_Search.pngg)
+- **Screenshot**: ![screenshot](./performance-starter/screenshots/baseline/Screenshot_Search.png)
 
 ### Interaction C: Change year
 
@@ -80,4 +80,4 @@
 | Search countries | 446.8ms       | 23.4ms         | 94.76%      |
 | Change year      | 1128.7ms      | 89.4ms         | 92.08%      |
 | Toggle column    | 3315.0ms      | 54.8ms         | 98.35%      |
-| **Average**      | **1515.1ms**  | **50.7ms**     | **96.65%%** |
+| **Average**      | **1515.1ms**  | **50.7ms**     | **96.65%**  |
