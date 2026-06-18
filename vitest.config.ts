@@ -1,8 +1,9 @@
 import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react-swc'
+import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tsconfigPaths()],
   test: {
     environment: 'happy-dom',
     globals: true,
@@ -18,7 +19,9 @@ export default defineConfig({
         'src/setupTests.{js,ts}',
         'src/**/*.d.ts',
         'src/types/**/*.{js,jsx,ts,tsx}',
-        'main.tsx',
+        'src/app/layout.tsx',
+        'src/app/next-env.d.ts',
+        'next.config.{js,ts,mjs}',
       ],
       thresholds: {
         statements: 80,
