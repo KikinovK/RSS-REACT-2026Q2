@@ -1,6 +1,6 @@
-import { Link } from '@tanstack/react-router';
 import SwitchTheme from './SwithcTheme';
-import { RefreshPokemonButton } from './RefreshPokemonButton';
+// import { RefreshPokemonButton } from './RefreshPokemonButton';
+import NavLink from './NavLink';
 
 const Header = () => {
   return (
@@ -9,32 +9,22 @@ const Header = () => {
         <div className="flex items-center justify-between gap-8">
           <h1 className="text-2xl font-bold text-guidepost-green">Pokémon Search</h1>
           <div className="mx-auto flex items-center gap-6">
-            <Link
-              to="/"
-              search={{ page: 1, filter: '', limit: 4 }}
-              activeProps={{
-                className: 'text-guidepost-green font-semibold',
-              }}
-              inactiveProps={{
-                className: 'text-stardust hover:text-guidepost-green transition-colors',
+            <NavLink
+              href={{
+                pathname: "/",
+                query: { page: 1, filter: '', limit: 4 },
               }}
             >
               Home
-            </Link>
-            <Link
-              to="/about"
-              activeProps={{
-                className: 'text-guidepost-green font-semibold',
-              }}
-              inactiveProps={{
-                className: 'text-stardust hover:text-guidepost-green transition-colors',
-              }}
+            </NavLink>
+            <NavLink
+              href="/about"
             >
               About
-            </Link>
+            </NavLink>
           </div>
           <SwitchTheme />
-          <RefreshPokemonButton />
+          {/* <RefreshPokemonButton /> */}
         </div>
       </nav>
     </header>

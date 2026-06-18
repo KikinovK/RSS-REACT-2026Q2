@@ -1,5 +1,8 @@
+'use client';
+
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { getStoredData, setStoredData } from '../utils/storage';
+import Cookies from 'js-cookie';
+
 import { THEME_KEY } from '../utils/const';
 
 export type Theme = 'light' | 'dark';
@@ -11,15 +14,13 @@ interface ThemeContextType {
 
 interface ThemeProviderProps {
   children: ReactNode;
+  initialTheme: Theme;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  const [theme, setTheme] = useState<Theme>(() => {
-    const savedTheme = getStoredData(THEME_KEY) as Theme | null;
-    return savedTheme || 'light';
-  });
+export const ThemeProvider = ({ children, initialTheme }: ThemeProviderProps) => {
+  const [theme, setTheme] = useState<Theme>(initialTheme);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -30,7 +31,7 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
       root.classList.remove('dark');
     }
 
-    setStoredData(THEME_KEY, theme);
+    Cookies.set(THEME_KEY, theme, { expires: 365 });
   }, [theme]);
 
   const toggleTheme = () => {
@@ -40,7 +41,6 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useTheme = (): ThemeContextType => {
   const context = useContext(ThemeContext);
   if (!context) {

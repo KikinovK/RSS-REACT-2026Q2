@@ -1,4 +1,7 @@
+"use client";
+
 import { useEffect } from 'react';
+
 import { useErrorStore, AppError } from '../../store/useErrorStore';
 
 export const ErrorToastList = () => {
