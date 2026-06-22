@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from 'next/navigation';
-import Button from '../../../components/ui/Button';
+import { useRouter } from '../../../../i18n/navigation';
+import Button from '../../../../components/ui/Button';
 
 interface ModalProps {
   searchQuery: string;

@@ -1,0 +1,78 @@
+{
+  "header": {
+    "title": "Pokémon-Suche",
+    "home": "Startseite",
+    "about": "Über uns"
+  },
+  "search": {
+    "title": "Pokémon-Suche",
+    "placeholder": "Suchen...",
+    "ariaLabel": "Pokémon suchen",
+    "buttonAriaLabel": "Suchen"
+  },
+  "results": {
+    "title": "Ergebnisse",
+    "loading": "Laden...",
+    "noResults": "Keine Ergebnisse gefunden.",
+    "noObjectsForRequest": "Keine Objekte für Ihre Anfrage gefunden."
+  },
+  "detail": {
+    "noResults": "Keine Ergebnisse gefunden.",
+    "height": "Größe",
+    "weight": "Gewicht",
+    "type": "Typ",
+    "baseStats": "Basiswerte",
+    "failedToFetch": "Fehler beim Abrufen der Detaildaten"
+  },
+  "pagination": {
+    "page": "Seite",
+    "to": "von",
+    "previous": "Vorherige Seite",
+    "next": "Nächste Seite",
+    "itemsPerPage": "Elemente pro Seite"
+  },
+  "selection": {
+    "itemsSelected": "{count} Element(e) ausgewählt",
+    "unselectAll": "Alle abwählen",
+    "download": "Herunterladen",
+    "preparing": "Vorbereiten…",
+    "clearAriaLabel": "Auswahl aufheben",
+    "downloadAriaLabel": "Ausgewählte Elemente herunterladen"
+  },
+  "refresh": {
+    "refreshData": "Daten aktualisieren",
+    "synchronizing": "Synchronisiere..."
+  },
+  "theme": {
+    "switchTo": "Zu {theme} wechseln",
+    "light": "Hell",
+    "dark": "Dunkel"
+  },
+  "footer": {
+    "copyright": "© 2026 Pokémon Search App. Alle Rechte vorbehalten."
+  },
+  "errorBoundary": {
+    "somethingWentWrong": "Etwas ist schiefgelaufen",
+    "tryAgain": "Erneut versuchen"
+  },
+  "errorSimulator": {
+    "simulateError": "Fehler simulieren"
+  },
+  "languageSwitcher": {
+    "en": "English",
+    "de": "Deutsch",
+    "ja": "日本語"
+  },
+  "about": {
+    "title": "Über Pokémon-Suche",
+    "description": "Ein agiles, leistungsstarkes Dashboard mit modernen Webtechnologien.",
+    "authorSection": "Autorenprofil",
+    "authorBio": "Angehender Frontend-Entwickler, der sich dem Bau hochinteraktiver, kompakter und optimierter Webumgebungen mit modernen Technologien wie React, TypeScript und Tailwind CSS widmet.",
+    "courseTitle": "RS School React Kurs",
+    "courseDescription": "Entwickelt im Rahmen des React-Materialien-Bewertungsrahmens.",
+    "goToCourse": "Zum Kurs"
+  },
+  "notFound": {
+    "title": "Seite 404 Nicht gefunden"
+  }
+}

@@ -1,4 +1,4 @@
-import DetailsCard from '../../../components/DetailsCard';
+import DetailsCard from '../../../../components/DetailsCard';
 import DetailsModalCloseButton from './DetailsModalCloseButton';
 
 interface ModalProps {

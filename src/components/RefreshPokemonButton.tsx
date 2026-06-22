@@ -6,10 +6,12 @@ import { useRouter } from 'next/navigation';
 import { syncAllData } from '../app/actions';
 import Button from './ui/Button';
 import RefreshIcon from './ui/icon/RefreshIcon';
+import { useTranslations } from 'next-intl';
 
 export const RefreshPokemonButton = () => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const t = useTranslations('refresh');
 
   const handleSync = () => {
     startTransition(async () => {
@@ -25,7 +27,7 @@ export const RefreshPokemonButton = () => {
       className={`flex items-center gap-2 bg-guidepost-green ${isPending ? 'cursor-not-allowed opacity-50' : ''}`}
     >
       <RefreshIcon className={`h-4 w-4 ${isPending ? 'animate-spin ' : ''}`} />
-      {isPending ? 'Synchronizing...' : 'Refresh Data'}
+      {isPending ? t('synchronizing') : t('refreshData')}
     </Button>
   );
 };

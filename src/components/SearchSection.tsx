@@ -1,12 +1,15 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { useRouter } from '../i18n/navigation';
 import { useRef } from 'react';
 import SearchBar from './SearchBar';
+import { useTranslations } from 'next-intl';
 
 const SearchSection = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const t = useTranslations('search');
 
   const searchQuery = searchParams.get('filter') || '';
 
@@ -32,7 +35,7 @@ const SearchSection = () => {
   return (
     <section className="w-full px-8 py-6 border-b border-midnight-core flex flex-col items-center gap-4">
       <h1 className="text-heading-lg font-noigrotesk text-stardust tracking-tight">
-        Pokémon Search
+        {t('title')}
       </h1>
       <SearchBar onSearch={handleSearch} query={searchQuery} />
     </section>

@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 import Button from './ui/Button';
 
 const ErrorSimulator = () => {
   const [shouldThrow, setShouldThrow] = useState(false);
+  const t = useTranslations('errorSimulator');
 
   const handleThrow = () => {
     setShouldThrow(true);
@@ -17,10 +19,10 @@ const ErrorSimulator = () => {
   return (
     <Button
       onClick={handleThrow}
-      ariaLabel="Simulate error"
+      ariaLabel={t('simulateError')}
       className="border border-red-500/50 text-red-400  transition-all hover:bg-red-500/10"
     >
-      Simulate error
+      {t('simulateError')}
     </Button>
   );
 };

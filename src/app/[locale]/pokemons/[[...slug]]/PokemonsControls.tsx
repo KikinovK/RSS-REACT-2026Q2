@@ -1,11 +1,11 @@
 "use client";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from '../../../../i18n/navigation';
 
-import Pagination from '../../../components/ui/Pagination';
-import SelectCountItem from '../../../components/ui/SelectCountItem';
+import Pagination from '../../../../components/ui/Pagination';
+import SelectCountItem from '../../../../components/ui/SelectCountItem';
 
-import { CountItem } from '../../../types/CoutItem';
+import { CountItem } from '../../../../types/CoutItem';
 
 interface ControlsProps {
   currentPage: number;

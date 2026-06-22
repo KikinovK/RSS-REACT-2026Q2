@@ -1,14 +1,14 @@
-import SearchSection from '../../../components/SearchSection';
-import SelectionToolbar from '../../../components/SelectionToolbar';
-import productsSearchSchema from '../../../utils/productsSearchSchema';
-import { fetchPokemons } from '../../../api/pokemonApi';
+import SearchSection from '../../../../components/SearchSection';
+import SelectionToolbar from '../../../../components/SelectionToolbar';
+import productsSearchSchema from '../../../../utils/productsSearchSchema';
+import { fetchPokemons } from '../../../../api/pokemonApi';
+import ResultsSectionServer from './ResultsSectionServer';
 import PokemonsClientEffects from './PokemonsClientEffects';
 import { PokemonsControls } from './PokemonsControls';
 import DetailsModalContainer from './DetailsModalContainer';
-import ResultsSectionServer from './ResultsSectionServer';
 
 interface PageProps {
-  params: Promise<{ slug?: string[] }>;
+  params: Promise<{ slug?: string[]; locale: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 

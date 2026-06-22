@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import { CountItem } from '../../types/CoutItem';
 import { OPTIONS_COUNT_ITEMS } from '../../utils/const';
 
@@ -10,6 +13,8 @@ const SelectCountItem = ({
   defaultCount = OPTIONS_COUNT_ITEMS[0],
   onSelect,
 }: SelectCountItemProps) => {
+  const t = useTranslations('pagination');
+
   return (
     <div className="flex items-center gap-2 ml-2">
       <select
@@ -23,7 +28,7 @@ const SelectCountItem = ({
           </option>
         ))}
       </select>
-      <span className="text-stardust/70 text-sm ">items per page</span>
+      <span className="text-stardust/70 text-sm ">{t('itemsPerPage')}</span>
     </div>
   );
 };

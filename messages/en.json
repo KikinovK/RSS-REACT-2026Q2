@@ -1,0 +1,78 @@
+{
+  "header": {
+    "title": "Pokémon Search",
+    "home": "Home",
+    "about": "About"
+  },
+  "search": {
+    "title": "Pokémon Search",
+    "placeholder": "Search...",
+    "ariaLabel": "Search Pokémon",
+    "buttonAriaLabel": "Search"
+  },
+  "results": {
+    "title": "Results",
+    "loading": "Loading...",
+    "noResults": "No results found.",
+    "noObjectsForRequest": "No objects found for your request."
+  },
+  "detail": {
+    "noResults": "No results found.",
+    "height": "Height",
+    "weight": "Weight",
+    "type": "Type",
+    "baseStats": "Base Stats",
+    "failedToFetch": "Failed to fetch detail data"
+  },
+  "pagination": {
+    "page": "Page",
+    "to": "to",
+    "previous": "Previous page",
+    "next": "Next page",
+    "itemsPerPage": "items per page"
+  },
+  "selection": {
+    "itemsSelected": "{count} item(s) selected",
+    "unselectAll": "Unselect all",
+    "download": "Download",
+    "preparing": "Preparing…",
+    "clearAriaLabel": "Clear selections",
+    "downloadAriaLabel": "Download selected items"
+  },
+  "refresh": {
+    "refreshData": "Refresh Data",
+    "synchronizing": "Synchronizing..."
+  },
+  "theme": {
+    "switchTo": "Switch to {theme} theme",
+    "light": "light",
+    "dark": "dark"
+  },
+  "footer": {
+    "copyright": "© 2026 Pokémon Search App. All rights reserved."
+  },
+  "errorBoundary": {
+    "somethingWentWrong": "Something went wrong",
+    "tryAgain": "Try again"
+  },
+  "errorSimulator": {
+    "simulateError": "Simulate error"
+  },
+  "languageSwitcher": {
+    "en": "English",
+    "de": "Deutsch",
+    "ja": "日本語"
+  },
+  "about": {
+    "title": "About Pokémon Search",
+    "description": "An agile, high-performance dashboard driven by modern web technologies.",
+    "authorSection": "Author Profile",
+    "authorBio": "Aspiring Frontend Developer dedicated to building highly interactive, compact, and optimized web environments using modern technologies like React, TypeScript, and Tailwind CSS.",
+    "courseTitle": "RS School React Course",
+    "courseDescription": "Developed as part of the React materials evaluation framework.",
+    "goToCourse": "Go to Course"
+  },
+  "notFound": {
+    "title": "404 Not Found Page"
+  }
+}

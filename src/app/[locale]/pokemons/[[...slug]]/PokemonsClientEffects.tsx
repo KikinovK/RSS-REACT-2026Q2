@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from 'react';
-import { useErrorStore } from '../../../store/useErrorStore';
+import { useErrorStore } from '../../../../store/useErrorStore';
 
 interface EffectsProps {
   serverErrors: string[];

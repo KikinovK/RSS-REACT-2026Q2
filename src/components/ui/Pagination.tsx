@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import Button from './Button';
 
 interface PaginationProps {
@@ -10,6 +13,8 @@ const BASE_BUTTON_STYLES =
   'border border-stardust/30 text-stardust hover:bg-stardust/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors';
 
 const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
+  const t = useTranslations('pagination');
+
   const getPageNumbers = () => {
     const maxButtons = 5;
     const halfMax = Math.floor(maxButtons / 2);
@@ -31,14 +36,14 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) 
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         className={BASE_BUTTON_STYLES}
-        ariaLabel="Previous page"
+        ariaLabel={t('previous')}
       >
         ←
       </Button>
 
       {pageNumbers[0] > 1 && (
         <>
-          <Button onClick={() => onPageChange(1)} className={BASE_BUTTON_STYLES} ariaLabel="Page 1">
+          <Button onClick={() => onPageChange(1)} className={BASE_BUTTON_STYLES} ariaLabel={t('page') + ' 1'}>
             1
           </Button>
           {pageNumbers[0] > 2 && <span className="text-stardust/50">...</span>}
@@ -54,7 +59,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) 
               ? 'bg-guidepost-green text-deep-space border-guidepost-green font-semibold'
               : BASE_BUTTON_STYLES
           }`}
-          ariaLabel={`Page ${page}`}
+          ariaLabel={`${t('page')} ${page}`}
           aria-current={currentPage === page ? 'page' : undefined}
         >
           {page}
@@ -69,7 +74,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) 
           <Button
             onClick={() => onPageChange(totalPages)}
             className={BASE_BUTTON_STYLES}
-            ariaLabel={`Page ${totalPages}`}
+            ariaLabel={`${t('page')} ${totalPages}`}
           >
             {totalPages}
           </Button>
@@ -80,13 +85,13 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) 
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         className={BASE_BUTTON_STYLES}
-        ariaLabel="Next page"
+        ariaLabel={t('next')}
       >
         →
       </Button>
 
       <span className="text-stardust/70 text-sm">
-        Page {currentPage} to {totalPages}
+        {t('page')} {currentPage} {t('to')} {totalPages}
       </span>
     </div>
   );

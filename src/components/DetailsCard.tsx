@@ -1,19 +1,21 @@
+import { getTranslations } from 'next-intl/server';
 import PokemonImage from './ui/PokemonImage';
 import { fetchPokemonData } from '../api/pokemonApi';
-import PokemonsClientEffects from '../app/pokemons/[[...slug]]/PokemonsClientEffects';
+import PokemonsClientEffects from '../app/[locale]/pokemons/[[...slug]]/PokemonsClientEffects';
 
 interface DetailsCardProps {
   detailId: string;
 }
 
 const DetailsCard = async ({ detailId }: DetailsCardProps) => {
+  const t = await getTranslations('detail');
 
   let pokemon = null;
   let error = null;
   try {
     pokemon = await fetchPokemonData(detailId);
   } catch (err) {
-    error = err instanceof Error && err.message || 'Failed to fetch detail data';
+    error = err instanceof Error && err.message || t('failedToFetch');
   }
 
   const pokemonImage =
@@ -23,7 +25,7 @@ const DetailsCard = async ({ detailId }: DetailsCardProps) => {
     <>
       <PokemonsClientEffects serverErrors={error ? [error] : []} />
       <div className="bg-black/6 dark:bg-white/6 rounded-(--radius-cards) p-6 border border-black/10 dark:border-white/10 max-w-md mx-auto flex flex-col gap-6 text-stardust">
-        {!pokemon && <p className="text-body text-muted-text">No results found.</p>}
+        {!pokemon && <p className="text-body text-muted-text">{t('noResults')}</p>}
         {pokemon && (
           <>
             <div className="text-center">
@@ -44,17 +46,17 @@ const DetailsCard = async ({ detailId }: DetailsCardProps) => {
 
             <div className="grid grid-cols-2 gap-4 text-center">
               <div className="bg-black/4 dark:bg-white/4 p-2 rounded-lg">
-                <p className="text-body-xs text-muted-text uppercase tracking-wider">Рост</p>
+                <p className="text-body-xs text-muted-text uppercase tracking-wider">{t('height')}</p>
                 <p className="text-body-md font-medium">{(pokemon.height / 10).toFixed(1)} м</p>
               </div>
               <div className="bg-black/4 dark:bg-white/4 p-2 rounded-lg">
-                <p className="text-body-xs text-muted-text uppercase tracking-wider">Вес</p>
+                <p className="text-body-xs text-muted-text uppercase tracking-wider">{t('weight')}</p>
                 <p className="text-body-md font-medium">{(pokemon.weight / 10).toFixed(1)} кг</p>
               </div>
             </div>
 
             <div>
-              <h4 className="text-body-sm font-medium text-muted-text mb-2">Тип</h4>
+              <h4 className="text-body-sm font-medium text-muted-text mb-2">{t('type')}</h4>
               <div className="flex gap-2 flex-wrap">
                 {pokemon.types.map(({ type }) => (
                   <span
@@ -68,9 +70,7 @@ const DetailsCard = async ({ detailId }: DetailsCardProps) => {
             </div>
 
             <div>
-              <h4 className="text-body-sm font-medium text-muted-text mb-3">
-                Базовые характеристики
-              </h4>
+              <h4 className="text-body-sm font-medium text-muted-text mb-3">{t('baseStats')}</h4>
               <div className="flex flex-col gap-2.5">
                 {pokemon.stats.map(({ base_stat, stat }) => (
                   <div key={stat.name} className="flex items-center gap-4 text-body-sm">

@@ -1,12 +1,31 @@
-const NotFound = () => {
+import Link from "next/link";
+
+export default function RootNotFound() {
   return (
-    <div className="flex-1 flex flex-col bg-deep-space text-stardust font-noigrotesk">
-      <section className="flex-1 flex flex-col items-center justify-center gap-6 px-8 py-12 text-center">
-        <span className="text-6xl">⚠️</span>
-        <h2 className="text-heading font-noigrotesk text-stardust">404 Not Found Page</h2>
-      </section>
-    </div>
+    <html lang="en">
+      <body style={{
+        backgroundColor: '#0b0d19',
+        color: '#f4f5f6',
+        fontFamily: 'sans-serif',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+        margin: 0
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>404</h1>
+          <p style={{ marginBottom: '2rem' }}>Page not found.</p>
+          <Link href="/en/pokemons" style={{
+            color: '#00ff87',
+            textDecoration: 'none',
+            fontWeight: 'bold'
+          }}>
+            Go to Home Page
+          </Link>
+        </div>
+      </body>
+    </html>
   );
 }
-
-export default NotFound;
