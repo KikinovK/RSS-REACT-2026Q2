@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 interface PokemonImageProps {
   src: string;
@@ -8,31 +9,32 @@ interface PokemonImageProps {
 }
 
 const PokemonImage = ({ src, alt }: PokemonImageProps) => {
-  const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
-
-  const handleLoad = () => {
-    setLoaded(true);
-  };
-
-  const handleError = () => {
-    setError(true);
-    setLoaded(true);
-  };
+  const [isReady, setIsReady] = useState(false);
 
   const fallbackSrc = 'https://placehold.co/400x400?text=No+Image&font=roboto&bg=ffffff&fg=000000';
 
   return (
     <>
-      {!loaded && !error && (
+      {!isReady && (
         <div className="absolute inset-0 bg-black/10 dark:bg-white/10 animate-pulse rounded-lg" />
       )}
-      <img
-        src={error ? fallbackSrc : src}
+      <Image
+        src={error || !src ? fallbackSrc : src}
         alt={alt}
-        onLoad={handleLoad}
-        onError={handleError}
-        className={`w-full h-full object-contain transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+        fill
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+        className={`object-contain transition-opacity duration-300 ${
+          isReady ? 'opacity-100' : 'opacity-0'
+        }`}
+
+        onLoad={() => setIsReady(true)}
+        onError={() => {
+          setError(true);
+          setIsReady(true);
+        }}
+
+        loading="lazy"
       />
     </>
   );
