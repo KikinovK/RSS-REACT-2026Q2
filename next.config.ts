@@ -1,7 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* options */
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/pokemons",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

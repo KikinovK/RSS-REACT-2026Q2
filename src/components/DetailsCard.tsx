@@ -1,24 +1,30 @@
-import { useParams } from '@tanstack/react-router';
-import ProgressBar from './ui/ProgressBar';
 import PokemonImage from './ui/PokemonImage';
-import { usePokemonDetails } from '../hooks/usePokemonQueries';
+import { fetchPokemonData } from '../api/pokemonApi';
+import PokemonsClientEffects from '../app/pokemons/[[...slug]]/PokemonsClientEffects';
 
-const DetailsCard = () => {
-  const { detailId } = useParams({ from: '/pokemons/$detailId' });
+interface DetailsCardProps {
+  detailId: string;
+}
 
-  const { data: pokemon, isFetching } = usePokemonDetails(detailId);
+const DetailsCard = async ({ detailId }: DetailsCardProps) => {
+
+  let pokemon = null;
+  let error = null;
+  try {
+    pokemon = await fetchPokemonData(detailId);
+  } catch (err) {
+    error = err instanceof Error && err.message || 'Failed to fetch detail data';
+  }
 
   const pokemonImage =
     pokemon?.sprites.other?.['official-artwork']?.front_default || pokemon?.sprites.front_default;
 
   return (
     <>
-      <ProgressBar isLoading={isFetching} />
+      <PokemonsClientEffects serverErrors={error ? [error] : []} />
       <div className="bg-black/6 dark:bg-white/6 rounded-(--radius-cards) p-6 border border-black/10 dark:border-white/10 max-w-md mx-auto flex flex-col gap-6 text-stardust">
-        {isFetching && <p className="text-body text-muted-text">Loading...</p>}
-
-        {!isFetching && !pokemon && <p className="text-body text-muted-text">No results found.</p>}
-        {!isFetching && pokemon && (
+        {!pokemon && <p className="text-body text-muted-text">No results found.</p>}
+        {pokemon && (
           <>
             <div className="text-center">
               {pokemonImage && (

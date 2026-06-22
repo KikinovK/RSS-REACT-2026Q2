@@ -10,8 +10,37 @@ import { ApiError } from '../utils/ApiError';
 
 const BASE = 'https://pokeapi.co/api/v2';
 
-export const fetchAllPokemon = async (signal: AbortSignal): Promise<PokemonListItem[]> => {
-  const res = await fetch(`${BASE}/pokemon?limit=2000`, { signal });
+
+export const fetchPokemons = async(searchQuery: string, currentPage: number, itemsPerPage: number) => {
+  const allPokemons = await fetchAllPokemon();
+
+  const normalized = searchQuery.toLowerCase();
+  const filtered = allPokemons.filter((p) => p.name.includes(normalized));
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginated = filtered.slice(startIndex, startIndex + itemsPerPage);
+
+  const settled = await Promise.allSettled(
+    paginated.map((item) => fetchPokemonResult(item))
+  );
+
+  const successful = settled
+    .filter((r): r is PromiseFulfilledResult<SearchResult> => r.status === 'fulfilled')
+    .map((r) => r.value);
+
+  const errors: string[] = settled
+    .filter((r): r is PromiseRejectedResult => r.status === 'rejected')
+    .map((r) => r.reason?.message || 'Unknown error');
+
+  return {
+    results: successful,
+    totalPages: Math.ceil(filtered.length / itemsPerPage),
+    errors,
+  };
+}
+
+export const fetchAllPokemon = async (): Promise<PokemonListItem[]> => {
+  const res = await fetch(`${BASE}/pokemon?limit=2000`);
   if (!res.ok) throw new ApiError(res.status, 'Failed to load Pokémon list');
   const data: PokemonListResponse = await res.json();
   return data.results;
@@ -19,15 +48,14 @@ export const fetchAllPokemon = async (signal: AbortSignal): Promise<PokemonListI
 
 export const fetchPokemonResult = async (
   item: PokemonListItem,
-  signal: AbortSignal
 ): Promise<SearchResult> => {
-  const detailResponse = await fetch(item.url, { signal });
+  const detailResponse = await fetch(item.url);
   if (!detailResponse.ok) {
     throw new ApiError(detailResponse.status, `Failed to load ${item.name}`);
   }
   const detail = await (detailResponse.json() as Promise<PokemonDetail>);
 
-  const speciesResponse = await fetch(detail.species.url, { signal });
+  const speciesResponse = await fetch(detail.species.url);
   if (!speciesResponse.ok) {
     throw new ApiError(speciesResponse.status, `Failed to load species for ${item.name}`);
   }
@@ -47,8 +75,8 @@ export const fetchPokemonResult = async (
   };
 };
 
-export const fetchPokemonData = async (id: string, signal: AbortSignal): Promise<PokemonData> => {
-  const res = await fetch(`${BASE}/pokemon/${id}`, { signal });
+export const fetchPokemonData = async (id: string): Promise<PokemonData> => {
+  const res = await fetch(`${BASE}/pokemon/${id}`);
   if (!res.ok) throw new ApiError(res.status, 'Failed to load Pokémon details');
   return res.json() as Promise<PokemonData>;
 };

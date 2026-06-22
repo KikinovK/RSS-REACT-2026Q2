@@ -1,9 +1,9 @@
-import { useCallback, useEffect } from 'react';
+'use client';
+
+import { useCallback, useState } from 'react';
 import SearchInput from './ui/SearchInput';
 import Button from './ui/Button';
-import SearchIcon from '../assets/icons/search.svg?react';
-import { useLocalStorage } from '../hooks/useLocalStorage';
-import { SEARCH_KEY } from '../utils/const';
+import SearchIcon from './ui/icon/SearchIcon';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -11,12 +11,9 @@ interface SearchBarProps {
 }
 
 const SearchBar = ({ onSearch, query: initialQuery }: SearchBarProps) => {
-  const [query, setQuery] = useLocalStorage(SEARCH_KEY, '');
+  const [query, setQuery] = useState(initialQuery || '');
 
-  useEffect(() => {
-    setQuery(initialQuery || query);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
 
   const handleChange = useCallback(
     (value: string) => {
