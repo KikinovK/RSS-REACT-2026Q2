@@ -1,5 +1,5 @@
 import SwitchTheme from './SwithcTheme';
-// import { RefreshPokemonButton } from './RefreshPokemonButton';
+import { RefreshPokemonButton } from './RefreshPokemonButton';
 import NavLink from './NavLink';
 
 const Header = () => {
@@ -24,7 +24,7 @@ const Header = () => {
             </NavLink>
           </div>
           <SwitchTheme />
-          {/* <RefreshPokemonButton /> */}
+          <RefreshPokemonButton />
         </div>
       </nav>
     </header>
