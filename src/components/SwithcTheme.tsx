@@ -9,7 +9,11 @@ const SwitchTheme = () => {
   const t = useTranslations('theme');
 
   return (
-    <Button onClick={toggleTheme} className="bg-guidepost-green" ariaLabel={t('switchTo', { theme: theme === 'light' ? t('dark') : t('light') })}>
+    <Button
+      onClick={toggleTheme}
+      className="bg-guidepost-green"
+      ariaLabel={t('switchTo', { theme: theme === 'light' ? t('dark') : t('light') })}
+    >
       {t('switchTo', { theme: theme === 'light' ? t('dark') : t('light') })}
     </Button>
   );

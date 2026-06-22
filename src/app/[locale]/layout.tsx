@@ -29,7 +29,7 @@ const LocaleLayout = async ({ children, params }: LocaleLayoutProps) => {
 
   const messages = await getMessages();
   const cookieStore = await cookies();
-  const savedTheme = cookieStore.get(THEME_KEY)?.value as Theme || 'light';
+  const savedTheme = (cookieStore.get(THEME_KEY)?.value as Theme) || 'light';
 
   return (
     <html lang={locale} className={savedTheme === 'dark' ? 'dark' : ''}>
@@ -39,9 +39,7 @@ const LocaleLayout = async ({ children, params }: LocaleLayoutProps) => {
             <NextIntlClientProvider messages={messages}>
               <ErrorToastList />
               <Header />
-              <main className="flex flex-col flex-1 w-full">
-                {children}
-              </main>
+              <main className="flex flex-col flex-1 w-full">{children}</main>
               <Footer />
             </NextIntlClientProvider>
           </ErrorBoundary>

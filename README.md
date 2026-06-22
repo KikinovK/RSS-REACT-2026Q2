@@ -113,8 +113,8 @@ Create a `.env` file in the root directory based on `.env.example`:
 cp .env.example .env
 ```
 
-| Variable | Description | Default |
-| -------- | ----------- | ------- |
+| Variable                 | Description                                        | Default              |
+| ------------------------ | -------------------------------------------------- | -------------------- |
 | `VITE_POKEMON_CACHE_TTL` | Cache time-to-live in milliseconds for React Query | `300000` (5 minutes) |
 
 ## Getting Started
@@ -157,22 +157,23 @@ npm run preview
 
 ## Scripts
 
-| Script                  | Description                          |
-| ----------------------- | ------------------------------------ |
-| `npm run dev`           | Start development server             |
-| `npm run build`         | Build for production                 |
-| `npm run preview`       | Preview production build             |
-| `npm run lint`          | Run ESLint                           |
-| `npm run lint:fix`      | Run ESLint with auto-fix             |
-| `npm run format`        | Format code with Prettier            |
-| `npm run test`          | Run tests with Vitest                |
-| `npm run test:coverage` | Generate coverage report             |
+| Script                  | Description               |
+| ----------------------- | ------------------------- |
+| `npm run dev`           | Start development server  |
+| `npm run build`         | Build for production      |
+| `npm run preview`       | Preview production build  |
+| `npm run lint`          | Run ESLint                |
+| `npm run lint:fix`      | Run ESLint with auto-fix  |
+| `npm run format`        | Format code with Prettier |
+| `npm run test`          | Run tests with Vitest     |
+| `npm run test:coverage` | Generate coverage report  |
 
 ## Key Concepts Demonstrated
 
 ### React Query Setup
 
 The application uses a centralized `QueryClient` configuration with:
+
 - Custom cache TTL settings
 - Global error handling via `QueryCache` callbacks
 - Optimized retry and refetch strategies
@@ -180,6 +181,7 @@ The application uses a centralized `QueryClient` configuration with:
 ### Query Keys
 
 Properly structured query keys enable efficient cache management:
+
 ```typescript
 export const pokemonKeys = {
   all: ['pokemon'] as const,
@@ -195,6 +197,7 @@ export const pokemonKeys = {
 ### Custom Hooks
 
 The `usePokemonQueries.ts` file exports custom hooks that encapsulate React Query logic:
+
 - `usePokemonSearch()` - Fetches paginated, filtered Pokémon list
 - `usePokemonDetails()` - Fetches individual Pokémon details
 - `useInvalidatePokemon()` - Manually invalidates cache

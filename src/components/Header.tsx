@@ -17,17 +17,13 @@ const Header = () => {
           <div className="mx-auto flex items-center gap-6">
             <NavLink
               href={{
-                pathname: "/pokemons",
+                pathname: '/pokemons',
                 query: { page: 1, filter: '', limit: 4 },
               }}
             >
               {t('home')}
             </NavLink>
-            <NavLink
-              href="/about"
-            >
-              {t('about')}
-            </NavLink>
+            <NavLink href="/about">{t('about')}</NavLink>
           </div>
           <LanguageSwitcher />
           <SwitchTheme />

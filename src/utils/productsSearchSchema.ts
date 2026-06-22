@@ -3,16 +3,14 @@ import { OPTIONS_COUNT_ITEMS } from '../utils/const';
 import { CountItem } from '../types/CoutItem';
 
 const productsSearchSchema = z.object({
-  page: z
-    .coerce
+  page: z.coerce
     .number()
     .int()
     .positive()
     .catch(() => 1)
     .transform((val) => val as number),
 
-  limit: z
-    .coerce
+  limit: z.coerce
     .number()
     .refine((val) => OPTIONS_COUNT_ITEMS.includes(val as CountItem))
     .catch(() => OPTIONS_COUNT_ITEMS[0])

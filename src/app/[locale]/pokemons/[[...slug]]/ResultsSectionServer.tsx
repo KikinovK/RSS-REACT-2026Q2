@@ -18,16 +18,11 @@ export default async function ResultsSectionServer({ results }: ResultsProps) {
       <div className="flex items-center justify-between">
         <h2 className="text-heading font-noigrotesk text-stardust">{t('title')}</h2>
       </div>
-      {results.length === 0 && (
-        <p className="text-body text-muted-text">{t('noResults')}</p>
-      )}
+      {results.length === 0 && <p className="text-body text-muted-text">{t('noResults')}</p>}
       {results.length > 0 && (
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4">
           {results.map((item) => (
-            <ResultCard
-              key={item.id}
-              item={item}
-            />
+            <ResultCard key={item.id} item={item} />
           ))}
         </ul>
       )}

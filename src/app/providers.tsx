@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { type Theme, ThemeProvider } from "../context/ThemeContext";
+import { type Theme, ThemeProvider } from '../context/ThemeContext';
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -8,10 +8,5 @@ interface ProvidersProps {
 }
 
 export const Providers = ({ children, initialTheme }: ProvidersProps) => {
-
-  return (
-    <ThemeProvider initialTheme={initialTheme}>
-      {children}
-    </ThemeProvider>
-  );
-}
+  return <ThemeProvider initialTheme={initialTheme}>{children}</ThemeProvider>;
+};

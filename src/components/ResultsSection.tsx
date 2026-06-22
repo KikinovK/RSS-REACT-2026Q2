@@ -7,7 +7,6 @@ interface ResultsSectionProps {
 }
 
 const ResultsSection = ({ results, isLoading }: ResultsSectionProps) => {
-
   return (
     <section className="w-full flex-1 px-8 py-6 flex flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -20,10 +19,7 @@ const ResultsSection = ({ results, isLoading }: ResultsSectionProps) => {
       {!isLoading && results.length > 0 && (
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4">
           {results.map((item) => (
-            <ResultCard
-              key={item.id}
-              item={item}
-            />
+            <ResultCard key={item.id} item={item} />
           ))}
         </ul>
       )}

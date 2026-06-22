@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useState } from 'react';
 import Image from 'next/image';
@@ -27,13 +27,11 @@ const PokemonImage = ({ src, alt }: PokemonImageProps) => {
         className={`object-contain transition-opacity duration-300 ${
           isReady ? 'opacity-100' : 'opacity-0'
         }`}
-
         onLoad={() => setIsReady(true)}
         onError={() => {
           setError(true);
           setIsReady(true);
         }}
-
         loading="lazy"
       />
     </>

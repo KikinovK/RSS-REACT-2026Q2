@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useRouter } from '../../../../i18n/navigation';
 
@@ -14,7 +14,12 @@ interface ControlsProps {
   searchQuery: string;
 }
 
-export function PokemonsControls({ currentPage, totalPages, itemsPerPage, searchQuery }: ControlsProps) {
+export function PokemonsControls({
+  currentPage,
+  totalPages,
+  itemsPerPage,
+  searchQuery,
+}: ControlsProps) {
   const router = useRouter();
 
   const handlePageChange = (page: number) => {

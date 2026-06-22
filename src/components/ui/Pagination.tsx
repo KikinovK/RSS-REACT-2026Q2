@@ -43,7 +43,11 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) 
 
       {pageNumbers[0] > 1 && (
         <>
-          <Button onClick={() => onPageChange(1)} className={BASE_BUTTON_STYLES} ariaLabel={t('page') + ' 1'}>
+          <Button
+            onClick={() => onPageChange(1)}
+            className={BASE_BUTTON_STYLES}
+            ariaLabel={t('page') + ' 1'}
+          >
             1
           </Button>
           {pageNumbers[0] > 2 && <span className="text-stardust/50">...</span>}

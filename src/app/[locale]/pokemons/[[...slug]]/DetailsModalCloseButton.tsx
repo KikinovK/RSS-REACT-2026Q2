@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useRouter } from '../../../../i18n/navigation';
 import Button from '../../../../components/ui/Button';
@@ -9,7 +9,7 @@ interface ModalProps {
   itemsPerPage: number;
 }
 
-const  DetailsModalCloseButton = ({ searchQuery, currentPage, itemsPerPage }: ModalProps) => {
+const DetailsModalCloseButton = ({ searchQuery, currentPage, itemsPerPage }: ModalProps) => {
   const router = useRouter();
 
   const handleClose = () => {
@@ -25,6 +25,6 @@ const  DetailsModalCloseButton = ({ searchQuery, currentPage, itemsPerPage }: Mo
       ✕
     </Button>
   );
-}
+};
 
 export default DetailsModalCloseButton;

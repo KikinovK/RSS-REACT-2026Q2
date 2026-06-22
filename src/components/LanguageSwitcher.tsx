@@ -14,13 +14,16 @@ const LanguageSwitcher = () => {
   const params = useParams();
   const currentLocale = params.locale as Locale;
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    const nextLocale = e.target.value as Locale;
-    const search = window.location.search;
-    startTransition(() => {
-      router.replace(pathname + search, { locale: nextLocale });
-    });
-  }, [router, pathname]);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const nextLocale = e.target.value as Locale;
+      const search = window.location.search;
+      startTransition(() => {
+        router.replace(pathname + search, { locale: nextLocale });
+      });
+    },
+    [router, pathname]
+  );
 
   return (
     <select

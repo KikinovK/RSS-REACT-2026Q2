@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { Component } from 'react';
 import { NextIntlClientProvider } from 'next-intl';
@@ -14,8 +14,8 @@ interface ErrorBoundaryState {
 const FALLBACK_MESSAGES = {
   error: {
     somethingWentWrong: 'Something went wrong',
-    tryAgain: 'Try again'
-  }
+    tryAgain: 'Try again',
+  },
 };
 
 class ErrorBoundary extends Component<{ children: React.ReactNode }, ErrorBoundaryState> {
@@ -42,7 +42,11 @@ class ErrorBoundary extends Component<{ children: React.ReactNode }, ErrorBounda
               <span className="text-6xl">⚠️</span>
               <h2 className="text-heading font-noigrotesk text-stardust">Something went wrong</h2>
               <p className="text-body text-muted-text max-w-md">{this.state.error?.message}</p>
-              <Button onClick={this.handleReset} ariaLabel="Try again" className="bg-guidepost-green">
+              <Button
+                onClick={this.handleReset}
+                ariaLabel="Try again"
+                className="bg-guidepost-green"
+              >
                 Try again
               </Button>
             </section>

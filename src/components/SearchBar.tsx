@@ -31,7 +31,12 @@ const SearchBar = ({ onSearch, query: initialQuery }: SearchBarProps) => {
 
   return (
     <form onSubmit={handleSubmit} className="flex items-center gap-3 w-full max-w-2xl">
-      <SearchInput value={query} onChange={handleChange} ariaLabel={t('ariaLabel')} placeholder={t('placeholder')} />
+      <SearchInput
+        value={query}
+        onChange={handleChange}
+        ariaLabel={t('ariaLabel')}
+        placeholder={t('placeholder')}
+      />
       <Button type="submit" ariaLabel={t('buttonAriaLabel')} className="bg-guidepost-green">
         <SearchIcon className="w-5 h-5 text-deep-space" />
       </Button>

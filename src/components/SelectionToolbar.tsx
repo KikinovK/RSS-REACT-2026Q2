@@ -29,17 +29,12 @@ const SelectionToolbar = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const t = useTranslations('selection');
 
-  const [state, formAction, isPending] = useActionState<CsvExportState, FormData>(
-    exportCsv,
-    null,
-  );
+  const [state, formAction, isPending] = useActionState<CsvExportState, FormData>(exportCsv, null);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMounted(true);
   }, []);
-
-
 
   useEffect(() => {
     if (state?.csv) {

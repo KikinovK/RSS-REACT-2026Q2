@@ -9,12 +9,7 @@ interface SearchInputProps {
   ariaLabel?: string;
 }
 
-const SearchInput = ({
-  value,
-  onChange,
-  placeholder,
-  ariaLabel,
-}: SearchInputProps) => {
+const SearchInput = ({ value, onChange, placeholder, ariaLabel }: SearchInputProps) => {
   const t = useTranslations('search');
   const resolvedPlaceholder = placeholder || t('placeholder');
   const resolvedAriaLabel = ariaLabel || t('ariaLabel');

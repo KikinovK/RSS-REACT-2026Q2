@@ -25,9 +25,7 @@ const Page = async () => {
           <h1 className="font-sansplomb text-heading-lg md:text-5xl uppercase tracking-[-0.02em] leading-0.85 text-stardust">
             {t('title')}
           </h1>
-          <p className="text-body-sm text-muted-text mt-2 font-light">
-            {t('description')}
-          </p>
+          <p className="text-body-sm text-muted-text mt-2 font-light">{t('description')}</p>
         </header>
 
         <section className="bg-black/6 dark:bg-white/6 border border-black/10 dark:border-white/10 rounded-3xl p-6 flex flex-col gap-4 backdrop-blur-md">
@@ -36,18 +34,14 @@ const Page = async () => {
           </h2>
           <div className="flex flex-col gap-2">
             <h3 className="text-subheading font-medium text-guidepost-green">Kostiantyn Kikinov</h3>
-            <p className="text-body text-stardust font-light leading-relaxed">
-              {t('authorBio')}
-            </p>
+            <p className="text-body text-stardust font-light leading-relaxed">{t('authorBio')}</p>
           </div>
         </section>
 
         <section className="flex flex-col md:flex-row items-center justify-between gap-6 bg-midnight-core/50 border border-black/5 dark:border-white/5 rounded-3xl p-6">
           <div className="flex flex-col gap-1 text-center md:text-left">
             <h4 className="text-body font-medium text-stardust">{t('courseTitle')}</h4>
-            <p className="text-body-sm text-muted-text">
-              {t('courseDescription')}
-            </p>
+            <p className="text-body-sm text-muted-text">{t('courseDescription')}</p>
           </div>
 
           <a

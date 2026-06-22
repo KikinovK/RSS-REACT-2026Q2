@@ -16,7 +16,7 @@ const RefreshIcon = (props: React.SVGProps<SVGSVGElement>) => {
         strokeLinejoin="round"
       />
     </svg>
-  )
-}
+  );
+};
 
 export default RefreshIcon;

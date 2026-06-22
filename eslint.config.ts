@@ -6,18 +6,11 @@ import eslintConfigPrettier from 'eslint-config-prettier/flat';
 import tseslint from 'typescript-eslint';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
-import nextVitals from 'eslint-config-next/core-web-vitals'
+import nextVitals from 'eslint-config-next/core-web-vitals';
 
 export default defineConfig([
   ...nextVitals,
-  globalIgnores([
-    'dist',
-    '.next/**',
-    'out/**',
-    'build/**',
-    'next-env.d.ts',
-    "coverage/**",
-  ]),
+  globalIgnores(['dist', '.next/**', 'out/**', 'build/**', 'next-env.d.ts', 'coverage/**']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

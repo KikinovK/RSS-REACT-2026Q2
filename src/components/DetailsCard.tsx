@@ -15,7 +15,7 @@ const DetailsCard = async ({ detailId }: DetailsCardProps) => {
   try {
     pokemon = await fetchPokemonData(detailId);
   } catch (err) {
-    error = err instanceof Error && err.message || t('failedToFetch');
+    error = (err instanceof Error && err.message) || t('failedToFetch');
   }
 
   const pokemonImage =
@@ -46,11 +46,15 @@ const DetailsCard = async ({ detailId }: DetailsCardProps) => {
 
             <div className="grid grid-cols-2 gap-4 text-center">
               <div className="bg-black/4 dark:bg-white/4 p-2 rounded-lg">
-                <p className="text-body-xs text-muted-text uppercase tracking-wider">{t('height')}</p>
+                <p className="text-body-xs text-muted-text uppercase tracking-wider">
+                  {t('height')}
+                </p>
                 <p className="text-body-md font-medium">{(pokemon.height / 10).toFixed(1)} м</p>
               </div>
               <div className="bg-black/4 dark:bg-white/4 p-2 rounded-lg">
-                <p className="text-body-xs text-muted-text uppercase tracking-wider">{t('weight')}</p>
+                <p className="text-body-xs text-muted-text uppercase tracking-wider">
+                  {t('weight')}
+                </p>
                 <p className="text-body-md font-medium">{(pokemon.weight / 10).toFixed(1)} кг</p>
               </div>
             </div>

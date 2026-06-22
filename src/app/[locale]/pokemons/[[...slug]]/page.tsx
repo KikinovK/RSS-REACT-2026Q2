@@ -23,10 +23,11 @@ const Page = async ({ searchParams, params }: PageProps) => {
   try {
     data = await fetchPokemons(searchQuery, currentPage, itemsPerPage);
   } catch (err) {
-    error = err instanceof Error && err.message || 'Failed to fetch data';
+    error = (err instanceof Error && err.message) || 'Failed to fetch data';
   }
 
-  const detailId = resolvedParams.slug && resolvedParams.slug[0] ? resolvedParams.slug[0] : undefined;
+  const detailId =
+    resolvedParams.slug && resolvedParams.slug[0] ? resolvedParams.slug[0] : undefined;
 
   return (
     <div className="space-y-8 pb-2">
@@ -34,7 +35,7 @@ const Page = async ({ searchParams, params }: PageProps) => {
       <SearchSection />
       <SelectionToolbar />
       <ResultsSectionServer results={data?.results || []} />
-      {data && data.totalPages > 1  && (
+      {data && data.totalPages > 1 && (
         <div className="flex justify-center flex-wrap gap-8 items-center">
           <PokemonsControls
             currentPage={currentPage}
