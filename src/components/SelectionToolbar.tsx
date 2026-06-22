@@ -1,47 +1,58 @@
-import { useQueryClient } from '@tanstack/react-query';
+'use client';
+
+import { useActionState, useEffect, useRef } from 'react';
 import { useSelectionStore } from '../store/useSelectionStore';
-import { downloadCSV } from '../utils/csvExport';
 import Button from './ui/Button';
-import { fetchAllPokemon, fetchPokemonResult } from '../api/pokemonApi';
-import { extractLastSegment } from '../utils/utils';
-import { pokemonKeys } from '../hooks/usePokemonQueries';
+import { exportCsv, type CsvExportState } from '../app/actions';
+
+const downloadBlob = (csv: string, filename: string) => {
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+
+  link.setAttribute('href', url);
+  link.setAttribute('download', filename);
+  link.style.visibility = 'hidden';
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  URL.revokeObjectURL(url);
+};
 
 const SelectionToolbar = () => {
-  const queryClient = useQueryClient();
   const { getSelectedCount, clearSelections } = useSelectionStore();
   const selectedCount = getSelectedCount();
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const [state, formAction, isPending] = useActionState<CsvExportState, FormData>(
+    exportCsv,
+    null,
+  );
+
+  useEffect(() => {
+    if (state?.csv) {
+      downloadBlob(state.csv, `${selectedCount}_items.csv`);
+    }
+  }, [state, selectedCount]);
 
   if (selectedCount === 0) {
     return null;
   }
 
-  const handleDownload = async () => {
+  const handleDownload = () => {
+    if (!formRef.current) return;
+
     const selectedItems = useSelectionStore.getState().selectedItems;
     const selectedIds = Array.from(selectedItems);
-
-    const allPokemon = await queryClient.ensureQueryData({
-      queryKey: pokemonKeys.all,
-      queryFn: ({ signal }) => fetchAllPokemon(signal),
-    });
-    const selectedResults = await Promise.all(
-      selectedIds.map((id) => {
-        const pokemonItem = allPokemon.find((p) => extractLastSegment(p.url) === id);
-
-        if (!pokemonItem) return Promise.resolve({ id: '', name: '', description: '', image: '' });
-
-        return queryClient.fetchQuery({
-          queryKey: ['pokemon', 'detail', id],
-          queryFn: ({ signal }) => fetchPokemonResult(pokemonItem, signal),
-        });
-      })
-    );
-
-    downloadCSV(selectedResults);
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'ids';
+    input.value = JSON.stringify(selectedIds);
+    formRef.current.appendChild(input);
+    formRef.current.requestSubmit();
   };
-
-  if (selectedCount === 0) {
-    return null;
-  }
 
   return (
     <div
@@ -59,6 +70,7 @@ const SelectionToolbar = () => {
         </span>
       </div>
       <div className="flex items-center gap-3">
+        <form ref={formRef} action={formAction} className="hidden" />
         <Button
           onClick={clearSelections}
           className="bg-guidepost-green"
@@ -68,10 +80,11 @@ const SelectionToolbar = () => {
         </Button>
         <Button
           onClick={handleDownload}
+          disabled={isPending}
           className="bg-guidepost-green"
           ariaLabel="Download selected items"
         >
-          Download
+          {isPending ? 'Preparing…' : 'Download'}
         </Button>
       </div>
     </div>

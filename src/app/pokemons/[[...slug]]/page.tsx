@@ -1,5 +1,5 @@
 import SearchSection from '../../../components/SearchSection';
-// import SelectionToolbar from '../../components/SelectionToolbar';
+import SelectionToolbar from '../../../components/SelectionToolbar';
 import productsSearchSchema from '../../../utils/productsSearchSchema';
 import { fetchPokemons } from '../../../api/pokemonApi';
 import PokemonsClientEffects from './PokemonsClientEffects';
@@ -32,7 +32,7 @@ const Page = async ({ searchParams, params }: PageProps) => {
     <div className="space-y-8 pb-2">
       <PokemonsClientEffects serverErrors={data?.errors || (error ? [error] : [])} />
       <SearchSection />
-      {/* <SelectionToolbar /> */}
+      <SelectionToolbar />
       <ResultsSectionServer results={data?.results || []} />
       {data && data.totalPages > 1  && (
         <div className="flex justify-center flex-wrap gap-8 items-center">
