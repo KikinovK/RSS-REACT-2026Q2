@@ -1,6 +1,18 @@
 import { getTranslations } from 'next-intl/server';
+import { routing } from '../../../i18n/routing';
 
-const Page = async () => {
+export const dynamic = 'force-static';
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
+interface AboutProps {
+  params: Promise<{ locale: string }>;
+}
+
+const Page = async ({ params }: AboutProps) => {
+  await params;
   const t = await getTranslations('about');
 
   return (
